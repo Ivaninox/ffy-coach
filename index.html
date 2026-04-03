@@ -237,9 +237,9 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
       </select>
     </div>
     <div class="scrollable" id="scoring-r1-body">
-      <div class="drop-zone" onclick="document.getElementById('file-r1').click()">
+      <div class="drop-zone" id="dropzone-r1" onclick="document.getElementById('file-r1').click()">
         <strong>Importer un transcript ou un enregistrement</strong>
-        <p>Fichier .txt, .md, .pdf ou .mp3</p>
+        <p>Fichier .txt, .md, .pdf ou .mp3 — cliquer ou glisser-déposer</p>
         <input type="file" id="file-r1" accept=".txt,.md,.pdf,.mp3,audio/mpeg,application/pdf" style="display:none" onchange="handleFile(event,'paste-r1','r1')">
       </div>
       <textarea class="paste-area" id="paste-r1" placeholder="...ou collez le transcript ici"></textarea>
@@ -262,9 +262,9 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
         <div style="font-size:12px;color:#92400e;font-weight:500;margin-bottom:4px;">Grille prospection /20</div>
         <div style="font-size:12px;color:#888;line-height:1.7;">Accroche & hook (3) · Pitch AIDA (3) · Qualification rapide (3) · Gestion du barrage/refus (4) · Obtention du RDV (4) · Énergie & rythme (3)</div>
       </div>
-      <div class="drop-zone" onclick="document.getElementById('file-prosp').click()">
+      <div class="drop-zone" id="dropzone-prosp" onclick="document.getElementById('file-prosp').click()">
         <strong>Importer un transcript ou un enregistrement de prospection</strong>
-        <p>Fichier .txt, .md, .pdf ou .mp3</p>
+        <p>Fichier .txt, .md, .pdf ou .mp3 — cliquer ou glisser-déposer</p>
         <input type="file" id="file-prosp" accept=".txt,.md,.pdf,.mp3,audio/mpeg,application/pdf" style="display:none" onchange="handleFile(event,'paste-prosp','prosp')">
       </div>
       <textarea class="paste-area" id="paste-prosp" placeholder="...ou collez le transcript du call de prospection ici"></textarea>
@@ -578,8 +578,7 @@ document.getElementById('chat-input').addEventListener('keydown', e => {
 /* ---- FILE HANDLER ---- */
 const fileData = { r1: null, prosp: null }; // stocke {base64, mediaType, name} pour audio/pdf
 
-function handleFile(e, targetId, slot) {
-  const file = e.target.files[0];
+function processFile(file, targetId, slot) {
   if (!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
   const textarea = document.getElementById(targetId);
@@ -587,7 +586,7 @@ function handleFile(e, targetId, slot) {
   if (ext === 'txt' || ext === 'md') {
     if (slot) fileData[slot] = null;
     const reader = new FileReader();
-    reader.onload = ev => { textarea.value = ev.target.result; };
+    reader.onload = ev => { textarea.value = ev.target.result; textarea.placeholder = '...ou collez le transcript ici'; };
     reader.readAsText(file);
   } else if (ext === 'mp3' || ext === 'pdf') {
     if (file.size > 4 * 1024 * 1024) {
@@ -607,6 +606,29 @@ function handleFile(e, targetId, slot) {
     alert('Format non supporté. Utilisez .txt, .md, .pdf ou .mp3');
   }
 }
+
+function handleFile(e, targetId, slot) {
+  processFile(e.target.files[0], targetId, slot);
+}
+
+function setupDropZone(zoneId, targetId, slot) {
+  const zone = document.getElementById(zoneId);
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = '#6366f1'; zone.style.background = '#f5f3ff'; });
+  zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; zone.style.background = ''; });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.style.borderColor = '';
+    zone.style.background = '';
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file, targetId, slot);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupDropZone('dropzone-r1', 'paste-r1', 'r1');
+  setupDropZone('dropzone-prosp', 'paste-prosp', 'prosp');
+});
 
 /* ---- SCORING R1/R2 ---- */
 async function scoreR1() {
@@ -632,7 +654,9 @@ async function scoreR1() {
     let messages;
     if (hasFile) {
       messages = [{ role: 'user', content: [
-        { type: 'document', source: { type: 'base64', media_type: fileData.r1.mediaType, data: fileData.r1.base64 } },
+        fileData.r1.mediaType === 'audio/mpeg'
+          ? { type: 'audio', source: { type: 'base64', media_type: 'audio/mpeg', data: fileData.r1.base64 } }
+          : { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: fileData.r1.base64 } },
         { type: 'text', text: promptText }
       ]}];
     } else {
@@ -679,7 +703,9 @@ Critères :
     let messages;
     if (hasFile) {
       messages = [{ role: 'user', content: [
-        { type: 'document', source: { type: 'base64', media_type: fileData.prosp.mediaType, data: fileData.prosp.base64 } },
+        fileData.prosp.mediaType === 'audio/mpeg'
+          ? { type: 'audio', source: { type: 'base64', media_type: 'audio/mpeg', data: fileData.prosp.base64 } }
+          : { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: fileData.prosp.base64 } },
         { type: 'text', text: promptText }
       ]}];
     } else {
