@@ -238,9 +238,9 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
     </div>
     <div class="scrollable" id="scoring-r1-body">
       <div class="drop-zone" onclick="document.getElementById('file-r1').click()">
-        <strong>Importer un transcript</strong>
-        <p>Fichier .txt ou .md</p>
-        <input type="file" id="file-r1" accept=".txt,.md" style="display:none" onchange="handleFile(event,'paste-r1')">
+        <strong>Importer un transcript ou un enregistrement</strong>
+        <p>Fichier .txt, .md, .pdf ou .mp3</p>
+        <input type="file" id="file-r1" accept=".txt,.md,.pdf,.mp3,audio/mpeg,application/pdf" style="display:none" onchange="handleFile(event,'paste-r1','r1')">
       </div>
       <textarea class="paste-area" id="paste-r1" placeholder="...ou collez le transcript ici"></textarea>
       <button class="action-btn" onclick="scoreR1()">Analyser et scorer ce call →</button>
@@ -263,9 +263,9 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
         <div style="font-size:12px;color:#888;line-height:1.7;">Accroche & hook (3) · Pitch AIDA (3) · Qualification rapide (3) · Gestion du barrage/refus (4) · Obtention du RDV (4) · Énergie & rythme (3)</div>
       </div>
       <div class="drop-zone" onclick="document.getElementById('file-prosp').click()">
-        <strong>Importer un transcript de call de prospection</strong>
-        <p>Fichier .txt ou .md</p>
-        <input type="file" id="file-prosp" accept=".txt,.md" style="display:none" onchange="handleFile(event,'paste-prosp')">
+        <strong>Importer un transcript ou un enregistrement de prospection</strong>
+        <p>Fichier .txt, .md, .pdf ou .mp3</p>
+        <input type="file" id="file-prosp" accept=".txt,.md,.pdf,.mp3,audio/mpeg,application/pdf" style="display:none" onchange="handleFile(event,'paste-prosp','prosp')">
       </div>
       <textarea class="paste-area" id="paste-prosp" placeholder="...ou collez le transcript du call de prospection ici"></textarea>
       <button class="action-btn" onclick="scoreProsp()">Analyser ce call de prospection →</button>
@@ -519,14 +519,14 @@ function switchTab(tab) {
   if (tab === 'history') renderHistory();
 }
 
-async function callAPI(messages, system) {
+async function callAPI(messages, system, maxTokens) {
   const r = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: system || SYSTEM_COACH, messages })
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 1500, system: system || SYSTEM_COACH, messages })
   });
   const d = await r.json();
-  if (d.error) throw new Error(d.error.message);
+  if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
   return d.content?.[0]?.text || '';
 }
 
@@ -576,18 +576,43 @@ document.getElementById('chat-input').addEventListener('keydown', e => {
 });
 
 /* ---- FILE HANDLER ---- */
-function handleFile(e, targetId) {
+const fileData = { r1: null, prosp: null }; // stocke {base64, mediaType, name} pour audio/pdf
+
+function handleFile(e, targetId, slot) {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => { document.getElementById(targetId).value = ev.target.result; };
-  reader.readAsText(file);
+  const ext = file.name.split('.').pop().toLowerCase();
+  const textarea = document.getElementById(targetId);
+
+  if (ext === 'txt' || ext === 'md') {
+    if (slot) fileData[slot] = null;
+    const reader = new FileReader();
+    reader.onload = ev => { textarea.value = ev.target.result; };
+    reader.readAsText(file);
+  } else if (ext === 'mp3' || ext === 'pdf') {
+    if (file.size > 4 * 1024 * 1024) {
+      alert('Fichier trop volumineux (max 4 Mo). Compressez le MP3 ou découpez-le en plusieurs parties.');
+      return;
+    }
+    const mediaType = ext === 'mp3' ? 'audio/mpeg' : 'application/pdf';
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const base64 = ev.target.result.split(',')[1];
+      if (slot) fileData[slot] = { base64, mediaType, name: file.name };
+      textarea.value = '';
+      textarea.placeholder = `Fichier chargé : ${file.name} — sera envoyé directement à Claude`;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    alert('Format non supporté. Utilisez .txt, .md, .pdf ou .mp3');
+  }
 }
 
 /* ---- SCORING R1/R2 ---- */
 async function scoreR1() {
   const text = document.getElementById('paste-r1').value.trim();
-  if (text.length < 50) { alert('Transcript trop court.'); return; }
+  const hasFile = fileData.r1 !== null;
+  if (!hasFile && text.length < 50) { alert('Transcript trop court ou aucun fichier importé.'); return; }
   const commercial = document.getElementById('score-r1-user').value;
   const type = document.getElementById('score-r1-type').value;
   const body = document.getElementById('scoring-r1-body');
@@ -601,10 +626,19 @@ async function scoreR1() {
     ? 'preparation(2), discovery(4 — SPIN quality), meddpicc(3), objections(3), pitch(2), closing(3 — NSC posée), followup(3)'
     : 'pain_revalidation(2 — douleur reconfirmée en ouverture), solution_fit(4 — solution collée aux pains), meddpicc(3 — EB présent, Champion actif), objections(3), demo_propale(2 — propale présentée live), closing(4 — deal avancé, next step signée), followup(2)';
 
-  const prompt = `Transcript d'un call ${type} de ${commercial} chez Flying For You.\n\n${text.slice(0,7000)}\n\nScore ce call ${type}. JSON strict uniquement, zéro texte autour :\n{"score_total":X,"type":"${type}","criteres":{${Object.keys(maxes).map(k=>`"${k}":X`).join(',')}},"points_forts":"...","axes":"...","recommandation":"...","maturite":"Exploration|Validation|Decision|Contractualisation"}\nCritères : ${criteresDesc}`;
+  const promptText = `Transcript d'un call ${type} de ${commercial} chez Flying For You.\n\n${hasFile ? '' : text.slice(0,7000)}\n\nScore ce call ${type}. JSON strict uniquement, zéro texte autour :\n{"score_total":X,"type":"${type}","criteres":{${Object.keys(maxes).map(k=>`"${k}":X`).join(',')}},"points_forts":"...","axes":"...","recommandation":"...","maturite":"Exploration|Validation|Decision|Contractualisation"}\nCritères : ${criteresDesc}`;
 
   try {
-    const raw = await callAPI([{role:'user',content:prompt}], SYSTEM_SCORE_R1);
+    let messages;
+    if (hasFile) {
+      messages = [{ role: 'user', content: [
+        { type: 'document', source: { type: 'base64', media_type: fileData.r1.mediaType, data: fileData.r1.base64 } },
+        { type: 'text', text: promptText }
+      ]}];
+    } else {
+      messages = [{ role: 'user', content: promptText }];
+    }
+    const raw = await callAPI(messages, SYSTEM_SCORE_R1, hasFile ? 2500 : 1500);
     let parsed;
     try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
@@ -618,16 +652,17 @@ async function scoreR1() {
 /* ---- SCORING PROSPECTION ---- */
 async function scoreProsp() {
   const text = document.getElementById('paste-prosp').value.trim();
-  if (text.length < 30) { alert('Transcript trop court.'); return; }
+  const hasFile = fileData.prosp !== null;
+  if (!hasFile && text.length < 30) { alert('Transcript trop court ou aucun fichier importé.'); return; }
   const commercial = document.getElementById('score-prosp-user').value;
   const body = document.getElementById('scoring-prosp-body');
   body.innerHTML = `<div style="text-align:center;padding:60px;color:#888;font-size:13px;">Analyse du call de prospection...</div>`;
 
   const maxes = {accroche:3,pitch_aida:3,qualification:3,barrage:4,obtention_rdv:4,energie:3};
 
-  const prompt = `Transcript d'un call de PROSPECTION TÉLÉPHONIQUE de ${commercial} chez Flying For You (agence street-marketing B2B).
+  const promptText = `Transcript d'un call de PROSPECTION TÉLÉPHONIQUE de ${commercial} chez Flying For You (agence street-marketing B2B).
 
-${text.slice(0,5000)}
+${hasFile ? '' : text.slice(0,5000)}
 
 Score ce call de prospection avec la grille prospection FFY /20. JSON strict uniquement :
 {"score_total":X,"type":"Prospection","criteres":{"accroche":X,"pitch_aida":X,"qualification":X,"barrage":X,"obtention_rdv":X,"energie":X},"points_forts":"...","axes":"...","reformulations":"3 exemples concrets de reformulations pour les moments clés du call","recommandation":"..."}
@@ -641,7 +676,16 @@ Critères :
 - energie (3) : rythme, confiance, sourire dans la voix, pas de mendicité`;
 
   try {
-    const raw = await callAPI([{role:'user',content:prompt}], SYSTEM_SCORE_PROSP);
+    let messages;
+    if (hasFile) {
+      messages = [{ role: 'user', content: [
+        { type: 'document', source: { type: 'base64', media_type: fileData.prosp.mediaType, data: fileData.prosp.base64 } },
+        { type: 'text', text: promptText }
+      ]}];
+    } else {
+      messages = [{ role: 'user', content: promptText }];
+    }
+    const raw = await callAPI(messages, SYSTEM_SCORE_PROSP, hasFile ? 2500 : 1500);
     let parsed;
     try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
