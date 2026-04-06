@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cheikho — Coach Commercial FFY</title>
+<title>FFY Coach Commercial v3</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; }
@@ -184,7 +184,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 <body>
 <div id="app">
   <header>
-    <div class="logo">Cheik<span>ho</span></div>
+    <div class="logo">FFY <span>Coach</span></div>
     <div class="version-badge">v3.0</div>
     <div style="font-size:11px;color:#aaa;margin-left:auto;">Flying For You · Propulsé par Claude</div>
   </header>
@@ -328,11 +328,17 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
     </div>
   </div>
 
-  <!-- ===== SIMULATEUR BAL ===== -->
+  <!-- ===== SIMULATEUR ===== -->
   <div class="panel" id="panel-simulateur">
-    <div class="sim-layout">
 
-      <!-- COL GAUCHE -->
+    <!-- TOGGLE BAL / HAND -->
+    <div style="display:flex;align-items:center;gap:0;padding:10px 16px;border-bottom:1px solid #e0ddd6;background:#fff;flex-shrink:0;">
+      <button id="sim-toggle-bal" onclick="simSwitchMode('bal')" style="flex:1;padding:8px 0;font-size:12px;font-weight:500;border:1px solid #1a1a1a;border-radius:8px 0 0 8px;background:#1a1a1a;color:#fff;cursor:pointer;">📦 Flying Box — BAL</button>
+      <button id="sim-toggle-hand" onclick="simSwitchMode('hand')" style="flex:1;padding:8px 0;font-size:12px;font-weight:500;border:1px solid #d0cdc6;border-left:none;border-radius:0 8px 8px 0;background:#fff;color:#888;cursor:pointer;">✋ Flying Hand</button>
+    </div>
+
+    <!-- SIMULATEUR BAL -->
+    <div id="sim-panel-bal" class="sim-layout">
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="sim-card">
           <div class="sim-card-title">📦 Opération</div>
@@ -397,8 +403,6 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
           </div>
         </div>
       </div>
-
-      <!-- COL DROITE -->
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="sim-card">
           <div class="sim-card-title">⚡ Cadence & scénarios</div>
@@ -423,7 +427,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
             </div>
           </div>
         </div>
-        <div class="sim-card" style="grid-column:1/-1;">
+        <div class="sim-card">
           <button class="sim-params-btn" onclick="simToggleParams()">⚙️ Paramètres cadences</button>
           <div id="sim-params-panel" style="display:none;">
             <div class="sim-params-grid" id="sim-params-grid"></div>
@@ -433,8 +437,99 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
           </div>
         </div>
       </div>
-
     </div>
+
+    <!-- SIMULATEUR HAND -->
+    <div id="sim-panel-hand" class="sim-layout" style="display:none;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="sim-card">
+          <div class="sim-card-title">✋ Opération</div>
+          <div class="sim-field">
+            <label>Nombre d'heures total de distribution</label>
+            <input type="number" id="hand-heures" placeholder="ex : 36" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <label>Nombre de distributeurs</label>
+            <input type="number" id="hand-nb-distrib" value="2" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <label>Zone géographique</label>
+            <select id="hand-zone" onchange="handCompute()">
+              <option value="paris">Paris intra-muros — 45€/h</option>
+              <option value="idf">IDF & Hors IDF — 50€/h</option>
+              <option value="rural">Villes &lt;5 000 hab. — 55€/h</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Créneau horaire</label>
+            <select id="hand-horaire" onchange="handCompute()">
+              <option value="0">Journée (7h–21h) — standard</option>
+              <option value="5">Soirée (21h–00h) — +5€/h</option>
+              <option value="10">Nuit (00h–2h) — +10€/h</option>
+              <option value="15">Nuit profonde (3h–7h) — +15€/h</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Équipement (par distributeur)</label>
+            <select id="hand-equip" onchange="handCompute()">
+              <option value="0">Aucun</option>
+              <option value="190">Flag Bag Paris — 190€/unité</option>
+              <option value="220">Flag Bag Région — 220€/unité</option>
+              <option value="490">Flying Balloon — 490€/unité</option>
+              <option value="150">Kit habillage — 150€/unité</option>
+            </select>
+          </div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-title">👷 Main d'œuvre</div>
+          <div class="sim-field">
+            <label>Taux horaire distributeur (€/h)</label>
+            <input type="number" id="hand-taux" value="13" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <div class="sim-toggle-row">
+              <label class="sim-toggle">
+                <input type="checkbox" id="hand-regisseur" onchange="handToggleReg()">
+                <span class="sim-toggle-slider"></span>
+              </label>
+              <span class="sim-toggle-label">Régisseur nécessaire (hors IDF)</span>
+            </div>
+            <div class="sim-indent" id="hand-reg-block">
+              <div class="sim-field" style="margin-top:10px;">
+                <label>Nombre de jours de régisseur</label>
+                <input type="number" id="hand-nb-reg" value="1" min="1" oninput="handCompute()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="sim-card">
+          <div class="sim-card-title">⚡ Détail de la mission</div>
+          <div id="hand-results"><div class="sim-empty">Renseignez les paramètres pour voir le coût.</div></div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-title">💰 Prix &amp; marge</div>
+          <div class="sim-field">
+            <label>Prix de vente envisagé (€ HT)</label>
+            <input type="number" id="hand-prix" placeholder="ex : 3 200" min="0" oninput="handComputeMarge()">
+          </div>
+          <div id="hand-marge" class="sim-marge-block empty">
+            <div class="sim-marge-top">
+              <div class="sim-marge-pct" id="hand-marge-pct">— %</div>
+              <div class="sim-marge-badge" id="hand-marge-badge">En attente</div>
+            </div>
+            <div class="sim-marge-details" id="hand-marge-details" style="display:none;">
+              <div class="sim-detail-item"><div class="dl">Coût production</div><div class="dv" id="hand-md-cout">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Marge brute</div><div class="dv" id="hand-md-marge">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Prix de vente</div><div class="dv" id="hand-md-prix">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Durée mission</div><div class="dv" id="hand-md-duree">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ===== HISTORIQUE ===== -->
@@ -454,55 +549,169 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 
 <script>
 
-const SYSTEM_BASE = `Tu es l'agent commercial de Flying For You (FFY), agence de street-marketing B2B basée à Paris (Asnières-sur-Seine).
+const API_KEY = 'VOTRE_CLE_API_ICI';
 
-SERVICES FFY :
-- Flying Box : distribution BAL géolocalisée (60% CA) — 100€/1000 boîtes zone Paris, 120€ zones premium. Frais d'agence 12-50% selon délai.
-- Flying Hand : distribution main-à-main (30% CA) — 45€/h Paris, 50€/h IDF, frais agence 15%. Minimum 36h/campagne.
-- Flying Event : sampling / guerrilla marketing
-- Flying Store : dépôt points de vente — 20-50€/point selon zone
-- Flying Bike : vélos publicitaires
-- Offre clé-en-main : création graphique, impression (HelloPrint ×1.3 à ×2 selon montant), distribution
+const SYSTEM_BASE = `Tu es l'agent commercial de Flying For You (FFY), agence de street-marketing B2B basée à Paris (Asnières-sur-Seine). Tu assistes Cheikh Kane, dirigeant, et son équipe. Tu es franc, direct, jamais complaisant.
+
+---
+CONTEXTE FFY
+Structure : ~15 personnes. Commerciaux : Cheikh Kane (dirigeant/HoS), Marcel Ambomo (CDI nov 2025), Simon Cognet (sept 2025), Ivan Messias (digital).
+CRM : HubSpot. Minimum deal : 2 000€ HT. Panier moyen : ~3 500€ HT.
+Cycle de vente : Inbound ~1 semaine / Outbound ~1 mois.
+Formation : Emilie Demas / RevOp — Qualification & Discovery (Jan 2026) + Closing & Négociation (Mars 2026).
+
+---
+SERVICES FFY
+Flying Box : Distribution BAL géolocalisée — ~60% CA
+Flying Hand : Distribution main-à-main — ~30% CA
+Flying Store : Dépôt en points de vente — <1% CA
+Flying Event : Guerrilla / sampling — <1% CA
+Flying Bike : Vélos publicitaires — <1% CA
+Marketing Digital : Google Ads, SEO, design — ~10% CA
+Offre clé-en-main : création graphique, impression, distribution.
 
 DIFFÉRENCIANTS :
-- App mobile temps réel (tracé GPS distributeurs, remontée anomalies)
-- Espace client transparent (photos, tracés, rapport fin de mission)
-- Chef de projet dédié, distribution solo (pas couplée), passants mystères
+- App mobile temps réel (tracé GPS, remontée anomalies)
+- Espace client transparent (tracés, photos, rapport fin de mission)
+- Chef de projet dédié, distribution solo, passants mystères
 - Data geomarketing INSEE pour ciblage précis
 - Mini-étude de notoriété incluse
+- Positionnement prix premium assumé
 
-MÉTHODES COMMERCIALES :
-- SPIN : Situation → Problem → Implication → Need-payoff
-- MEDDPICC : Metrics, Economic Buyer, Decision Criteria, Decision Process, Paper Process, Implicate Pain (D.U.R.), Champion, Competition
-- D.U.R. : Pain Douloureux, Urgent, Reconnu
-- NSC : Next Step Calée — toujours une date posée
-- Gap Selling : écart entre situation actuelle (pain) et idéale (gain)
-- Règle R1 : 80% temps parole client, pas de pitch avant le pain
-- Closing : propale toujours en live, jamais par mail seul
+---
+PRICING FFY COMPLET
 
-COMMERCIAUX : Cheikh Kane (dirigeant), Marcel Ambomo (CDI nov 2025), Simon Cognet (sept 2025)
-PANIER MOYEN : 3 500€ HT / MINIMUM : 2 000€ HT`;
+Flying Box BAL Secteur :
+Zone 1 Paris intra : 100€/1000 boîtes / Zone 2 premium (6e,7e,8e,16e,17e) : 120€/1000 boîtes
+Frais d'agence : +3 sem=12% / 2-3 sem=14% / 1-2 sem=27% / <1 sem=45%
+Abattement Stop Pub : 30% national / 40% Paris 16e-8e
+Villes OUI-PUB (distribution impossible) : Dunkerque, Sartrouville, Grenoble, Bordeaux, Nancy, Antibes-Grasse, Corse
+
+Flying Box BAL Énergies Renouvelables (forfaitaire) :
+0-500 log=1800€ / 501-750=2350€ / 751-1000=2900€ / 1001-1250=3450€ / 1251-1500=4000€
+1501-1875=4550€ / 1876-2250=5100€ / 2251-2750=5650€ / 2751-3250=6200€ / 3251-3750=6750€
+3751-4250=7250€ / 4250-5000=8000€ / +5000=devis
+Majorations : périmètre +0-50% / distance Paris +0-30% / format +0-12%
+
+Flying Hand : Paris 45€/h+15%FA / IDF&Province 50€/h+15%FA / min 36h
+Régisseur hors IDF : 280€ HT/jour (frais VHR uniquement)
+Chef d'équipe : 17€/h IDF (zones U1/U2/S1) / 20€/h hors IDF (zones S2/S3/R1/R2) — 1 par campagne, même durée que les distributeurs
+Horaires décalés : +5€/h (21h-00h) / +10€/h (00h-2h) / +15€/h (3h-7h)
+Options : Flag Bag Paris 190€ / Région 220€ / Flying Balloon 490€ / Kit habillage 150€
+
+Flying Store : Paris 20€/pt / arrond. premium 22€ / petite couronne 24€ / 77-91 et métropoles 27€ / rural 50€
+
+Flying Bike : XL 4m² Paris ~1405€ TTC / XL Métropole ~1445€ / XXL 8m² Paris ~1645€ — min 2-3 jours
+
+Marketing Digital : SEA 2500€ mois 1 / SEO sans rédac 1950€ / SEO avec rédac 2650€ / SMA 1900€ / Gestion RS 3500€
+
+Création visuelle : Logo 750€ / Charte 2000€ / Flyer 650-700€ / Site vitrine ~4575€ / Site e-comm ~5650€
+
+Impression HelloPrint coefficients : <200€ ×2,0 / 200-250 ×1,9 / 250-300 ×1,8 / 300-350 ×1,7 / 350-500 ×1,6 / 500-700 ×1,5 / 700-900 ×1,4 / >900 ×1,3
+
+---
+DONNÉES COMMERCIALES
+
+CA 2025 par commercial : Cheikh 879k€ (85%) / Marcel 91k€ (9%) / Simon 4k€ (<1%) / Ivan 76k€ (7%)
+CA 2026 à date (26 mars) — total 441 716€ : Cheikh 289k€ / Marcel 72k€ / Simon 65k€ / Ivan 12k€
+
+Objectifs 2026 annuels : Cheikh 675k€ / Marcel 308k€ / Simon 374k€ / Ivan 100k€ (8333€/mois fixe)
+Objectifs mensuels Cheikh : Jan 47k / Fév 68k / Mar 62k / Avr 48k / Mai 57k / Jun 81k / Jul 50k / Aoû 32k / Sep 56k / Oct 69k / Nov 50k / Déc 56k
+Objectifs mensuels Marcel : Jan 18k / Fév 27k / Mar 27k / Avr 23k / Mai 27k / Jun 38k / Jul 24k / Aoû 15k / Sep 26k / Oct 33k / Nov 24k / Déc 27k
+Objectifs mensuels Simon : Jan 21k / Fév 33k / Mar 33k / Avr 28k / Mai 33k / Jun 46k / Jul 29k / Aoû 18k / Sep 32k / Oct 40k / Nov 29k / Déc 32k
+
+CA 2025 secteurs : EnR 236k€ (baisse) / Mairies 214k€ (hausse) / Partis politiques 140k€ (hausse) / Agences 126k€ / Grande conso 107k€ / Immo 60k€ / Retail 55k€
+CA 2026 secteurs : Partis politiques 244k€ (dominant — municipales) / Agences 73k€ / Mairies 67k€ / Retail 23k€ / EnR 10k€ (très faible)
+
+Provenance deals 2025 : Repeat 41% / Outbound 16% / Inbound 16% / Keemia 10% / AO 10% / BAO 6%
+Provenance deals 2026 : Outbound 33% / Inbound 23% / Keemia 16% / Repeat 16% / BAO 8% / AO 4%
+
+Top clients 2025 : Assemblée nationale 142k€ / Keemia 118k€ / Barebells 106k€ / Ville de Pessac 84k€ / RWE 81k€
+
+CA 2025 par service :
+Flying Box BAL 713 932€ / Logistique 201 680€ / Impression 61 434€ / Flying Hand 79 097€ / SEA/Digital 47 900€ / Création graphique 10 800€
+
+---
+OBJECTIFS CA ÉQUIPE GLOBALE 2026 (total 1 506 994€ annuel)
+Jan 97 339€ réalisé 183 235€ (188%) / Fév 141 232€ réalisé 149 271€ (106%) / Mar 133 934€ en cours
+Avr 110 996€ / Mai 129 415€ / Jun 179 590€ / Jul 115 238€ / Aoû 75 679€ / Sep 126 921€ / Oct 155 144€ / Nov 113 889€ / Déc 127 617€
+
+---
+PIPELINE HUBSPOT FFY
+Étapes : appointmentscheduled=Transaction ouverte / 1289128980=R1 Fait / 29524916=R2 Fait / 29524917=Devis envoyé / closedwon=Fermé gagné / closedlost=Fermé perdu
+Seuil stagnation : 14 jours sans modification → alerte relance
+Priorités relances : Devis envoyé (argent sur la table) > R1 Fait (momentum fragile) > R2 Fait
+Owner ID Cheikh HubSpot : 34858380
+
+---
+RECOMMANDATIONS REVOP PRIORITAIRES (Audit Jan 2026)
+1. Réduire la dépendance à Cheikh — monter Marcel et Simon en autonomie complète
+2. Définir un ICP général + grille de scoring sectorielle (priorisation des prospects)
+3. Passer de "vendeur de produits" à "vendeur de solutions" — packager l'offre par secteur
+4. Augmenter le panier moyen par cross-sell et combos multi-produits (Box + Hand, Box + Digital)
+5. Industrialiser le repeat business (41% du CA 2025 — peu structuré, grande marge de progression)
+6. Mettre en place KPIs manquants : taux de conversion par étape, temps de closing, panier moyen par sales, % CA Cheikh vs équipe
+
+KPIs actuels manquants : nb deals closés / panier moyen par sales / temps de closing / taux de conversion par étape
+Objectifs AE par trimestre : 2 000 appels / 36 RDVs / 60k€ CA
+Incohérence RevOp : 60k€ ÷ 3 500€ PM = 17 deals → avec 12,5% taux global = 136 RDVs nécessaires. Le problème n'est pas le volume mais le taux de conversion et le panier moyen.
+
+---
+POINTS FORTS FFY (Audit RevOp)
+- Produit solide et différenciant (technologie propriétaire)
+- Satisfaction client élevée, repeat business 41% du CA 2025
+- Plus de 250 marques accompagnées
+- Positionnement prix premium assumé et justifié
+
+---
+DIAGNOSTICS CLÉS (Audit RevOp Jan 2026)
+- 85% du CA généré par Cheikh — dépendance critique
+- Taux de conversion estimé 12,5% (R1→R2: 50%, Opps→Won: 50%)
+- Propositions envoyées par mail au lieu d'être présentées en live
+- Marcel : 8 RDV sur 2362 appels en 2025. Pitch avant pain, gestion objections faible.
+- Simon : CA explosif 2026 (65k€ en 3 mois vs 4k€ en 2025 entier).
+
+---
+MÉTHODES COMMERCIALES FFY
+SPIN : Situation → Problem → Implication → Need-payoff. Règle : 80% temps parole client en R1, jamais pitcher avant le pain.
+MEDDPICC : Metrics / Economic Buyer / Decision Criteria / Decision Process / Paper Process / Implicate Pain (D.U.R.) / Champion / Competition
+D.U.R. : Pain Douloureux, Urgent, Reconnu — sinon pas de propale.
+NSC : Next Step Calée — toujours une date posée et un engagement.
+Gap Selling : écart entre situation actuelle (pain) et idéale (gain avec FFY).
+Closing : propale TOUJOURS en live, jamais par mail seul. Pas de compelling event = pas de deal.
+
+---
+QUESTIONS SPIN FFY
+Situation : "Comment communiquez-vous aujourd'hui pour toucher le grand public ?" / "Comment pilotez-vous ces campagnes ?" / "Qu'est-ce qui vous a donné envie d'accepter ce RDV ?"
+Problem : "Qu'est-ce qui est le plus frustrant dans vos campagnes terrain ?" / "Avez-vous des campagnes dont l'impact était difficile à prouver ?" / "Quelles sont les limites de vos prestataires actuels ?"
+Implication : "Quelles conséquences concrètes cela a-t-il pour vous ?" / "Combien de CA pourrait-on espérer en corrigeant cela ?" / "Si la situation reste identique dans 6-12 mois, qu'est-ce que cela freine ?"
+Need-payoff : "Si vous aviez une solution plus mesurable, qu'est-ce que ça changerait ?" / "Qu'est-ce que cela vous permettrait de mieux défendre en interne ?"
+
+---
+BATTLE CARD CONCURRENTS
+Mediapost : infra massive mais pas de tracé GPS temps réel, distribution couplée. Battre avec agilité + transparence tech.
+Keemia : généraliste premium, BAL non prioritaire. FFY = spécialiste street-marketing, plus agile, moins cher.
+BAL IDF / Champar / ISA Plus : volume sans preuve. FFY = volume + preuve (espace client, photos, passants mystères).
+Urban Act / Hold-up Media (main-à-main) : créativité mais cher ou capacité limitée. FFY = qualité ET volume + suivi tech.
+
+---
+OBJECTIONS CONNUES
+"Déjà un prestataire" → complémentarité, pas remplacement
+"Pas écologique" → données INSEE pour produire le bon nombre exact
+"Trop cher" → positionner l'impact : euros campagne face aux euros de CoI
+"Pas de budget" → investissement rentable, format adaptable, minimum 2k€
+"Envoyez un mail" → 5 min avant pour cibler les infos pertinentes`;
 
 const SYSTEM_COACH = SYSTEM_BASE + `\n\nTon rôle : tu es Cheikho, coach commercial direct, franc, jamais complaisant. Réponses courtes et actionnables en français.\n\nTu peux aussi rédiger des mails commerciaux B2B : si on te colle un mail reçu d'un prospect, détecte automatiquement son type (objection, demande de prix, refus, intérêt tiède, relance...) et propose une réponse adaptée. Corps du mail uniquement, ton adapté au secteur détecté (formel pour institutionnel/mairie, direct pour PME/retail), méthode SPIN intégrée, next step claire à la fin, 150-200 mots max.`;
 
 const SYSTEM_MAIL = SYSTEM_BASE + `\n\nTu es Cheikho, expert en mails commerciaux B2B pour Flying For You.
+RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté au secteur. SPIN intégré. NSC concrète. 150-200 mots max. Commence par "Suite à notre échange..." ou similaire.`;
 
-RÈGLES RÉDACTION MAIL :
-- Corps du mail uniquement (pas d'objet, pas de signature)
-- Détecte automatiquement le secteur du prospect dans le transcript et adapte le ton : formel pour institutionnel/mairie/politique, direct et chaleureux pour PME/retail/franchise/FMCG
-- Méthode SPIN intégrée : rappelle brièvement le pain identifié, l'implication si rien ne change, next step claire
-- Jamais de langue de bois. Toujours une action concrète à la fin (NSC avec date ou proposition de date)
-- 150-200 mots maximum
-- En français
-- Commence directement par le corps (ex: "Suite à notre échange...")
-- Personnalise avec les éléments concrets du call/mail (noms, chiffres, contexte)`;
+const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu es un coach commercial senior. Tu analyses les calls R1/R2 FFY avec un niveau de détail élevé. Tu cites des extraits exacts du transcript. Tu es franc, jamais complaisant, et fournis des reformulations concrètes actionnables.`;
 
+const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospection téléphonique B2B. Tu analyses les calls de prospection FFY avec précision, en identifiant chaque moment clé et en proposant des reformulations concrètes immédiatement réutilisables.`;
 
-const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu scores des calls R1/R2 selon la grille FFY /20.`;
-
-const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu scores des calls de prospection téléphonique selon la grille prospection FFY /20.`;
-
-const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté business. Jamais de langue de bois.`;
+const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté résultat. Jamais de langue de bois.`;
 
 const callHistory = [];
 const scoreHistory = [];
@@ -520,9 +729,9 @@ function switchTab(tab) {
 }
 
 async function callAPI(messages, system, maxTokens) {
-  const r = await fetch('/api/chat', {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 1500, system: system || SYSTEM_COACH, messages })
   });
   const d = await r.json();
@@ -638,38 +847,109 @@ async function scoreR1() {
   const commercial = document.getElementById('score-r1-user').value;
   const type = document.getElementById('score-r1-type').value;
   const body = document.getElementById('scoring-r1-body');
-  body.innerHTML = `<div style="text-align:center;padding:60px;color:#888;font-size:13px;">Analyse du ${type} en cours...</div>`;
 
   const maxes = type === 'R1'
     ? {preparation:2,discovery:4,meddpicc:3,objections:3,pitch:2,closing:3,followup:3}
     : {pain_revalidation:2,solution_fit:4,meddpicc:3,objections:3,demo_propale:2,closing:4,followup:2};
 
-  const criteresDesc = type === 'R1'
-    ? 'preparation(2), discovery(4 — SPIN quality), meddpicc(3), objections(3), pitch(2), closing(3 — NSC posée), followup(3)'
-    : 'pain_revalidation(2 — douleur reconfirmée en ouverture), solution_fit(4 — solution collée aux pains), meddpicc(3 — EB présent, Champion actif), objections(3), demo_propale(2 — propale présentée live), closing(4 — deal avancé, next step signée), followup(2)';
+  // APPEL 1 — notes uniquement
+  body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Étape 1/2 — Calcul des notes...</div>`;
 
-  const promptText = `Transcript d'un call ${type} de ${commercial} chez Flying For You.\n\n${hasFile ? '' : text.slice(0,7000)}\n\nScore ce call ${type}. JSON strict uniquement, zéro texte autour :\n{"score_total":X,"type":"${type}","criteres":{${Object.keys(maxes).map(k=>`"${k}":X`).join(',')}},"points_forts":"...","axes":"...","recommandation":"...","maturite":"Exploration|Validation|Decision|Contractualisation"}\nCritères : ${criteresDesc}`;
+  const notesPrompt = type === 'R1'
+    ? `Transcript d'un call R1 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,7000)}\n\nJSON strict uniquement :\n{"score_total":X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X,"discovery":X,"meddpicc":X,"objections":X,"pitch":X,"closing":X,"followup":X}}\nMax : preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3.`
+    : `Transcript d'un call R2 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,7000)}\n\nJSON strict uniquement :\n{"score_total":X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X,"solution_fit":X,"meddpicc":X,"objections":X,"demo_propale":X,"closing":X,"followup":X}}\nMax : pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2.`;
+
+  let parsed;
+  try {
+    let msg1;
+    if (hasFile) {
+      msg1 = [{ role:'user', content:[
+        fileData.r1.mediaType==='audio/mpeg'
+          ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
+          : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
+        {type:'text',text:notesPrompt}
+      ]}];
+    } else { msg1 = [{role:'user',content:notesPrompt}]; }
+    const raw1 = await callAPI(msg1, SYSTEM_SCORE_R1, 500);
+    try { parsed = JSON.parse(raw1.replace(/```json|```/g,'').trim()); }
+    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw1)}</pre>`; return; }
+  } catch(e) {
+    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur étape 1 : ${escHtml(e.message)}</div>`; return;
+  }
+
+  // Affichage intermédiaire des notes
+  renderScoreShell(body, parsed, commercial, maxes, type);
+
+  // APPEL 2 — débrief narratif complet
+  const debriefEl = document.getElementById('debrief-zone');
+  if (debriefEl) debriefEl.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Étape 2/2 — Rédaction du débrief détaillé...</div>`;
+
+  const spinSection = type === 'R1' ? `
+ANALYSE SPIN OBLIGATOIRE — pour chaque étape :
+- Questions Situation posées (cite des extraits exacts) : pertinentes ? suffisantes ?
+- Questions Problem : lesquelles ont été posées ? Quelles douleurs révélées ? Lesquelles manquées ?
+- Questions Implication : posées ? Si non, quelles questions auraient dû être posées avec les pains identifiés ?
+- Questions Need-payoff : le prospect a-t-il verbalisé la valeur ? Sinon, comment l'y amener ?
+- Ratio temps de parole estimé (client vs commercial)` : `
+ANALYSE R2 OBLIGATOIRE :
+- La douleur a-t-elle été revalidée en ouverture ?
+- La solution présentée est-elle collée aux pains du R1 ?
+- L'Economic Buyer était-il présent ? Le Champion a-t-il joué son rôle ?
+- La propale a-t-elle été présentée en live ou envoyée par mail ?`;
+
+  const debriefPrompt = `Tu es directeur commercial senior chez FFY. Tu viens d'écouter ce call ${type} de ${commercial}.
+
+Transcript :
+${hasFile ? '[fichier audio/PDF joint — base ton analyse sur les notes ci-dessus]' : text.slice(0,7000)}
+
+Notes : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20
+
+Rédige un débrief complet structuré EXACTEMENT ainsi :
+
+NOTE GLOBALE : ${parsed.score_total}/20 — ${commercial} — Stade : ${parsed.maturite}
+
+CONTEXTE DU CALL
+[2-3 phrases : qui est le prospect, quel est l'enjeu, quel type de call]
+
+ANALYSE DÉTAILLÉE PAR CRITÈRE
+[Pour chaque critère noté, 3-4 phrases d'analyse avec citations exactes du transcript. Sois précis sur ce qui s'est passé et pourquoi c'est bien ou problématique.]
+${spinSection}
+
+POINTS FORTS À CONSERVER
+[3 points forts numérotés, chacun avec explication du POURQUOI et comment reproduire]
+
+AXES D'AMÉLIORATION AVEC REFORMULATIONS
+[3 axes majeurs numérotés. Pour chaque :
+- Ce qui s'est passé (citation transcript)
+- Pourquoi c'est un problème
+- ❌ Version réelle
+- ✅ Version améliorée concrète et réutilisable]
+
+STADE RÉEL DU DEAL
+[Évaluation franche avec les signaux qui l'indiquent]
+
+RECOMMANDATION — 3 ACTIONS DANS LES 48H
+[Actions concrètes et datées]
+
+Ton : direct, franc, jamais complaisant. Cite le transcript. Pas de bullet points génériques.`;
 
   try {
-    let messages;
+    let msg2;
     if (hasFile) {
-      messages = [{ role: 'user', content: [
-        fileData.r1.mediaType === 'audio/mpeg'
-          ? { type: 'audio', source: { type: 'base64', media_type: 'audio/mpeg', data: fileData.r1.base64 } }
-          : { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: fileData.r1.base64 } },
-        { type: 'text', text: promptText }
+      msg2 = [{ role:'user', content:[
+        fileData.r1.mediaType==='audio/mpeg'
+          ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
+          : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
+        {type:'text',text:debriefPrompt}
       ]}];
-    } else {
-      messages = [{ role: 'user', content: promptText }];
-    }
-    const raw = await callAPI(messages, SYSTEM_SCORE_R1, hasFile ? 2500 : 1500);
-    let parsed;
-    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
-    renderScoreResult(body, parsed, commercial, maxes, type, 'r1r2', text);
+    } else { msg2 = [{role:'user',content:debriefPrompt}]; }
+    const debrief = await callAPI(msg2, SYSTEM_SCORE_R1, 2500);
+    const dz = document.getElementById('debrief-zone');
+    if (dz) dz.innerHTML = `<div class="card"><div class="card-label">Débrief complet</div><div class="card-text">${escHtml(debrief)}</div></div>`;
     saveToHistory(commercial, parsed, type, 'r1r2', maxes);
   } catch(e) {
-    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
+    const dz = document.getElementById('debrief-zone');
+    if (dz) dz.innerHTML = `<div style="padding:14px;font-size:13px;color:#c00;">Erreur débrief : ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -720,6 +1000,36 @@ Critères :
   } catch(e) {
     body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
   }
+}
+
+/* ---- SCORE SHELL — affichage intermédiaire ---- */
+function renderScoreShell(body, parsed, commercial, maxes, type) {
+  const s = parsed.score_total;
+  const scoreColor = s >= 15 ? '#3B6D11' : s >= 10 ? '#BA7517' : '#c00';
+  const labels = {
+    preparation:'Préparation', discovery:'Découverte SPIN', meddpicc:'MEDDPICC',
+    objections:'Objections', pitch:'Pitch & preuves', closing:'Closing & NSC', followup:'Follow-up',
+    pain_revalidation:'Revalidation pain', solution_fit:'Solution / fit', demo_propale:'Démo & propale',
+    accroche:'Accroche & hook', pitch_aida:'Pitch AIDA', qualification:'Qualification',
+    barrage:'Gestion barrage', obtention_rdv:'Obtention RDV', energie:'Énergie & rythme'
+  };
+  let grid = '';
+  for (const [key, max] of Object.entries(maxes)) {
+    const val = parsed.criteres?.[key] ?? 0;
+    const pct = Math.round((val/max)*100);
+    const barColor = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#c00';
+    grid += `<div class="score-item"><div class="score-item-label">${labels[key]||key}</div><div class="score-item-val">${val}/${max}</div><div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div></div>`;
+  }
+  const badgeType = type === 'Prospection' ? 'prospection' : 'r1r2';
+  body.innerHTML = `<div class="score-result">
+    <div class="score-header">
+      <div class="score-badge" style="color:${scoreColor}">${s}/20</div>
+      <div><div style="font-size:14px;font-weight:600;">${commercial}</div><div style="font-size:12px;color:#888;">${type} · ${parsed.maturite||''}</div></div>
+    </div>
+    <div class="score-grid">${grid}</div>
+    <div id="debrief-zone"></div>
+    <button class="action-btn secondary" style="margin-top:4px;" onclick="resetScore('${badgeType}')">Analyser un autre call</button>
+  </div>`;
 }
 
 /* ---- RENDER SCORE ---- */
@@ -1022,6 +1332,13 @@ function simCompute(){
   const idx=stopPub?0:1;
   const cadence=cadences[zone][support][idx];
   const heuresTotal=nbBAL/cadence;
+
+  // Chef d'équipe — 1 par campagne, même durée que les distributeurs
+  // IDF = zones U1/U2/S1 → 17€/h | Hors IDF = zones S2/S3/R1/R2 → 20€/h
+  const isIDF=['U1','U2','S1'].includes(zone);
+  const tauxChef=isIDF?17:20;
+  const coutChef=heuresTotal*tauxChef;
+
   const coutReg=avecReg?nbJReg*SIM_COUT_REG_JOUR:0;
   let html=`<div class="sim-cadence-badge"><span class="sim-cadence-val">${cadence}</span><span class="sim-cadence-unit">BAL/h · ${SIM_ZONE_LABELS[zone]} · ${SIM_SUP_LABELS[support]}<br>Stop Pub ${stopPub?'OUI':'NON'}</span></div>`;
   html+=`<table class="sim-table"><thead><tr><th>Distrib.</th><th>H/distrib.</th><th>Durée</th><th>Coût MO</th><th></th></tr></thead><tbody>`;
@@ -1036,10 +1353,11 @@ function simCompute(){
   const hPDSel=heuresTotal/simSelectedScenario;
   const jSel=Math.ceil(hPDSel/SIM_HEURES_JOUR);
   const coutMOSel=heuresTotal*tauxH;
-  const coutTotal=coutMOSel+coutReg;
+  const coutTotal=coutMOSel+coutChef+coutReg;
   simLastCout=coutTotal;
   html+=`<div class="sim-cost-lines"><div class="sim-cost-line"><span class="lbl">MO — ${simSelectedScenario} distrib. × ${simFmtH(hPDSel)} × ${tauxH}€/h</span><span class="amt">${simFmt(coutMOSel)}</span></div>`;
-  if(avecReg)html+=`<div class="sim-cost-line"><span class="lbl">Régisseur — ${nbJReg}j × ${SIM_COUT_REG_JOUR}€</span><span class="amt">${simFmt(coutReg)}</span></div>`;
+  html+=`<div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${simFmtH(heuresTotal)} × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
+  if(avecReg)html+=`<div class="sim-cost-line"><span class="lbl">VHR Régisseur — ${nbJReg}j × ${SIM_COUT_REG_JOUR}€</span><span class="amt">${simFmt(coutReg)}</span></div>`;
   html+=`</div><div class="sim-cost-total"><span class="lbl">Coût total de production</span><span class="amt">${simFmt(coutTotal)}</span></div>`;
   el.innerHTML=html;
   simComputeMarge();
@@ -1104,6 +1422,120 @@ function simResetCadences(){
   if(confirm('Réinitialiser toutes les cadences aux valeurs par défaut ?')){
     localStorage.removeItem('ffy_cadences');simRenderParams();simCompute();
   }
+}
+
+/* ===== SWITCH MODE BAL / HAND ===== */
+function simSwitchMode(mode) {
+  const isBAL = mode === 'bal';
+  document.getElementById('sim-panel-bal').style.display = isBAL ? 'grid' : 'none';
+  document.getElementById('sim-panel-hand').style.display = isBAL ? 'none' : 'grid';
+  const btnBAL = document.getElementById('sim-toggle-bal');
+  const btnHand = document.getElementById('sim-toggle-hand');
+  btnBAL.style.background = isBAL ? '#1a1a1a' : '#fff';
+  btnBAL.style.color = isBAL ? '#fff' : '#888';
+  btnBAL.style.borderColor = isBAL ? '#1a1a1a' : '#d0cdc6';
+  btnHand.style.background = isBAL ? '#fff' : '#1a1a1a';
+  btnHand.style.color = isBAL ? '#888' : '#fff';
+  btnHand.style.borderColor = isBAL ? '#d0cdc6' : '#1a1a1a';
+}
+
+/* ===== SIMULATEUR FLYING HAND ===== */
+const HAND_COUT_REG_JOUR = 280;
+let handLastCout = null;
+
+function handToggleReg() {
+  const on = document.getElementById('hand-regisseur').checked;
+  document.getElementById('hand-reg-block').classList.toggle('visible', on);
+  handCompute();
+}
+
+function handCompute() {
+  const heures = parseFloat(document.getElementById('hand-heures').value) || 0;
+  const nbDistrib = parseInt(document.getElementById('hand-nb-distrib').value) || 1;
+  const zone = document.getElementById('hand-zone').value;
+  const majHoraire = parseFloat(document.getElementById('hand-horaire').value) || 0;
+  const equipPrix = parseFloat(document.getElementById('hand-equip').value) || 0;
+  const tauxH = parseFloat(document.getElementById('hand-taux').value) || 13;
+  const avecReg = document.getElementById('hand-regisseur').checked;
+  const nbJReg = parseInt(document.getElementById('hand-nb-reg').value) || 1;
+  const el = document.getElementById('hand-results');
+
+  if (!heures || !zone) {
+    el.innerHTML = '<div class="sim-empty">Renseignez les paramètres pour voir le coût.</div>';
+    handLastCout = null; handComputeMarge(); return;
+  }
+
+  // Tarifs vente client selon zone
+  const tauxVente = { paris: 45, idf: 50, rural: 55 }[zone] || 50;
+  const tauxVenteReel = tauxVente + majHoraire;
+  const zoneLabel = { paris: 'Paris', idf: 'IDF / Hors IDF', rural: '<5 000 hab.' }[zone];
+
+  // Coût interne MO distributeurs
+  const coutMO = heures * nbDistrib * tauxH;
+
+  // Chef d'équipe — 1 par campagne, même durée totale (heures)
+  // IDF = Paris → 17€/h | Hors IDF = rural → 20€/h
+  const isIDF = zone === 'paris' || zone === 'idf';
+  const tauxChef = isIDF ? 17 : 20;
+  const coutChef = heures * tauxChef;
+
+  // Équipement
+  const coutEquip = equipPrix > 0 ? equipPrix * nbDistrib : 0;
+  const equipLabel = document.getElementById('hand-equip').options[document.getElementById('hand-equip').selectedIndex].text;
+
+  // Régisseur VHR
+  const coutReg = avecReg ? nbJReg * HAND_COUT_REG_JOUR : 0;
+
+  // Durée en jours (7h/jour de terrain)
+  const joursTotal = Math.ceil(heures / SIM_HEURES_JOUR);
+  const hParDistrib = heures / nbDistrib;
+
+  const coutTotal = coutMO + coutChef + coutEquip + coutReg;
+  handLastCout = coutTotal;
+
+  let html = `<div class="sim-cadence-badge">
+    <span class="sim-cadence-val">${heures}h</span>
+    <span class="sim-cadence-unit">${nbDistrib} distributeur${nbDistrib>1?'s':''} · ${zoneLabel}<br>${simFmtH(hParDistrib)}/distributeur · ${joursTotal}j de terrain</span>
+  </div>`;
+
+  html += `<div class="sim-cost-lines">
+    <div class="sim-cost-line"><span class="lbl">MO — ${nbDistrib} distrib. × ${heures}h × ${tauxH}€/h</span><span class="amt">${simFmt(coutMO)}</span></div>
+    <div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${heures}h × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
+  if (coutEquip > 0) html += `<div class="sim-cost-line"><span class="lbl">${equipLabel.split('—')[0].trim()} × ${nbDistrib}</span><span class="amt">${simFmt(coutEquip)}</span></div>`;
+  if (avecReg) html += `<div class="sim-cost-line"><span class="lbl">VHR Régisseur — ${nbJReg}j × ${HAND_COUT_REG_JOUR}€</span><span class="amt">${simFmt(coutReg)}</span></div>`;
+  html += `</div><div class="sim-cost-total"><span class="lbl">Coût total de production</span><span class="amt">${simFmt(coutTotal)}</span></div>`;
+
+  el.innerHTML = html;
+  handComputeMarge();
+}
+
+function handComputeMarge() {
+  const prix = parseFloat(document.getElementById('hand-prix').value) || 0;
+  const cout = handLastCout;
+  const el = document.getElementById('hand-marge');
+  const elPct = document.getElementById('hand-marge-pct');
+  const elBadge = document.getElementById('hand-marge-badge');
+  const elDet = document.getElementById('hand-marge-details');
+  if (!prix || !cout) {
+    el.className = 'sim-marge-block empty'; elPct.textContent = '— %'; elBadge.textContent = 'En attente'; elDet.style.display = 'none'; return;
+  }
+  const margeEur = prix - cout;
+  const margePct = (margeEur / prix) * 100;
+  let cls, label;
+  if (margePct >= 70) { cls = 'good'; label = '🟢 Bonne marge'; }
+  else if (margePct >= 40) { cls = 'medium'; label = '🟡 Marge moyenne'; }
+  else { cls = 'bad'; label = '🔴 Marge insuffisante'; }
+  el.className = `sim-marge-block ${cls}`;
+  elPct.textContent = `${margePct.toFixed(1)}%`;
+  elBadge.textContent = label;
+  const heures = parseFloat(document.getElementById('hand-heures').value) || 0;
+  const nbDistrib = parseInt(document.getElementById('hand-nb-distrib').value) || 1;
+  const joursTotal = Math.ceil(heures / SIM_HEURES_JOUR);
+  document.getElementById('hand-md-cout').textContent = simFmt(cout);
+  document.getElementById('hand-md-marge').textContent = simFmt(margeEur);
+  document.getElementById('hand-md-prix').textContent = simFmt(prix);
+  document.getElementById('hand-md-duree').textContent = `${joursTotal}j / ${nbDistrib} distrib.`;
+  elDet.style.display = 'grid';
 }
 </script>
 </body>
