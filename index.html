@@ -549,7 +549,6 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 
 <script>
 
-const API_KEY = 'VOTRE_CLE_API_ICI';
 
 const SYSTEM_BASE = `Tu es l'agent commercial de Flying For You (FFY), agence de street-marketing B2B basée à Paris (Asnières-sur-Seine). Tu assistes Cheikh Kane, dirigeant, et son équipe. Tu es franc, direct, jamais complaisant.
 
@@ -729,9 +728,9 @@ function switchTab(tab) {
 }
 
 async function callAPI(messages, system, maxTokens) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 1500, system: system || SYSTEM_COACH, messages })
   });
   const d = await r.json();
@@ -756,7 +755,7 @@ async function sendChat() {
     typEl.remove();
     appendMsg('agent', reply);
     callHistory.push({ role: 'assistant', content: reply });
-  } catch(e) { typEl.remove(); appendMsg('agent', 'Erreur de connexion. Vérifiez votre clé API.'); }
+  } catch(e) { typEl.remove(); appendMsg('agent', "Erreur de connexion. Vérifiez que l'API backend (/api/chat) fonctionne."); }
   btn.disabled = false;
 }
 
