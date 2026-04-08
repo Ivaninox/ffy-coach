@@ -738,6 +738,34 @@ RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté 
 
 const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu es un coach commercial senior. Tu analyses les calls R1/R2 FFY avec un niveau de détail élevé. Tu cites des extraits exacts du transcript. Tu es franc, jamais complaisant, et fournis des reformulations concrètes actionnables.`;
 
+// Prompt allégé pour l'appel débrief — évite de renvoyer SYSTEM_BASE (~2500 tokens) une 2e fois
+const SYSTEM_SCORE_DEBRIEF = `Tu es un coach commercial senior expert en vente B2B pour Flying For You (FFY), agence de street-marketing basée à Puteaux (92).
+
+MÉTHODES FFY :
+SPIN : Situation → Problem → Implication → Need-payoff. Règle d'or : 80% temps de parole client en R1, jamais pitcher avant le pain.
+MEDDPICC : Metrics / Economic Buyer / Decision Criteria / Decision Process / Paper Process / Implicate Pain (D.U.R.) / Champion / Competition
+D.U.R. : Pain Douloureux, Urgent, Reconnu — sinon pas de propale.
+NSC : Next Step Calée — toujours une date posée avant de raccrocher.
+Gap Selling : creuser l'écart entre situation actuelle (pain) et idéale (gain avec FFY).
+Closing : propale TOUJOURS présentée en live, jamais envoyée par mail seul. Pas de compelling event = pas de deal.
+
+QUESTIONS SPIN FFY :
+Situation : "Comment communiquez-vous aujourd'hui ?" / "Qu'est-ce qui vous a donné envie d'accepter ce RDV ?"
+Problem : "Qu'est-ce qui est le plus frustrant dans vos campagnes terrain ?" / "Quelles sont les limites de vos prestataires actuels ?"
+Implication : "Quelles conséquences concrètes si ça reste comme ça ?" / "Si la situation reste identique dans 6 mois, qu'est-ce que ça freine ?"
+Need-payoff : "Si vous aviez une solution plus mesurable, qu'est-ce que ça changerait ?"
+
+PATTERNS À CHALLENGER (Audit RevOp FFY) :
+- Propale envoyée par mail au lieu d'être présentée en live
+- Pitch avant que le pain soit verbalisé
+- Pas de NSC (prochaine étape dans les mains du prospect, pas du commercial)
+- Pas de compelling event utilisé pour créer l'urgence
+- Marcel : pitch avant pain, gestion objections faible — 8 RDV sur 2362 appels en 2025
+- Simon : progression rapide mais techniques à consolider
+- Cheikh : tendance à ne pas revalider le pain en R2, closes trop souples
+
+Tu es franc, direct, jamais complaisant. Tu cites le transcript. Reformulations réutilisables mot pour mot.`;
+
 const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospection téléphonique B2B. Tu analyses les calls de prospection FFY avec précision, en identifiant chaque moment clé et en proposant des reformulations concrètes immédiatement réutilisables.`;
 
 const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté résultat. Jamais de langue de bois.`;
@@ -1005,7 +1033,7 @@ ANALYSE R2 OBLIGATOIRE :
   const debriefPrompt = `Tu es directeur commercial senior chez FFY. Tu viens d'analyser ce call ${type} de ${commercial}.
 
 Transcript :
-${hasFile ? '[fichier audio/PDF joint — base ton analyse sur les scores ci-dessus]' : text.slice(0,7000)}
+${hasFile ? '[fichier audio/PDF joint — base ton analyse sur les scores ci-dessus]' : text.slice(0,4000)}
 
 Scores : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
 Barème : ${critMaxesText}
@@ -1055,7 +1083,7 @@ RÈGLES : cite toujours le transcript, reformulations utilisables mot pour mot, 
         {type:'text',text:debriefPrompt}
       ]}];
     } else { msg2 = [{role:'user',content:debriefPrompt}]; }
-    const debrief = await callAPI(msg2, SYSTEM_SCORE_R1, 4000);
+    const debrief = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 4000);
     const dz = document.getElementById('debrief-zone');
     if (dz) dz.innerHTML = `<div class="card"><div class="card-label">Débrief complet</div><div class="card-text">${escHtml(debrief)}</div></div>`;
     saveToHistory(commercial, parsed, type, 'r1r2', maxes);
