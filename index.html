@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cheikho — Coach Commercial FFY</title>
+<title>FFY Coach Commercial v3</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a1a; }
@@ -88,6 +88,23 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .h-type { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; }
 .h-type.r1r2 { background: #dbeafe; color: #1d4ed8; }
 .h-type.prospection { background: #fef3c7; color: #92400e; }
+
+/* VHR RESULT */
+.vhr-result { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; margin-top: 10px; }
+.vhr-result-title { font-size: 11px; font-weight: 600; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.vhr-line { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; color: #374151; border-bottom: 1px solid #e0effe; }
+.vhr-line:last-of-type { border-bottom: none; }
+.vhr-total-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #1d4ed8; padding-top: 7px; margin-top: 4px; border-top: 1px solid #bfdbfe; }
+.vhr-loading { font-size: 12px; color: #888; font-style: italic; padding: 8px 0; display: flex; align-items: center; gap: 6px; }
+
+/* HISTORY CARDS */
+.history-item { background: #fff; border: 1px solid #e0ddd6; border-radius: 12px; padding: 12px 14px; }
+.h-criteria { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0ede8; }
+.h-crit-item { flex: 1; min-width: 75px; max-width: 110px; }
+.h-crit-label { font-size: 10px; color: #aaa; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-crit-val { font-size: 11px; font-weight: 700; }
+.h-crit-bar { height: 3px; background: #e5e5e5; border-radius: 2px; margin-top: 2px; }
+.h-crit-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
 
 /* COMPARATIF */
 .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
@@ -180,11 +197,12 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .sim-param-item input:focus { border-color: #1a6ef5; }
 .sim-full { grid-column: 1/-1; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div id="app">
   <header>
-    <div class="logo">Cheik<span>ho</span></div>
+    <div class="logo">FFY <span>Coach</span></div>
     <div class="version-badge">v3.0</div>
     <div style="font-size:11px;color:#aaa;margin-left:auto;">Flying For You · Propulsé par Claude</div>
   </header>
@@ -328,11 +346,17 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
     </div>
   </div>
 
-  <!-- ===== SIMULATEUR BAL ===== -->
+  <!-- ===== SIMULATEUR ===== -->
   <div class="panel" id="panel-simulateur">
-    <div class="sim-layout">
 
-      <!-- COL GAUCHE -->
+    <!-- TOGGLE BAL / HAND -->
+    <div style="display:flex;align-items:center;gap:0;padding:10px 16px;border-bottom:1px solid #e0ddd6;background:#fff;flex-shrink:0;">
+      <button id="sim-toggle-bal" onclick="simSwitchMode('bal')" style="flex:1;padding:8px 0;font-size:12px;font-weight:500;border:1px solid #1a1a1a;border-radius:8px 0 0 8px;background:#1a1a1a;color:#fff;cursor:pointer;">📦 Flying Box — BAL</button>
+      <button id="sim-toggle-hand" onclick="simSwitchMode('hand')" style="flex:1;padding:8px 0;font-size:12px;font-weight:500;border:1px solid #d0cdc6;border-left:none;border-radius:0 8px 8px 0;background:#fff;color:#888;cursor:pointer;">✋ Flying Hand</button>
+    </div>
+
+    <!-- SIMULATEUR BAL -->
+    <div id="sim-panel-bal" class="sim-layout">
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="sim-card">
           <div class="sim-card-title">📦 Opération</div>
@@ -386,23 +410,28 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
                 <input type="checkbox" id="sim-regisseur" onchange="simToggleReg()">
                 <span class="sim-toggle-slider"></span>
               </label>
-              <span class="sim-toggle-label">Régisseur nécessaire (hors IDF)</span>
+              <span class="sim-toggle-label">VHR régisseur (hors IDF)</span>
             </div>
             <div class="sim-indent" id="sim-reg-block">
               <div class="sim-field" style="margin-top:10px;">
-                <label>Nombre de jours de régisseur</label>
-                <input type="number" id="sim-nb-reg" value="1" min="1" oninput="simCompute()">
+                <label>Ville de destination</label>
+                <input type="text" id="sim-vhr-ville" placeholder="ex : Lyon, Bordeaux, Marseille..." style="width:100%;font-size:13px;padding:8px 10px;border-radius:8px;border:1px solid #d0cdc6;font-family:inherit;outline:none;background:#fff;color:#1a1a1a;" oninput="simVhrVilleChange()">
               </div>
+              <div class="sim-field">
+                <label>Jours sur place</label>
+                <input type="number" id="sim-nb-reg" value="1" min="1" oninput="calcVHRIfCached()">
+              </div>
+              <button class="action-btn secondary" style="font-size:12px;padding:6px 14px;margin-top:2px;width:100%;" onclick="calcVHR()">Calculer le VHR →</button>
+              <div id="sim-vhr-result"></div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- COL DROITE -->
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="sim-card">
           <div class="sim-card-title">⚡ Cadence & scénarios</div>
           <div id="sim-results"><div class="sim-empty">Renseignez les paramètres pour voir les scénarios.</div></div>
+          <canvas id="sim-chart-repartition" height="210" style="display:none;margin-top:16px;"></canvas>
         </div>
         <div class="sim-card">
           <div class="sim-card-title">💰 Prix &amp; marge</div>
@@ -422,8 +451,9 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
               <div class="sim-detail-item"><div class="dl">Scénario retenu</div><div class="dv" id="sim-md-scenario">—</div></div>
             </div>
           </div>
+          <canvas id="sim-chart-marge" height="90" style="display:none;margin-top:14px;"></canvas>
         </div>
-        <div class="sim-card" style="grid-column:1/-1;">
+        <div class="sim-card">
           <button class="sim-params-btn" onclick="simToggleParams()">⚙️ Paramètres cadences</button>
           <div id="sim-params-panel" style="display:none;">
             <div class="sim-params-grid" id="sim-params-grid"></div>
@@ -433,12 +463,107 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
           </div>
         </div>
       </div>
-
     </div>
+
+    <!-- SIMULATEUR HAND -->
+    <div id="sim-panel-hand" class="sim-layout" style="display:none;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="sim-card">
+          <div class="sim-card-title">✋ Opération</div>
+          <div class="sim-field">
+            <label>Nombre d'heures total de distribution</label>
+            <input type="number" id="hand-heures" placeholder="ex : 36" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <label>Nombre de distributeurs</label>
+            <input type="number" id="hand-nb-distrib" value="2" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <label>Zone géographique</label>
+            <select id="hand-zone" onchange="handCompute()">
+              <option value="paris">Paris intra-muros — 45€/h</option>
+              <option value="idf">IDF & Hors IDF — 50€/h</option>
+              <option value="rural">Villes &lt;5 000 hab. — 55€/h</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Créneau horaire</label>
+            <select id="hand-horaire" onchange="handCompute()">
+              <option value="0">Journée (7h–21h) — standard</option>
+              <option value="5">Soirée (21h–00h) — +5€/h</option>
+              <option value="10">Nuit (00h–2h) — +10€/h</option>
+              <option value="15">Nuit profonde (3h–7h) — +15€/h</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Équipement (par distributeur)</label>
+            <select id="hand-equip" onchange="handCompute()">
+              <option value="0">Aucun</option>
+              <option value="190">Flag Bag Paris — 190€/unité</option>
+              <option value="220">Flag Bag Région — 220€/unité</option>
+              <option value="490">Flying Balloon — 490€/unité</option>
+              <option value="150">Kit habillage — 150€/unité</option>
+            </select>
+          </div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-title">👷 Main d'œuvre</div>
+          <div class="sim-field">
+            <label>Taux horaire distributeur (€/h)</label>
+            <input type="number" id="hand-taux" value="13" min="1" oninput="handCompute()">
+          </div>
+          <div class="sim-field">
+            <div class="sim-toggle-row">
+              <label class="sim-toggle">
+                <input type="checkbox" id="hand-regisseur" onchange="handToggleReg()">
+                <span class="sim-toggle-slider"></span>
+              </label>
+              <span class="sim-toggle-label">Régisseur nécessaire (hors IDF)</span>
+            </div>
+            <div class="sim-indent" id="hand-reg-block">
+              <div class="sim-field" style="margin-top:10px;">
+                <label>Nombre de jours de régisseur</label>
+                <input type="number" id="hand-nb-reg" value="1" min="1" oninput="handCompute()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="sim-card">
+          <div class="sim-card-title">⚡ Détail de la mission</div>
+          <div id="hand-results"><div class="sim-empty">Renseignez les paramètres pour voir le coût.</div></div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-title">💰 Prix &amp; marge</div>
+          <div class="sim-field">
+            <label>Prix de vente envisagé (€ HT)</label>
+            <input type="number" id="hand-prix" placeholder="ex : 3 200" min="0" oninput="handComputeMarge()">
+          </div>
+          <div id="hand-marge" class="sim-marge-block empty">
+            <div class="sim-marge-top">
+              <div class="sim-marge-pct" id="hand-marge-pct">— %</div>
+              <div class="sim-marge-badge" id="hand-marge-badge">En attente</div>
+            </div>
+            <div class="sim-marge-details" id="hand-marge-details" style="display:none;">
+              <div class="sim-detail-item"><div class="dl">Coût production</div><div class="dv" id="hand-md-cout">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Marge brute</div><div class="dv" id="hand-md-marge">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Prix de vente</div><div class="dv" id="hand-md-prix">—</div></div>
+              <div class="sim-detail-item"><div class="dl">Durée mission</div><div class="dv" id="hand-md-duree">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ===== HISTORIQUE ===== -->
   <div class="panel" id="panel-history">
+    <div style="padding:10px 16px;border-bottom:1px solid #e0ddd6;background:#fff;display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
+      <button class="action-btn" style="font-size:12px;padding:7px 16px;background:#1a6ef5;" onclick="analyzeCoaching()">🎯 Analyse coaching par sales →</button>
+      <button class="action-btn secondary" style="font-size:12px;padding:7px 14px;" onclick="clearHistory()">Vider l'historique</button>
+    </div>
     <div class="scrollable" id="history-body">
       <div style="color:#888;font-size:13px;text-align:center;margin-top:60px;">Aucun call scoré pour l'instant.</div>
     </div>
@@ -454,59 +579,240 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 
 <script>
 
-const SYSTEM_BASE = `Tu es l'agent commercial de Flying For You (FFY), agence de street-marketing B2B basée à Paris (Asnières-sur-Seine).
 
-SERVICES FFY :
-- Flying Box : distribution BAL géolocalisée (60% CA) — 100€/1000 boîtes zone Paris, 120€ zones premium. Frais d'agence 12-50% selon délai.
-- Flying Hand : distribution main-à-main (30% CA) — 45€/h Paris, 50€/h IDF, frais agence 15%. Minimum 36h/campagne.
-- Flying Event : sampling / guerrilla marketing
-- Flying Store : dépôt points de vente — 20-50€/point selon zone
-- Flying Bike : vélos publicitaires
-- Offre clé-en-main : création graphique, impression (HelloPrint ×1.3 à ×2 selon montant), distribution
+const SYSTEM_BASE = `Tu es l'agent commercial de Flying For You (FFY), agence de street-marketing B2B basée à Paris (Asnières-sur-Seine). Tu assistes Cheikh Kane, dirigeant, et son équipe. Tu es franc, direct, jamais complaisant.
+
+---
+CONTEXTE FFY
+Structure : ~15 personnes. Commerciaux : Cheikh Kane (dirigeant/HoS), Marcel Ambomo (CDI nov 2025), Simon Cognet (sept 2025), Ivan Messias (digital).
+CRM : HubSpot. Minimum deal : 2 000€ HT. Panier moyen : ~3 500€ HT.
+Cycle de vente : Inbound ~1 semaine / Outbound ~1 mois.
+Formation : Emilie Demas / RevOp — Qualification & Discovery (Jan 2026) + Closing & Négociation (Mars 2026).
+
+---
+SERVICES FFY
+Flying Box : Distribution BAL géolocalisée — ~60% CA
+Flying Hand : Distribution main-à-main — ~30% CA
+Flying Store : Dépôt en points de vente — <1% CA
+Flying Event : Guerrilla / sampling — <1% CA
+Flying Bike : Vélos publicitaires — <1% CA
+Marketing Digital : Google Ads, SEO, design — ~10% CA
+Offre clé-en-main : création graphique, impression, distribution.
 
 DIFFÉRENCIANTS :
-- App mobile temps réel (tracé GPS distributeurs, remontée anomalies)
-- Espace client transparent (photos, tracés, rapport fin de mission)
-- Chef de projet dédié, distribution solo (pas couplée), passants mystères
+- App mobile temps réel (tracé GPS, remontée anomalies)
+- Espace client transparent (tracés, photos, rapport fin de mission)
+- Chef de projet dédié, distribution solo, passants mystères
 - Data geomarketing INSEE pour ciblage précis
 - Mini-étude de notoriété incluse
+- Positionnement prix premium assumé
 
-MÉTHODES COMMERCIALES :
-- SPIN : Situation → Problem → Implication → Need-payoff
-- MEDDPICC : Metrics, Economic Buyer, Decision Criteria, Decision Process, Paper Process, Implicate Pain (D.U.R.), Champion, Competition
-- D.U.R. : Pain Douloureux, Urgent, Reconnu
-- NSC : Next Step Calée — toujours une date posée
-- Gap Selling : écart entre situation actuelle (pain) et idéale (gain)
-- Règle R1 : 80% temps parole client, pas de pitch avant le pain
-- Closing : propale toujours en live, jamais par mail seul
+---
+PRICING FFY COMPLET
 
-COMMERCIAUX : Cheikh Kane (dirigeant), Marcel Ambomo (CDI nov 2025), Simon Cognet (sept 2025)
-PANIER MOYEN : 3 500€ HT / MINIMUM : 2 000€ HT`;
+Flying Box BAL Secteur :
+Zone 1 Paris intra : 100€/1000 boîtes / Zone 2 premium (6e,7e,8e,16e,17e) : 120€/1000 boîtes
+Frais d'agence : +3 sem=12% / 2-3 sem=14% / 1-2 sem=27% / <1 sem=45%
+Abattement Stop Pub : 30% national / 40% Paris 16e-8e
+Villes OUI-PUB (distribution impossible) : Dunkerque, Sartrouville, Grenoble, Bordeaux, Nancy, Antibes-Grasse, Corse
+
+Flying Box BAL Énergies Renouvelables (forfaitaire) :
+0-500 log=1800€ / 501-750=2350€ / 751-1000=2900€ / 1001-1250=3450€ / 1251-1500=4000€
+1501-1875=4550€ / 1876-2250=5100€ / 2251-2750=5650€ / 2751-3250=6200€ / 3251-3750=6750€
+3751-4250=7250€ / 4250-5000=8000€ / +5000=devis
+Majorations : périmètre +0-50% / distance Paris +0-30% / format +0-12%
+
+Flying Hand : Paris 45€/h+15%FA / IDF&Province 50€/h+15%FA / min 36h
+Régisseur hors IDF : 280€ HT/jour (frais VHR uniquement)
+Chef d'équipe : 17€/h IDF (zones U1/U2/S1) / 20€/h hors IDF (zones S2/S3/R1/R2) — 1 par campagne, même durée que les distributeurs
+Horaires décalés : +5€/h (21h-00h) / +10€/h (00h-2h) / +15€/h (3h-7h)
+Options : Flag Bag Paris 190€ / Région 220€ / Flying Balloon 490€ / Kit habillage 150€
+
+Flying Store : Paris 20€/pt / arrond. premium 22€ / petite couronne 24€ / 77-91 et métropoles 27€ / rural 50€
+
+Flying Bike : XL 4m² Paris ~1405€ TTC / XL Métropole ~1445€ / XXL 8m² Paris ~1645€ — min 2-3 jours
+
+Marketing Digital : SEA 2500€ mois 1 / SEO sans rédac 1950€ / SEO avec rédac 2650€ / SMA 1900€ / Gestion RS 3500€
+
+Création visuelle : Logo 750€ / Charte 2000€ / Flyer 650-700€ / Site vitrine ~4575€ / Site e-comm ~5650€
+
+Impression HelloPrint coefficients : <200€ ×2,0 / 200-250 ×1,9 / 250-300 ×1,8 / 300-350 ×1,7 / 350-500 ×1,6 / 500-700 ×1,5 / 700-900 ×1,4 / >900 ×1,3
+
+---
+DONNÉES COMMERCIALES
+
+CA 2025 par commercial : Cheikh 879k€ (85%) / Marcel 91k€ (9%) / Simon 4k€ (<1%) / Ivan 76k€ (7%)
+CA 2026 à date (26 mars) — total 441 716€ : Cheikh 289k€ / Marcel 72k€ / Simon 65k€ / Ivan 12k€
+
+Objectifs 2026 annuels : Cheikh 675k€ / Marcel 308k€ / Simon 374k€ / Ivan 100k€ (8333€/mois fixe)
+Objectifs mensuels Cheikh : Jan 47k / Fév 68k / Mar 62k / Avr 48k / Mai 57k / Jun 81k / Jul 50k / Aoû 32k / Sep 56k / Oct 69k / Nov 50k / Déc 56k
+Objectifs mensuels Marcel : Jan 18k / Fév 27k / Mar 27k / Avr 23k / Mai 27k / Jun 38k / Jul 24k / Aoû 15k / Sep 26k / Oct 33k / Nov 24k / Déc 27k
+Objectifs mensuels Simon : Jan 21k / Fév 33k / Mar 33k / Avr 28k / Mai 33k / Jun 46k / Jul 29k / Aoû 18k / Sep 32k / Oct 40k / Nov 29k / Déc 32k
+
+CA 2025 secteurs : EnR 236k€ (baisse) / Mairies 214k€ (hausse) / Partis politiques 140k€ (hausse) / Agences 126k€ / Grande conso 107k€ / Immo 60k€ / Retail 55k€
+CA 2026 secteurs : Partis politiques 244k€ (dominant — municipales) / Agences 73k€ / Mairies 67k€ / Retail 23k€ / EnR 10k€ (très faible)
+
+Provenance deals 2025 : Repeat 41% / Outbound 16% / Inbound 16% / Keemia 10% / AO 10% / BAO 6%
+Provenance deals 2026 : Outbound 33% / Inbound 23% / Keemia 16% / Repeat 16% / BAO 8% / AO 4%
+
+Top clients 2025 : Assemblée nationale 142k€ / Keemia 118k€ / Barebells 106k€ / Ville de Pessac 84k€ / RWE 81k€
+
+CA 2025 par service :
+Flying Box BAL 713 932€ / Logistique 201 680€ / Impression 61 434€ / Flying Hand 79 097€ / SEA/Digital 47 900€ / Création graphique 10 800€
+
+---
+OBJECTIFS CA ÉQUIPE GLOBALE 2026 (total 1 506 994€ annuel)
+Jan 97 339€ réalisé 183 235€ (188%) / Fév 141 232€ réalisé 149 271€ (106%) / Mar 133 934€ en cours
+Avr 110 996€ / Mai 129 415€ / Jun 179 590€ / Jul 115 238€ / Aoû 75 679€ / Sep 126 921€ / Oct 155 144€ / Nov 113 889€ / Déc 127 617€
+
+---
+PIPELINE HUBSPOT FFY
+Étapes : appointmentscheduled=Transaction ouverte / 1289128980=R1 Fait / 29524916=R2 Fait / 29524917=Devis envoyé / closedwon=Fermé gagné / closedlost=Fermé perdu
+Seuil stagnation : 14 jours sans modification → alerte relance
+Priorités relances : Devis envoyé (argent sur la table) > R1 Fait (momentum fragile) > R2 Fait
+Owner ID Cheikh HubSpot : 34858380
+
+---
+RECOMMANDATIONS REVOP PRIORITAIRES (Audit Jan 2026)
+1. Réduire la dépendance à Cheikh — monter Marcel et Simon en autonomie complète
+2. Définir un ICP général + grille de scoring sectorielle (priorisation des prospects)
+3. Passer de "vendeur de produits" à "vendeur de solutions" — packager l'offre par secteur
+4. Augmenter le panier moyen par cross-sell et combos multi-produits (Box + Hand, Box + Digital)
+5. Industrialiser le repeat business (41% du CA 2025 — peu structuré, grande marge de progression)
+6. Mettre en place KPIs manquants : taux de conversion par étape, temps de closing, panier moyen par sales, % CA Cheikh vs équipe
+
+KPIs actuels manquants : nb deals closés / panier moyen par sales / temps de closing / taux de conversion par étape
+Objectifs AE par trimestre : 2 000 appels / 36 RDVs / 60k€ CA
+Incohérence RevOp : 60k€ ÷ 3 500€ PM = 17 deals → avec 12,5% taux global = 136 RDVs nécessaires. Le problème n'est pas le volume mais le taux de conversion et le panier moyen.
+
+---
+POINTS FORTS FFY (Audit RevOp)
+- Produit solide et différenciant (technologie propriétaire)
+- Satisfaction client élevée, repeat business 41% du CA 2025
+- Plus de 250 marques accompagnées
+- Positionnement prix premium assumé et justifié
+
+---
+DIAGNOSTICS CLÉS (Audit RevOp Jan 2026)
+- 85% du CA généré par Cheikh — dépendance critique
+- Taux de conversion estimé 12,5% (R1→R2: 50%, Opps→Won: 50%)
+- Propositions envoyées par mail au lieu d'être présentées en live
+- Marcel : 8 RDV sur 2362 appels en 2025. Pitch avant pain, gestion objections faible.
+- Simon : CA explosif 2026 (65k€ en 3 mois vs 4k€ en 2025 entier).
+
+---
+MÉTHODES COMMERCIALES FFY
+SPIN : Situation → Problem → Implication → Need-payoff. Règle : 80% temps parole client en R1, jamais pitcher avant le pain.
+MEDDPICC : Metrics / Economic Buyer / Decision Criteria / Decision Process / Paper Process / Implicate Pain (D.U.R.) / Champion / Competition
+D.U.R. : Pain Douloureux, Urgent, Reconnu — sinon pas de propale.
+NSC : Next Step Calée — toujours une date posée et un engagement.
+Gap Selling : écart entre situation actuelle (pain) et idéale (gain avec FFY).
+Closing : propale TOUJOURS en live, jamais par mail seul. Pas de compelling event = pas de deal.
+
+---
+QUESTIONS SPIN FFY
+Situation : "Comment communiquez-vous aujourd'hui pour toucher le grand public ?" / "Comment pilotez-vous ces campagnes ?" / "Qu'est-ce qui vous a donné envie d'accepter ce RDV ?"
+Problem : "Qu'est-ce qui est le plus frustrant dans vos campagnes terrain ?" / "Avez-vous des campagnes dont l'impact était difficile à prouver ?" / "Quelles sont les limites de vos prestataires actuels ?"
+Implication : "Quelles conséquences concrètes cela a-t-il pour vous ?" / "Combien de CA pourrait-on espérer en corrigeant cela ?" / "Si la situation reste identique dans 6-12 mois, qu'est-ce que cela freine ?"
+Need-payoff : "Si vous aviez une solution plus mesurable, qu'est-ce que ça changerait ?" / "Qu'est-ce que cela vous permettrait de mieux défendre en interne ?"
+
+---
+BATTLE CARD CONCURRENTS
+Mediapost : infra massive mais pas de tracé GPS temps réel, distribution couplée. Battre avec agilité + transparence tech.
+Keemia : généraliste premium, BAL non prioritaire. FFY = spécialiste street-marketing, plus agile, moins cher.
+BAL IDF / Champar / ISA Plus : volume sans preuve. FFY = volume + preuve (espace client, photos, passants mystères).
+Urban Act / Hold-up Media (main-à-main) : créativité mais cher ou capacité limitée. FFY = qualité ET volume + suivi tech.
+
+---
+OBJECTIONS CONNUES
+"Déjà un prestataire" → complémentarité, pas remplacement
+"Pas écologique" → données INSEE pour produire le bon nombre exact
+"Trop cher" → positionner l'impact : euros campagne face aux euros de CoI
+"Pas de budget" → investissement rentable, format adaptable, minimum 2k€
+"Envoyez un mail" → 5 min avant pour cibler les infos pertinentes`;
 
 const SYSTEM_COACH = SYSTEM_BASE + `\n\nTon rôle : tu es Cheikho, coach commercial direct, franc, jamais complaisant. Réponses courtes et actionnables en français.\n\nTu peux aussi rédiger des mails commerciaux B2B : si on te colle un mail reçu d'un prospect, détecte automatiquement son type (objection, demande de prix, refus, intérêt tiède, relance...) et propose une réponse adaptée. Corps du mail uniquement, ton adapté au secteur détecté (formel pour institutionnel/mairie, direct pour PME/retail), méthode SPIN intégrée, next step claire à la fin, 150-200 mots max.`;
 
 const SYSTEM_MAIL = SYSTEM_BASE + `\n\nTu es Cheikho, expert en mails commerciaux B2B pour Flying For You.
+RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté au secteur. SPIN intégré. NSC concrète. 150-200 mots max. Commence par "Suite à notre échange..." ou similaire.`;
 
-RÈGLES RÉDACTION MAIL :
-- Corps du mail uniquement (pas d'objet, pas de signature)
-- Détecte automatiquement le secteur du prospect dans le transcript et adapte le ton : formel pour institutionnel/mairie/politique, direct et chaleureux pour PME/retail/franchise/FMCG
-- Méthode SPIN intégrée : rappelle brièvement le pain identifié, l'implication si rien ne change, next step claire
-- Jamais de langue de bois. Toujours une action concrète à la fin (NSC avec date ou proposition de date)
-- 150-200 mots maximum
-- En français
-- Commence directement par le corps (ex: "Suite à notre échange...")
-- Personnalise avec les éléments concrets du call/mail (noms, chiffres, contexte)`;
+const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu es un coach commercial senior. Tu analyses les calls R1/R2 FFY avec un niveau de détail élevé. Tu cites des extraits exacts du transcript. Tu es franc, jamais complaisant, et fournis des reformulations concrètes actionnables.`;
 
+const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospection téléphonique B2B. Tu analyses les calls de prospection FFY avec précision, en identifiant chaque moment clé et en proposant des reformulations concrètes immédiatement réutilisables.`;
 
-const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu scores des calls R1/R2 selon la grille FFY /20.`;
-
-const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu scores des calls de prospection téléphonique selon la grille prospection FFY /20.`;
-
-const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté business. Jamais de langue de bois.`;
+const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté résultat. Jamais de langue de bois.`;
 
 const callHistory = [];
-const scoreHistory = [];
+const scoreHistory = (() => { try { return JSON.parse(localStorage.getItem('ffy_score_history') || '[]'); } catch { return []; } })();
 const mailStore = {};
+
+/* ---- VHR ---- */
+const vhrCache = {};
+let simVhrCout = 0;
+let simVhrDetails = null;
+let simLastCoutMO = 0;
+let simLastCoutChef = 0;
+let simLastCoutVHR = 0;
+let simChartDonut = null;
+let simChartMarge = null;
+
+function simVhrVilleChange() {
+  const ville = document.getElementById('sim-vhr-ville').value.trim();
+  if (simVhrDetails && simVhrDetails.ville.toLowerCase() !== ville.toLowerCase()) {
+    simVhrCout = 0; simVhrDetails = null;
+    document.getElementById('sim-vhr-result').innerHTML = '';
+  }
+  simCompute();
+}
+
+function calcVHRIfCached() {
+  const ville = (document.getElementById('sim-vhr-ville')?.value || '').trim();
+  if (ville && vhrCache[ville.toLowerCase()]) {
+    const nbJours = parseInt(document.getElementById('sim-nb-reg').value) || 1;
+    applyVHR(vhrCache[ville.toLowerCase()], nbJours, ville, document.getElementById('sim-vhr-result'));
+  } else { simCompute(); }
+}
+
+async function calcVHR() {
+  const ville = (document.getElementById('sim-vhr-ville')?.value || '').trim();
+  const nbJours = parseInt(document.getElementById('sim-nb-reg').value) || 1;
+  if (!ville) { alert('Entrez une ville de destination.'); return; }
+  const resultEl = document.getElementById('sim-vhr-result');
+  if (vhrCache[ville.toLowerCase()]) { applyVHR(vhrCache[ville.toLowerCase()], nbJours, ville, resultEl); return; }
+  resultEl.innerHTML = '<div class="vhr-loading"><span>⏳</span> Calcul distance et péages...</div>';
+  try {
+    const prompt = `Distance routière depuis "6 rue Bellini, 92800 Puteaux" jusqu'à "${ville}" en France. JSON strict uniquement, aucun autre texte : {"distance_km": X, "peages_aller_eur": X}. distance_km = trajet aller en km par autoroute. peages_aller_eur = total péages aller en euros pour véhicule léger.`;
+    const raw = await callAPI([{role:'user',content:prompt}], 'Tu es un expert en géographie routière française. Réponds UNIQUEMENT avec un objet JSON valide, aucun autre texte.', 150);
+    const jsonStr = raw.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
+    if (!jsonStr) throw new Error('Réponse inattendue');
+    const data = JSON.parse(jsonStr);
+    vhrCache[ville.toLowerCase()] = data;
+    applyVHR(data, nbJours, ville, resultEl);
+  } catch(e) { resultEl.innerHTML = `<div style="font-size:12px;color:#c00;padding:6px 0;">Erreur : ${escHtml(e.message)}</div>`; }
+}
+
+function applyVHR(data, nbJours, ville, resultEl) {
+  const distAR = data.distance_km * 2;
+  const peagesAR = data.peages_aller_eur * 2;
+  const carburantTrajet = Math.round((distAR / 100) * 10);
+  const carburantJour = nbJours * 20;
+  const repas = nbJours * 35;
+  const hebergement = nbJours * 80;
+  const total = carburantTrajet + peagesAR + carburantJour + repas + hebergement;
+  simVhrCout = total;
+  simVhrDetails = { ville, distAR: Math.round(distAR), peagesAR, carburantTrajet, carburantJour, repas, hebergement, total };
+  resultEl.innerHTML = `<div class="vhr-result">
+    <div class="vhr-result-title">🚗 VHR — ${escHtml(ville)} · ${nbJours}j</div>
+    <div class="vhr-line"><span>Distance A/R (≈ ${Math.round(distAR)} km)</span><span style="color:#888;font-size:11px;">base calcul</span></div>
+    <div class="vhr-line"><span>Carburant trajet (${Math.round(distAR)} km × 10€/100)</span><span>${simFmt(carburantTrajet)}</span></div>
+    <div class="vhr-line"><span>Péages A/R (estimés)</span><span>${simFmt(peagesAR)}</span></div>
+    <div class="vhr-line"><span>Carburant sur place (${nbJours}j × 20€)</span><span>${simFmt(carburantJour)}</span></div>
+    <div class="vhr-line"><span>Repas (${nbJours}j × 35€)</span><span>${simFmt(repas)}</span></div>
+    <div class="vhr-line"><span>Hébergement Airbnb (${nbJours}j × 80€)</span><span>${simFmt(hebergement)}</span></div>
+    <div class="vhr-total-line"><span>Total VHR régisseur</span><span>${simFmt(total)}</span></div>
+  </div>`;
+  simCompute();
+}
 
 const TABS = ['chat','scoring-r1','scoring-prosp','propale','simulateur','history','compare'];
 
@@ -547,7 +853,7 @@ async function sendChat() {
     typEl.remove();
     appendMsg('agent', reply);
     callHistory.push({ role: 'assistant', content: reply });
-  } catch(e) { typEl.remove(); appendMsg('agent', 'Erreur de connexion. Vérifiez votre clé API.'); }
+  } catch(e) { typEl.remove(); appendMsg('agent', "Erreur de connexion. Vérifiez que l'API backend (/api/chat) fonctionne."); }
   btn.disabled = false;
 }
 
@@ -638,38 +944,124 @@ async function scoreR1() {
   const commercial = document.getElementById('score-r1-user').value;
   const type = document.getElementById('score-r1-type').value;
   const body = document.getElementById('scoring-r1-body');
-  body.innerHTML = `<div style="text-align:center;padding:60px;color:#888;font-size:13px;">Analyse du ${type} en cours...</div>`;
 
   const maxes = type === 'R1'
     ? {preparation:2,discovery:4,meddpicc:3,objections:3,pitch:2,closing:3,followup:3}
     : {pain_revalidation:2,solution_fit:4,meddpicc:3,objections:3,demo_propale:2,closing:4,followup:2};
 
-  const criteresDesc = type === 'R1'
-    ? 'preparation(2), discovery(4 — SPIN quality), meddpicc(3), objections(3), pitch(2), closing(3 — NSC posée), followup(3)'
-    : 'pain_revalidation(2 — douleur reconfirmée en ouverture), solution_fit(4 — solution collée aux pains), meddpicc(3 — EB présent, Champion actif), objections(3), demo_propale(2 — propale présentée live), closing(4 — deal avancé, next step signée), followup(2)';
+  // APPEL 1 — notes uniquement
+  body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Étape 1/2 — Calcul des notes...</div>`;
 
-  const promptText = `Transcript d'un call ${type} de ${commercial} chez Flying For You.\n\n${hasFile ? '' : text.slice(0,7000)}\n\nScore ce call ${type}. JSON strict uniquement, zéro texte autour :\n{"score_total":X,"type":"${type}","criteres":{${Object.keys(maxes).map(k=>`"${k}":X`).join(',')}},"points_forts":"...","axes":"...","recommandation":"...","maturite":"Exploration|Validation|Decision|Contractualisation"}\nCritères : ${criteresDesc}`;
+  const notesPrompt = type === 'R1'
+    ? `Transcript d'un call R1 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,7000)}\n\nJSON strict uniquement (scores en multiples de 0.5) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}\nMax : preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3. Score total = somme des critères.`
+    : `Transcript d'un call R2 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,7000)}\n\nJSON strict uniquement (scores en multiples de 0.5) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}\nMax : pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2. Score total = somme des critères.`;
+
+  let parsed;
+  try {
+    let msg1;
+    if (hasFile) {
+      msg1 = [{ role:'user', content:[
+        fileData.r1.mediaType==='audio/mpeg'
+          ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
+          : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
+        {type:'text',text:notesPrompt}
+      ]}];
+    } else { msg1 = [{role:'user',content:notesPrompt}]; }
+    const raw1 = await callAPI(msg1, SYSTEM_SCORE_R1, 500);
+    try {
+      const jsonStr = raw1.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
+      if (!jsonStr) throw new Error('Aucun JSON trouvé');
+      parsed = JSON.parse(jsonStr);
+    }
+    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw1)}</pre>`; return; }
+  } catch(e) {
+    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur étape 1 : ${escHtml(e.message)}</div>`; return;
+  }
+
+  // Affichage intermédiaire des notes
+  renderScoreShell(body, parsed, commercial, maxes, type);
+
+  // APPEL 2 — débrief narratif complet
+  const debriefEl = document.getElementById('debrief-zone');
+  if (debriefEl) debriefEl.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Étape 2/2 — Rédaction du débrief détaillé...</div>`;
+
+  const spinSection = type === 'R1' ? `
+ANALYSE SPIN OBLIGATOIRE — pour chaque étape :
+- Questions Situation posées (cite des extraits exacts) : pertinentes ? suffisantes ?
+- Questions Problem : lesquelles ont été posées ? Quelles douleurs révélées ? Lesquelles manquées ?
+- Questions Implication : posées ? Si non, quelles questions auraient dû être posées avec les pains identifiés ?
+- Questions Need-payoff : le prospect a-t-il verbalisé la valeur ? Sinon, comment l'y amener ?
+- Ratio temps de parole estimé (client vs commercial)` : `
+ANALYSE R2 OBLIGATOIRE :
+- La douleur a-t-elle été revalidée en ouverture ?
+- La solution présentée est-elle collée aux pains du R1 ?
+- L'Economic Buyer était-il présent ? Le Champion a-t-il joué son rôle ?
+- La propale a-t-elle été présentée en live ou envoyée par mail ?`;
+
+  const critMaxesText = type === 'R1'
+    ? 'preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3'
+    : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
+
+  const debriefPrompt = `Tu es directeur commercial senior chez FFY. Tu viens d'analyser ce call ${type} de ${commercial}.
+
+Transcript :
+${hasFile ? '[fichier audio/PDF joint — base ton analyse sur les scores ci-dessus]' : text.slice(0,7000)}
+
+Scores : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
+Barème : ${critMaxesText}
+
+Rédige le débrief complet EXACTEMENT dans ce format :
+
+Scoring call ${commercial} — [date et contexte du call extraits du transcript]
+Prospect : [qui est le prospect, son rôle, son contexte, son enjeu — tiré du transcript]
+Type : ${type} — [sous-titre descriptif en 5-8 mots]
+
+Note globale : ${parsed.score_total}/20
+
+Détail par critère
+[Pour CHAQUE critère du barème, une entrée structurée ainsi :]
+[Nom lisible du critère] — [score]/[max] : [3-4 phrases d'analyse avec citation exacte du transcript entre guillemets. Ce qui s'est passé précisément, ce qui manquait, l'impact sur le deal.]
+
+${spinSection}
+
+Points forts à conserver
+[3 points numérotés. Pour chaque : ce qui a été dit/fait exactement, POURQUOI c'est efficace commercialement, comment le reproduire systématiquement]
+
+Axes d'amélioration avec reformulations concrètes
+[3 axes numérotés, structurés EXACTEMENT ainsi pour chaque axe :]
+1. [Titre court et percutant]
+[2-3 phrases expliquant le problème avec le contexte du call]
+❌ Ce qui s'est passé : "[citation exacte]"
+✅ Ce qu'il fallait dire : "[reformulation complète, prête à l'emploi mot pour mot]"
+
+Stade de maturité réel du deal
+[3-4 phrases d'évaluation franche. Signaux positifs ET risques concrets. Probabilité de closing. Pas de langue de bois.]
+
+Recommandation — 3 actions dans les 48h
+[3 actions numérotées, concrètes, avec si pertinent le texte exact du mail ou message à envoyer]
+
+Note personnelle
+[2-3 phrases en tutoyant ${commercial} directement. Mettre en miroir ce pattern avec ses tendances habituelles. Poser la question qui fait réfléchir. Direct, coach, pas brutal.]
+
+RÈGLES : cite toujours le transcript, reformulations utilisables mot pour mot, zéro généralité.`;
 
   try {
-    let messages;
+    let msg2;
     if (hasFile) {
-      messages = [{ role: 'user', content: [
-        fileData.r1.mediaType === 'audio/mpeg'
-          ? { type: 'audio', source: { type: 'base64', media_type: 'audio/mpeg', data: fileData.r1.base64 } }
-          : { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: fileData.r1.base64 } },
-        { type: 'text', text: promptText }
+      msg2 = [{ role:'user', content:[
+        fileData.r1.mediaType==='audio/mpeg'
+          ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
+          : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
+        {type:'text',text:debriefPrompt}
       ]}];
-    } else {
-      messages = [{ role: 'user', content: promptText }];
-    }
-    const raw = await callAPI(messages, SYSTEM_SCORE_R1, hasFile ? 2500 : 1500);
-    let parsed;
-    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
-    renderScoreResult(body, parsed, commercial, maxes, type, 'r1r2', text);
+    } else { msg2 = [{role:'user',content:debriefPrompt}]; }
+    const debrief = await callAPI(msg2, SYSTEM_SCORE_R1, 4000);
+    const dz = document.getElementById('debrief-zone');
+    if (dz) dz.innerHTML = `<div class="card"><div class="card-label">Débrief complet</div><div class="card-text">${escHtml(debrief)}</div></div>`;
     saveToHistory(commercial, parsed, type, 'r1r2', maxes);
   } catch(e) {
-    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
+    const dz = document.getElementById('debrief-zone');
+    if (dz) dz.innerHTML = `<div style="padding:14px;font-size:13px;color:#c00;">Erreur débrief : ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -713,13 +1105,47 @@ Critères :
     }
     const raw = await callAPI(messages, SYSTEM_SCORE_PROSP, hasFile ? 2500 : 1500);
     let parsed;
-    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    try {
+      const jsonStr = raw.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
+      if (!jsonStr) throw new Error('Aucun JSON trouvé');
+      parsed = JSON.parse(jsonStr);
+    }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
     renderScoreResult(body, parsed, commercial, maxes, 'Prospection', 'prospection', text);
     saveToHistory(commercial, parsed, 'Prospection', 'prospection', maxes);
   } catch(e) {
     body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
   }
+}
+
+/* ---- SCORE SHELL — affichage intermédiaire ---- */
+function renderScoreShell(body, parsed, commercial, maxes, type) {
+  const s = parsed.score_total;
+  const scoreColor = s >= 15 ? '#3B6D11' : s >= 10 ? '#BA7517' : '#c00';
+  const labels = {
+    preparation:'Préparation', discovery:'Découverte SPIN', meddpicc:'MEDDPICC',
+    objections:'Objections', pitch:'Pitch & preuves', closing:'Closing & NSC', followup:'Follow-up',
+    pain_revalidation:'Revalidation pain', solution_fit:'Solution / fit', demo_propale:'Démo & propale',
+    accroche:'Accroche & hook', pitch_aida:'Pitch AIDA', qualification:'Qualification',
+    barrage:'Gestion barrage', obtention_rdv:'Obtention RDV', energie:'Énergie & rythme'
+  };
+  let grid = '';
+  for (const [key, max] of Object.entries(maxes)) {
+    const val = parsed.criteres?.[key] ?? 0;
+    const pct = Math.round((val/max)*100);
+    const barColor = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#c00';
+    grid += `<div class="score-item"><div class="score-item-label">${labels[key]||key}</div><div class="score-item-val">${val}/${max}</div><div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div></div>`;
+  }
+  const badgeType = type === 'Prospection' ? 'prospection' : 'r1r2';
+  body.innerHTML = `<div class="score-result">
+    <div class="score-header">
+      <div class="score-badge" style="color:${scoreColor}">${s}/20</div>
+      <div><div style="font-size:14px;font-weight:600;">${commercial}</div><div style="font-size:12px;color:#888;">${type} · ${parsed.maturite||''}</div></div>
+    </div>
+    <div class="score-grid">${grid}</div>
+    <div id="debrief-zone"></div>
+    <button class="action-btn secondary" style="margin-top:4px;" onclick="resetScore('${badgeType}')">Analyser un autre call</button>
+  </div>`;
 }
 
 /* ---- RENDER SCORE ---- */
@@ -789,8 +1215,16 @@ function resetScore(type) {
 
 /* ---- SAVE & RENDER HISTORY ---- */
 function saveToHistory(commercial, parsed, type, badgeType, maxes) {
-  scoreHistory.push({ commercial, score: parsed.score_total, criteres: parsed.criteres, date: new Date().toLocaleDateString('fr-FR'), type, badgeType, maxes });
+  scoreHistory.push({ commercial, score: parsed.score_total, maturite: parsed.maturite||'', criteres: parsed.criteres||{}, date: new Date().toLocaleDateString('fr-FR'), type, badgeType, maxes: maxes||{} });
+  try { localStorage.setItem('ffy_score_history', JSON.stringify(scoreHistory)); } catch {}
 }
+
+const H_LABELS = {
+  preparation:'Prépa', discovery:'Découverte', meddpicc:'MEDDPICC',
+  objections:'Objections', pitch:'Pitch', closing:'Closing', followup:'Follow-up',
+  pain_revalidation:'Revalidation', solution_fit:'Solution fit', demo_propale:'Démo/Propale',
+  accroche:'Accroche', pitch_aida:'Pitch AIDA', qualification:'Qualif.', barrage:'Barrage', obtention_rdv:'RDV', energie:'Énergie'
+};
 
 function renderHistory() {
   const body = document.getElementById('history-body');
@@ -799,14 +1233,63 @@ function renderHistory() {
     const color = h.score >= 15 ? '#3B6D11' : h.score >= 10 ? '#BA7517' : '#c00';
     const badgeClass = h.badgeType === 'prospection' ? 'prospection' : 'r1r2';
     const badgeLabel = h.badgeType === 'prospection' ? 'Prospection' : h.type;
+    let critHtml = '';
+    if (h.criteres && Object.keys(h.criteres).length) {
+      critHtml = '<div class="h-criteria">';
+      for (const [key, val] of Object.entries(h.criteres)) {
+        const max = h.maxes?.[key] || 4;
+        const pct = Math.round((val / max) * 100);
+        const c = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#c00';
+        critHtml += `<div class="h-crit-item"><div class="h-crit-label">${H_LABELS[key]||key}</div><div class="h-crit-val" style="color:${c}">${val}/${max}</div><div class="h-crit-bar"><div class="h-crit-fill" style="width:${pct}%;background:${c}"></div></div></div>`;
+      }
+      critHtml += '</div>';
+    }
     return `<div class="history-item">
-      <div class="h-row">
-        <span class="h-name">${h.commercial}</span>
-        <span class="h-score" style="color:${color}">${h.score}/20</span>
-      </div>
-      <div class="h-meta">${h.date} · <span class="h-type ${badgeClass}">${badgeLabel}</span></div>
+      <div class="h-row"><span class="h-name">${h.commercial}</span><span class="h-score" style="color:${color}">${h.score}/20</span></div>
+      <div class="h-meta">${h.date} · <span class="h-type ${badgeClass}">${badgeLabel}</span>${h.maturite?' · '+h.maturite:''}</div>
+      ${critHtml}
     </div>`;
   }).join('');
+}
+
+function clearHistory() {
+  if (!scoreHistory.length) { alert('L\'historique est déjà vide.'); return; }
+  if (confirm(`Supprimer les ${scoreHistory.length} call(s) de l'historique ?`)) {
+    scoreHistory.length = 0;
+    try { localStorage.removeItem('ffy_score_history'); } catch {}
+    renderHistory();
+  }
+}
+
+async function analyzeCoaching() {
+  if (!scoreHistory.length) { alert('Aucun call dans l\'historique. Scorez d\'abord quelques calls.'); return; }
+  const body = document.getElementById('history-body');
+  body.innerHTML = '<div style="text-align:center;padding:50px;color:#888;font-size:13px;">⏳ Cheikho analyse les performances de l\'équipe...</div>';
+  const byC = {};
+  for (const h of scoreHistory) {
+    if (!byC[h.commercial]) byC[h.commercial] = [];
+    byC[h.commercial].push(h);
+  }
+  const summaries = Object.entries(byC).map(([com, calls]) => {
+    const avg = (calls.reduce((s,c)=>s+c.score,0)/calls.length).toFixed(1);
+    const detail = calls.map(c=>{
+      const crit = Object.entries(c.criteres||{}).map(([k,v])=>`${H_LABELS[k]||k}:${v}/${c.maxes?.[k]||4}`).join(', ');
+      return `  - ${c.date} · ${c.type} → ${c.score}/20 · Stade:${c.maturite||'?'} | ${crit}`;
+    }).join('\n');
+    return `=== ${com} — ${calls.length} call(s), moyenne ${avg}/20 ===\n${detail}`;
+  }).join('\n\n');
+  const prompt = `Tu es Cheikho, coach commercial senior FFY. Voici l'historique complet des calls scorés de l'équipe :\n\n${summaries}\n\nPour CHAQUE commercial présent dans l'historique, fournis une analyse structurée ainsi :\n\n## [Prénom] — [score moyen]/20\n\n**Profil actuel**\n[2-3 phrases sur son niveau réel, ses patterns récurrents, ce qui ressort des données]\n\n**Points forts identifiés**\n[Les critères où il performe bien avec les scores à l'appui]\n\n**Axes prioritaires de développement**\n[Les 2-3 lacunes les plus critiques avec les scores qui les révèlent. Sois précis et direct.]\n\n**Plan d'action — prochaines semaines**\n[3 actions concrètes et immédiatement applicables : exercices, scripts, comportements à changer]\n\nTon : direct, factuel, basé sur les chiffres. Pas de langue de bois. Le but est de faire monter chaque sales en compétences.`;
+  try {
+    const analysis = await callAPI([{role:'user',content:prompt}], SYSTEM_COACH, 2500);
+    body.innerHTML = `
+      <div style="padding:10px 16px 12px;border-bottom:1px solid #e0ddd6;display:flex;gap:8px;">
+        <button class="action-btn secondary" style="font-size:12px;padding:7px 14px;" onclick="renderHistory()">← Retour à l'historique</button>
+      </div>
+      <div style="padding:16px 18px;font-size:13px;line-height:1.85;color:#1a1a1a;white-space:pre-wrap;">${escHtml(analysis)}</div>`;
+  } catch(e) {
+    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>
+      <div style="padding:0 16px;"><button class="action-btn secondary" style="font-size:12px;padding:7px 14px;" onclick="renderHistory()">← Retour</button></div>`;
+  }
 }
 
 /* ---- COMPARATIF ---- */
@@ -1005,6 +1488,7 @@ function simFmtH(h){const hh=Math.floor(h),mm=Math.round((h-hh)*60);return mm>0?
 function simToggleReg(){
   const on=document.getElementById('sim-regisseur').checked;
   document.getElementById('sim-reg-block').classList.toggle('visible',on);
+  if(!on){ simVhrCout=0; simVhrDetails=null; document.getElementById('sim-vhr-result').innerHTML=''; }
   simCompute();
 }
 
@@ -1022,7 +1506,14 @@ function simCompute(){
   const idx=stopPub?0:1;
   const cadence=cadences[zone][support][idx];
   const heuresTotal=nbBAL/cadence;
-  const coutReg=avecReg?nbJReg*SIM_COUT_REG_JOUR:0;
+
+  // Chef d'équipe — 1 par campagne, même durée que les distributeurs
+  // IDF = zones U1/U2/S1 → 17€/h | Hors IDF = zones S2/S3/R1/R2 → 20€/h
+  const isIDF=['U1','U2','S1'].includes(zone);
+  const tauxChef=isIDF?17:20;
+  const coutChef=heuresTotal*tauxChef;
+
+  const coutVHR=avecReg?simVhrCout:0;
   let html=`<div class="sim-cadence-badge"><span class="sim-cadence-val">${cadence}</span><span class="sim-cadence-unit">BAL/h · ${SIM_ZONE_LABELS[zone]} · ${SIM_SUP_LABELS[support]}<br>Stop Pub ${stopPub?'OUI':'NON'}</span></div>`;
   html+=`<table class="sim-table"><thead><tr><th>Distrib.</th><th>H/distrib.</th><th>Durée</th><th>Coût MO</th><th></th></tr></thead><tbody>`;
   for(let n=1;n<=4;n++){
@@ -1036,16 +1527,74 @@ function simCompute(){
   const hPDSel=heuresTotal/simSelectedScenario;
   const jSel=Math.ceil(hPDSel/SIM_HEURES_JOUR);
   const coutMOSel=heuresTotal*tauxH;
-  const coutTotal=coutMOSel+coutReg;
-  simLastCout=coutTotal;
+  const coutTotal=coutMOSel+coutChef+coutVHR;
+  simLastCout=coutTotal; simLastCoutMO=coutMOSel; simLastCoutChef=coutChef; simLastCoutVHR=coutVHR;
   html+=`<div class="sim-cost-lines"><div class="sim-cost-line"><span class="lbl">MO — ${simSelectedScenario} distrib. × ${simFmtH(hPDSel)} × ${tauxH}€/h</span><span class="amt">${simFmt(coutMOSel)}</span></div>`;
-  if(avecReg)html+=`<div class="sim-cost-line"><span class="lbl">Régisseur — ${nbJReg}j × ${SIM_COUT_REG_JOUR}€</span><span class="amt">${simFmt(coutReg)}</span></div>`;
+  html+=`<div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${simFmtH(heuresTotal)} × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
+  if(avecReg){
+    if(simVhrDetails) html+=`<div class="sim-cost-line"><span class="lbl">VHR — ${escHtml(simVhrDetails.ville)} · ${nbJReg}j</span><span class="amt">${simFmt(coutVHR)}</span></div>`;
+    else html+=`<div class="sim-cost-line" style="opacity:0.5;"><span class="lbl">VHR — cliquez "Calculer le VHR" pour inclure</span><span class="amt">—</span></div>`;
+  }
   html+=`</div><div class="sim-cost-total"><span class="lbl">Coût total de production</span><span class="amt">${simFmt(coutTotal)}</span></div>`;
   el.innerHTML=html;
   simComputeMarge();
+  renderSimCharts();
 }
 
 function simSelectScenario(n){simSelectedScenario=n;simCompute();}
+
+function renderSimCharts(){
+  if(typeof Chart==='undefined') return;
+  const mo=simLastCoutMO, chef=simLastCoutChef, vhr=simLastCoutVHR;
+  const prix=parseFloat(document.getElementById('sim-prix').value)||0;
+  if(mo<=0&&chef<=0) return;
+
+  // — Donut répartition —
+  const ctxD=document.getElementById('sim-chart-repartition');
+  if(ctxD){
+    const labels=['MO Distributeurs',"Chef d'équipe"];
+    const vals=[mo,chef];
+    const colors=['#1a6ef5','#7c3aed'];
+    if(vhr>0){labels.push('VHR Régisseur');vals.push(vhr);colors.push('#f59e0b');}
+    ctxD.style.display='block';
+    if(simChartDonut){simChartDonut.destroy();simChartDonut=null;}
+    simChartDonut=new Chart(ctxD,{
+      type:'doughnut',
+      data:{labels,datasets:[{data:vals,backgroundColor:colors,borderWidth:2,borderColor:'#fff',hoverOffset:6}]},
+      options:{responsive:true,plugins:{
+        legend:{position:'bottom',labels:{font:{size:11},padding:12,usePointStyle:true}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label} : ${simFmt(ctx.parsed)} (${Math.round(ctx.parsed/(mo+chef+vhr)*100)}%)`}}
+      }}
+    });
+  }
+
+  // — Barre coût vs marge —
+  const ctxM=document.getElementById('sim-chart-marge');
+  if(ctxM&&prix>0){
+    const cout=mo+chef+vhr;
+    const marge=prix-cout;
+    ctxM.style.display='block';
+    if(simChartMarge){simChartMarge.destroy();simChartMarge=null;}
+    simChartMarge=new Chart(ctxM,{
+      type:'bar',
+      data:{
+        labels:[''],
+        datasets:[
+          {label:'Coût de production',data:[cout],backgroundColor:'#fca5a5',borderRadius:6,borderSkipped:false},
+          {label:marge>=0?'Marge':'Dépassement',data:[Math.abs(marge)],backgroundColor:marge>=0?'#86efac':'#f87171',borderRadius:6,borderSkipped:false}
+        ]
+      },
+      options:{
+        indexAxis:'y',responsive:true,
+        plugins:{
+          legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true}},
+          tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label} : ${simFmt(ctx.parsed.x)}`}}
+        },
+        scales:{x:{stacked:true,ticks:{font:{size:10},callback:v=>simFmt(v)}},y:{stacked:true,display:false}}
+      }
+    });
+  }
+}
 
 function simComputeMarge(){
   const prix=parseFloat(document.getElementById('sim-prix').value)||0;
@@ -1069,6 +1618,7 @@ function simComputeMarge(){
   document.getElementById('sim-md-prix').textContent=simFmt(prix);
   document.getElementById('sim-md-scenario').textContent=`${simSelectedScenario} distributeur${simSelectedScenario>1?'s':''}`;
   elDet.style.display='grid';
+  renderSimCharts();
 }
 
 function simToggleParams(){
@@ -1104,6 +1654,119 @@ function simResetCadences(){
   if(confirm('Réinitialiser toutes les cadences aux valeurs par défaut ?')){
     localStorage.removeItem('ffy_cadences');simRenderParams();simCompute();
   }
+}
+
+/* ===== SWITCH MODE BAL / HAND ===== */
+function simSwitchMode(mode) {
+  const isBAL = mode === 'bal';
+  document.getElementById('sim-panel-bal').style.display = isBAL ? 'grid' : 'none';
+  document.getElementById('sim-panel-hand').style.display = isBAL ? 'none' : 'grid';
+  const btnBAL = document.getElementById('sim-toggle-bal');
+  const btnHand = document.getElementById('sim-toggle-hand');
+  btnBAL.style.background = isBAL ? '#1a1a1a' : '#fff';
+  btnBAL.style.color = isBAL ? '#fff' : '#888';
+  btnBAL.style.borderColor = isBAL ? '#1a1a1a' : '#d0cdc6';
+  btnHand.style.background = isBAL ? '#fff' : '#1a1a1a';
+  btnHand.style.color = isBAL ? '#888' : '#fff';
+  btnHand.style.borderColor = isBAL ? '#d0cdc6' : '#1a1a1a';
+}
+
+/* ===== SIMULATEUR FLYING HAND ===== */
+const HAND_COUT_REG_JOUR = 280;
+let handLastCout = null;
+
+function handToggleReg() {
+  const on = document.getElementById('hand-regisseur').checked;
+  document.getElementById('hand-reg-block').classList.toggle('visible', on);
+  handCompute();
+}
+
+function handCompute() {
+  const heures = parseFloat(document.getElementById('hand-heures').value) || 0;
+  const nbDistrib = parseInt(document.getElementById('hand-nb-distrib').value) || 1;
+  const zone = document.getElementById('hand-zone').value;
+  const majHoraire = parseFloat(document.getElementById('hand-horaire').value) || 0;
+  const equipPrix = parseFloat(document.getElementById('hand-equip').value) || 0;
+  const tauxH = parseFloat(document.getElementById('hand-taux').value) || 13;
+  const avecReg = document.getElementById('hand-regisseur').checked;
+  const nbJReg = parseInt(document.getElementById('hand-nb-reg').value) || 1;
+  const el = document.getElementById('hand-results');
+
+  if (!heures || !zone) {
+    el.innerHTML = '<div class="sim-empty">Renseignez les paramètres pour voir le coût.</div>';
+    handLastCout = null; handComputeMarge(); return;
+  }
+
+  // Tarifs vente client selon zone
+  const tauxVente = { paris: 45, idf: 50, rural: 55 }[zone] || 50;
+  const tauxVenteReel = tauxVente + majHoraire;
+  const zoneLabel = { paris: 'Paris', idf: 'IDF / Hors IDF', rural: '<5 000 hab.' }[zone];
+
+  // Durée calendaire = heures totales réparties entre les distributeurs
+  const hParDistrib = heures / nbDistrib;
+  const joursTotal = Math.ceil(hParDistrib / SIM_HEURES_JOUR);
+
+  // Coût MO : heures totales × taux (indépendant du nb de distributeurs)
+  const coutMO = heures * tauxH;
+
+  // Chef d'équipe : travaille pendant la durée calendaire de l'opération
+  const isIDF = zone === 'paris' || zone === 'idf';
+  const tauxChef = isIDF ? 17 : 20;
+  const coutChef = hParDistrib * tauxChef;
+
+  // Équipement
+  const coutEquip = equipPrix > 0 ? equipPrix * nbDistrib : 0;
+  const equipLabel = document.getElementById('hand-equip').options[document.getElementById('hand-equip').selectedIndex].text;
+
+  // Régisseur VHR
+  const coutReg = avecReg ? nbJReg * HAND_COUT_REG_JOUR : 0;
+
+  const coutTotal = coutMO + coutChef + coutEquip + coutReg;
+  handLastCout = coutTotal;
+
+  let html = `<div class="sim-cadence-badge">
+    <span class="sim-cadence-val">${heures}h</span>
+    <span class="sim-cadence-unit">${nbDistrib} distributeur${nbDistrib>1?'s':''} · ${zoneLabel}<br>${simFmtH(hParDistrib)}/distributeur · ${joursTotal}j de terrain</span>
+  </div>`;
+
+  html += `<div class="sim-cost-lines">
+    <div class="sim-cost-line"><span class="lbl">MO — ${nbDistrib} distrib. × ${simFmtH(hParDistrib)} × ${tauxH}€/h</span><span class="amt">${simFmt(coutMO)}</span></div>
+    <div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${simFmtH(hParDistrib)} × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
+  if (coutEquip > 0) html += `<div class="sim-cost-line"><span class="lbl">${equipLabel.split('—')[0].trim()} × ${nbDistrib}</span><span class="amt">${simFmt(coutEquip)}</span></div>`;
+  if (avecReg) html += `<div class="sim-cost-line"><span class="lbl">VHR Régisseur — ${nbJReg}j × ${HAND_COUT_REG_JOUR}€</span><span class="amt">${simFmt(coutReg)}</span></div>`;
+  html += `</div><div class="sim-cost-total"><span class="lbl">Coût total de production</span><span class="amt">${simFmt(coutTotal)}</span></div>`;
+
+  el.innerHTML = html;
+  handComputeMarge();
+}
+
+function handComputeMarge() {
+  const prix = parseFloat(document.getElementById('hand-prix').value) || 0;
+  const cout = handLastCout;
+  const el = document.getElementById('hand-marge');
+  const elPct = document.getElementById('hand-marge-pct');
+  const elBadge = document.getElementById('hand-marge-badge');
+  const elDet = document.getElementById('hand-marge-details');
+  if (!prix || !cout) {
+    el.className = 'sim-marge-block empty'; elPct.textContent = '— %'; elBadge.textContent = 'En attente'; elDet.style.display = 'none'; return;
+  }
+  const margeEur = prix - cout;
+  const margePct = (margeEur / prix) * 100;
+  let cls, label;
+  if (margePct >= 70) { cls = 'good'; label = '🟢 Bonne marge'; }
+  else if (margePct >= 40) { cls = 'medium'; label = '🟡 Marge moyenne'; }
+  else { cls = 'bad'; label = '🔴 Marge insuffisante'; }
+  el.className = `sim-marge-block ${cls}`;
+  elPct.textContent = `${margePct.toFixed(1)}%`;
+  elBadge.textContent = label;
+  const heures = parseFloat(document.getElementById('hand-heures').value) || 0;
+  const nbDistrib = parseInt(document.getElementById('hand-nb-distrib').value) || 1;
+  const joursTotal = Math.ceil(heures / SIM_HEURES_JOUR);
+  document.getElementById('hand-md-cout').textContent = simFmt(cout);
+  document.getElementById('hand-md-marge').textContent = simFmt(margeEur);
+  document.getElementById('hand-md-prix').textContent = simFmt(prix);
+  document.getElementById('hand-md-duree').textContent = `${joursTotal}j / ${nbDistrib} distrib.`;
+  elDet.style.display = 'grid';
 }
 </script>
 </body>
