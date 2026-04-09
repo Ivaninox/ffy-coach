@@ -196,6 +196,64 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .sim-param-item input { width: 100%; font-size: 12px; padding: 5px 8px; border-radius: 6px; border: 1px solid #d0cdc6; background: #fff; color: #1a1a1a; font-family: inherit; outline: none; }
 .sim-param-item input:focus { border-color: #1a6ef5; }
 .sim-full { grid-column: 1/-1; }
+
+/* ===== DEBRIEF REDESIGN ===== */
+.critere-card { background:#fff; border:1px solid #e0ddd6; border-radius:12px; padding:12px 14px; }
+.critere-header { display:flex; align-items:center; gap:10px; }
+.critere-label { font-size:12px; font-weight:500; color:#555; flex:1; }
+.critere-score { font-size:15px; font-weight:700; color:#1a1a1a; min-width:36px; text-align:right; }
+.critere-toggle { background:none; border:none; color:#888; font-size:11px; cursor:pointer; padding:2px 6px; border-radius:6px; transition:background 0.15s; flex-shrink:0; }
+.critere-toggle:hover { background:#f0ede8; color:#1a1a1a; }
+.critere-comment { font-size:12px; line-height:1.7; color:#444; margin-top:10px; padding-top:10px; border-top:1px solid #f0ede8; display:none; }
+.critere-comment.open { display:block; }
+
+.debrief-section { display:flex; flex-direction:column; gap:10px; }
+.debrief-section-title { font-size:11px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:0.6px; padding:4px 0; }
+
+.point-fort-card { background:#f0fdf4; border:1px solid #86efac; border-radius:12px; padding:14px; }
+.point-fort-num { font-size:10px; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.point-fort-titre { font-size:13px; font-weight:600; color:#14532d; margin-bottom:6px; }
+.point-fort-detail { font-size:12px; line-height:1.7; color:#166534; }
+
+.axe-card { background:#fff; border:1px solid #e0ddd6; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+.axe-num { font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.5px; }
+.axe-titre { font-size:13px; font-weight:600; color:#1a1a1a; }
+.axe-contexte { font-size:12px; line-height:1.7; color:#555; }
+.axe-citation { background:#fef2f2; border-left:3px solid #ef4444; border-radius:0 8px 8px 0; padding:10px 12px; font-size:12px; line-height:1.6; color:#7f1d1d; }
+.axe-citation-label { font-size:10px; font-weight:700; color:#ef4444; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px; }
+.axe-reformulation { background:#f0fdf4; border-left:3px solid #22c55e; border-radius:0 8px 8px 0; padding:10px 12px; font-size:12px; line-height:1.6; color:#14532d; }
+.axe-reformulation-label { font-size:10px; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px; }
+
+.maturite-card { background:#fffbeb; border:1px solid #fcd34d; border-radius:12px; padding:14px; }
+.maturite-label { font-size:10px; font-weight:700; color:#d97706; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.maturite-text { font-size:12px; line-height:1.7; color:#78350f; }
+
+.actions-card { background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:14px; }
+.actions-label { font-size:10px; font-weight:700; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+.action-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; }
+.action-item:last-child { margin-bottom:0; }
+.action-num { width:20px; height:20px; background:#1d4ed8; color:#fff; border-radius:50%; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.action-text { font-size:12px; line-height:1.6; color:#1e3a8a; }
+
+.note-perso-card { background:#1a1a1a; border-radius:12px; padding:16px; }
+.note-perso-label { font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+.note-perso-text { font-size:13px; line-height:1.75; color:#f5f5f5; font-style:italic; }
+
+/* Mail section */
+.mail-section { background:#fff; border:1px solid #e0ddd6; border-radius:12px; overflow:hidden; }
+.mail-section-header { padding:12px 14px; border-bottom:1px solid #f0ede8; display:flex; align-items:center; justify-content:space-between; }
+.mail-section-title { font-size:11px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:0.5px; }
+.mail-body { padding:14px; font-size:13px; line-height:1.8; color:#1a1a1a; white-space:pre-wrap; border-bottom:1px solid #f0ede8; min-height:80px; }
+.mail-body[contenteditable=true]:focus { outline:none; background:#fafaf8; }
+.mail-chat-msgs { max-height:180px; overflow-y:auto; padding:10px 14px; display:flex; flex-direction:column; gap:8px; background:#f9f8f6; }
+.mail-chat-msg { font-size:12px; line-height:1.6; padding:8px 10px; border-radius:8px; max-width:90%; }
+.mail-chat-msg.user { background:#1a6ef5; color:#fff; align-self:flex-end; }
+.mail-chat-msg.agent { background:#fff; color:#1a1a1a; border:1px solid #e0ddd6; align-self:flex-start; }
+.mail-chat-input-row { display:flex; gap:8px; padding:10px 14px; border-top:1px solid #f0ede8; background:#fff; }
+.mail-chat-input-row input { flex:1; font-size:12px; padding:7px 10px; border-radius:8px; border:1px solid #d0cdc6; font-family:inherit; outline:none; background:#faf9f7; color:#1a1a1a; }
+.mail-chat-input-row input:focus { border-color:#1a6ef5; }
+.mail-chat-input-row button { font-size:12px; padding:7px 14px; border-radius:8px; border:none; background:#1a1a1a; color:#fff; cursor:pointer; flex-shrink:0; }
+.mail-chat-input-row button:hover { background:#333; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -811,9 +869,7 @@ async function calcVHR() {
   try {
     const prompt = `Distance routière depuis "6 rue Bellini, 92800 Puteaux" jusqu'à "${ville}" en France. JSON strict uniquement, aucun autre texte : {"distance_km": X, "peages_aller_eur": X}. distance_km = trajet aller en km par autoroute. peages_aller_eur = total péages aller en euros pour véhicule léger.`;
     const raw = await callAPI([{role:'user',content:prompt}], 'Tu es un expert en géographie routière française. Réponds UNIQUEMENT avec un objet JSON valide, aucun autre texte.', 150);
-    const jsonStr = raw.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
-    if (!jsonStr) throw new Error('Réponse inattendue');
-    const data = JSON.parse(jsonStr);
+    const data = extractJSON(raw);
     vhrCache[ville.toLowerCase()] = data;
     applyVHR(data, nbJours, ville, resultEl);
   } catch(e) { resultEl.innerHTML = `<div style="font-size:12px;color:#c00;padding:6px 0;">Erreur : ${escHtml(e.message)}</div>`; }
@@ -853,8 +909,22 @@ function switchTab(tab) {
   if (tab === 'history') renderHistory();
 }
 
-async function callAPI(messages, system, maxTokens, temperature) {
-  const body = { model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 1500, system: system || SYSTEM_COACH, messages };
+function extractJSON(raw) {
+  // Essaie chaque bloc ```json ... ``` du dernier au premier
+  const blocks = [...raw.matchAll(/```json\s*([\s\S]*?)```/g)].map(m => m[1].trim());
+  for (const block of blocks.reverse()) {
+    try { return JSON.parse(block); } catch {}
+  }
+  // Fallback : cherche le plus grand objet JSON brut (greedy)
+  const matches = [...raw.matchAll(/\{[\s\S]*\}/g)];
+  for (const m of matches.reverse()) {
+    try { return JSON.parse(m[0]); } catch {}
+  }
+  throw new Error('Aucun JSON valide trouvé dans la réponse');
+}
+
+async function callAPI(messages, system, maxTokens, temperature, model) {
+  const body = { model: model || 'claude-sonnet-4-6', max_tokens: maxTokens || 1500, system: system || SYSTEM_COACH, messages };
   if (temperature !== undefined) body.temperature = temperature;
   const r = await fetch('/api/chat', {
     method: 'POST',
@@ -979,12 +1049,16 @@ async function scoreR1() {
     ? {preparation:2,discovery:4,meddpicc:3,objections:3,pitch:2,closing:3,followup:3}
     : {pain_revalidation:2,solution_fit:4,meddpicc:3,objections:3,demo_propale:2,closing:4,followup:2};
 
-  // APPEL 1 — notes uniquement
+  // APPEL 1 — scores JSON via Haiku (rapide + léger)
   body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Étape 1/2 — Calcul des notes...</div>`;
 
+  const critMaxesText = type === 'R1'
+    ? 'preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3'
+    : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
+
   const notesPrompt = type === 'R1'
-    ? `Transcript d'un call R1 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,3000)}\n\nJSON strict uniquement (scores en multiples de 0.5) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}\nMax : preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3. Score total = somme des critères.`
-    : `Transcript d'un call R2 de ${commercial} chez Flying For You.\n\n${hasFile?'[fichier joint]':text.slice(0,3000)}\n\nJSON strict uniquement (scores en multiples de 0.5) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}\nMax : pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2. Score total = somme des critères.`;
+    ? `Transcript call R1 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,2000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}`
+    : `Transcript call R2 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,2000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}`;
 
   let parsed;
   try {
@@ -997,83 +1071,58 @@ async function scoreR1() {
         {type:'text',text:notesPrompt}
       ]}];
     } else { msg1 = [{role:'user',content:notesPrompt}]; }
-    const raw1 = await callAPI(msg1, SYSTEM_SCORE_R1, 500, 0);
-    try {
-      const jsonStr = raw1.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
-      if (!jsonStr) throw new Error('Aucun JSON trouvé');
-      parsed = JSON.parse(jsonStr);
-    }
+    const raw1 = await callAPI(msg1, SYSTEM_SCORE_DEBRIEF, 500, 0, 'claude-sonnet-4-6');
+    try { parsed = extractJSON(raw1); }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw1)}</pre>`; return; }
   } catch(e) {
     body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur étape 1 : ${escHtml(e.message)}</div>`; return;
   }
 
-  // Affichage intermédiaire des notes
   renderScoreShell(body, parsed, commercial, maxes, type);
 
-  // APPEL 2 — débrief narratif complet
+  // APPEL 2 — débrief JSON structuré via Sonnet
   const debriefEl = document.getElementById('debrief-zone');
-  if (debriefEl) debriefEl.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Étape 2/2 — Rédaction du débrief détaillé...</div>`;
+  if (debriefEl) debriefEl.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Étape 2/2 — Rédaction du débrief...</div>`;
 
-  const spinSection = type === 'R1' ? `
-ANALYSE SPIN OBLIGATOIRE — pour chaque étape :
-- Questions Situation posées (cite des extraits exacts) : pertinentes ? suffisantes ?
-- Questions Problem : lesquelles ont été posées ? Quelles douleurs révélées ? Lesquelles manquées ?
-- Questions Implication : posées ? Si non, quelles questions auraient dû être posées avec les pains identifiés ?
-- Questions Need-payoff : le prospect a-t-il verbalisé la valeur ? Sinon, comment l'y amener ?
-- Ratio temps de parole estimé (client vs commercial)` : `
-ANALYSE R2 OBLIGATOIRE :
-- La douleur a-t-elle été revalidée en ouverture ?
-- La solution présentée est-elle collée aux pains du R1 ?
-- L'Economic Buyer était-il présent ? Le Champion a-t-il joué son rôle ?
-- La propale a-t-elle été présentée en live ou envoyée par mail ?`;
+  const spinInstruction = type === 'R1'
+    ? `Pour "commentaires", inclus aussi l'analyse SPIN dans le commentaire "discovery" : questions Situation/Problem/Implication/Need-payoff posées, cite des extraits exacts, lesquelles manquaient, ratio parole client vs commercial.`
+    : `Pour "commentaires", inclus dans "pain_revalidation" : la douleur a-t-elle été revalidée en ouverture ? Solution collée aux pains R1 ? Economic Buyer présent ? Propale en live ou par mail ?`;
 
-  const critMaxesText = type === 'R1'
-    ? 'preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3'
-    : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
-
-  const debriefPrompt = `Tu es directeur commercial senior chez FFY. Tu viens d'analyser ce call ${type} de ${commercial}.
+  const debriefPrompt = `Tu es coach commercial senior chez FFY. Tu analyses ce call ${type} de ${commercial} et tu lui parles directement en "tu".
 
 Transcript :
-${hasFile ? '[fichier audio/PDF joint — base ton analyse sur les scores ci-dessus]' : text.slice(0,2500)}
+${hasFile ? '[fichier joint]' : text.slice(0,2000)}
 
 Scores : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
 Barème : ${critMaxesText}
 
-Rédige le débrief complet EXACTEMENT dans ce format :
+${spinInstruction}
 
-Scoring call ${commercial} — [date et contexte du call extraits du transcript]
-Prospect : [qui est le prospect, son rôle, son contexte, son enjeu — tiré du transcript]
-Type : ${type} — [sous-titre descriptif en 5-8 mots]
+Réponds UNIQUEMENT avec ce JSON strict (zéro texte avant ou après) :
+{
+  "commentaires": {
+    ${Object.keys(maxes).map(k => `"${k}": "3-4 phrases en tutoyant ${commercial}. Cite des extraits exacts entre guillemets. Ce que tu as fait, ce qui manquait, impact sur le deal."`).join(',\n    ')}
+  },
+  "points_forts": [
+    {"titre": "Titre court", "detail": "Ce que tu as fait exactement + POURQUOI c'est efficace + comment reproduire systématiquement. En tutoyant."},
+    {"titre": "...", "detail": "..."},
+    {"titre": "...", "detail": "..."}
+  ],
+  "axes": [
+    {"titre": "Titre court et percutant", "contexte": "2-3 phrases sur le problème, en tutoyant.", "citation": "Ce que tu as dit exactement", "reformulation": "Ce que tu aurais dû dire, mot pour mot, réutilisable immédiatement"},
+    {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."},
+    {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."}
+  ],
+  "maturite_deal": "3-4 phrases franches. Signaux positifs ET risques. Probabilité de closing. Zéro langue de bois. En tutoyant.",
+  "actions": [
+    "Action 1 concrète avec texte exact du message à envoyer si pertinent",
+    "Action 2",
+    "Action 3"
+  ],
+  "note_perso": "2-3 phrases en tutoyant ${commercial} directement. Miroir avec ses patterns habituels. Question qui fait réfléchir. Direct, coach, pas brutal."
+}
 
-Note globale : ${parsed.score_total}/20
-
-Détail par critère
-[Pour CHAQUE critère du barème, une entrée structurée ainsi :]
-[Nom lisible du critère] — [score]/[max] : [3-4 phrases d'analyse avec citation exacte du transcript entre guillemets. Ce qui s'est passé précisément, ce qui manquait, l'impact sur le deal.]
-
-${spinSection}
-
-Points forts à conserver
-[3 points numérotés. Pour chaque : ce qui a été dit/fait exactement, POURQUOI c'est efficace commercialement, comment le reproduire systématiquement]
-
-Axes d'amélioration avec reformulations concrètes
-[3 axes numérotés, structurés EXACTEMENT ainsi pour chaque axe :]
-1. [Titre court et percutant]
-[2-3 phrases expliquant le problème avec le contexte du call]
-❌ Ce qui s'est passé : "[citation exacte]"
-✅ Ce qu'il fallait dire : "[reformulation complète, prête à l'emploi mot pour mot]"
-
-Stade de maturité réel du deal
-[3-4 phrases d'évaluation franche. Signaux positifs ET risques concrets. Probabilité de closing. Pas de langue de bois.]
-
-Recommandation — 3 actions dans les 48h
-[3 actions numérotées, concrètes, avec si pertinent le texte exact du mail ou message à envoyer]
-
-Note personnelle
-[2-3 phrases en tutoyant ${commercial} directement. Mettre en miroir ce pattern avec ses tendances habituelles. Poser la question qui fait réfléchir. Direct, coach, pas brutal.]
-
-RÈGLES : cite toujours le transcript, reformulations utilisables mot pour mot, zéro généralité.`;
+RÈGLES : cite toujours le transcript, reformulations mot pour mot, zéro généralité, "tu" partout.`;
 
   try {
     let msg2;
@@ -1085,9 +1134,19 @@ RÈGLES : cite toujours le transcript, reformulations utilisables mot pour mot, 
         {type:'text',text:debriefPrompt}
       ]}];
     } else { msg2 = [{role:'user',content:debriefPrompt}]; }
-    const debrief = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 4000);
-    const dz = document.getElementById('debrief-zone');
-    if (dz) dz.innerHTML = `<div class="card"><div class="card-label">Débrief complet</div><div class="card-text">${escHtml(debrief)}</div></div>`;
+    const raw2 = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 4500, undefined, 'claude-sonnet-4-6');
+    let debrief;
+    try { debrief = extractJSON(raw2); } catch(e) {
+      const dz = document.getElementById('debrief-zone');
+      if (dz) dz.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw2)}</pre>`;
+      saveToHistory(commercial, parsed, type, 'r1r2', maxes);
+      return;
+    }
+    // Mettre à jour le header — supprimer "analyse en cours"
+    const headerNote = body.querySelector('.score-header div:last-child div:last-child');
+    if (headerNote && headerNote.textContent.includes('en cours')) headerNote.remove();
+
+    renderDebrief(parsed, debrief, maxes, commercial, type, text);
     saveToHistory(commercial, parsed, type, 'r1r2', maxes);
   } catch(e) {
     const dz = document.getElementById('debrief-zone');
@@ -1136,9 +1195,7 @@ Critères :
     const raw = await callAPI(messages, SYSTEM_SCORE_PROSP, hasFile ? 2500 : 1500, 0);
     let parsed;
     try {
-      const jsonStr = raw.replace(/```json|```/g,'').match(/\{[\s\S]*\}/)?.[0];
-      if (!jsonStr) throw new Error('Aucun JSON trouvé');
-      parsed = JSON.parse(jsonStr);
+      parsed = extractJSON(raw);
     }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
     renderScoreResult(body, parsed, commercial, maxes, 'Prospection', 'prospection', text);
@@ -1152,30 +1209,231 @@ Critères :
 function renderScoreShell(body, parsed, commercial, maxes, type) {
   const s = parsed.score_total;
   const scoreColor = s >= 15 ? '#3B6D11' : s >= 10 ? '#BA7517' : '#c00';
+  const scoreLabel = s >= 15 ? 'Excellent' : s >= 12 ? 'Bon' : s >= 8 ? 'À travailler' : 'Insuffisant';
   const labels = {
     preparation:'Préparation', discovery:'Découverte SPIN', meddpicc:'MEDDPICC',
-    objections:'Objections', pitch:'Pitch & preuves', closing:'Closing & NSC', followup:'Follow-up',
+    objections:'Gestion objections', pitch:'Pitch & preuves', closing:'Closing & NSC', followup:'Follow-up',
     pain_revalidation:'Revalidation pain', solution_fit:'Solution / fit', demo_propale:'Démo & propale',
     accroche:'Accroche & hook', pitch_aida:'Pitch AIDA', qualification:'Qualification',
     barrage:'Gestion barrage', obtention_rdv:'Obtention RDV', energie:'Énergie & rythme'
   };
-  let grid = '';
+  let cards = '';
   for (const [key, max] of Object.entries(maxes)) {
     const val = parsed.criteres?.[key] ?? 0;
     const pct = Math.round((val/max)*100);
-    const barColor = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#c00';
-    grid += `<div class="score-item"><div class="score-item-label">${labels[key]||key}</div><div class="score-item-val">${val}/${max}</div><div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div></div>`;
+    const barColor = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#dc2626';
+    const dot = pct >= 70 ? '🟢' : pct >= 40 ? '🟡' : '🔴';
+    cards += `
+    <div class="critere-card">
+      <div class="critere-header">
+        <span style="font-size:13px;">${dot}</span>
+        <span class="critere-label">${labels[key]||key}</span>
+        <span class="critere-score" style="color:${barColor}">${val}/${max}</span>
+        <button class="critere-toggle" onclick="toggleComment('${key}')" id="toggle-${key}" style="display:none;">Voir ▼</button>
+      </div>
+      <div class="bar-wrap" style="margin-top:8px;"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <div class="critere-comment" id="comment-${key}"></div>
+    </div>`;
   }
   const badgeType = type === 'Prospection' ? 'prospection' : 'r1r2';
   body.innerHTML = `<div class="score-result">
     <div class="score-header">
-      <div class="score-badge" style="color:${scoreColor}">${s}/20</div>
-      <div><div style="font-size:14px;font-weight:600;">${commercial}</div><div style="font-size:12px;color:#888;">${type} · ${parsed.maturite||''}</div></div>
+      <div>
+        <div class="score-badge" style="color:${scoreColor}">${s}/20</div>
+        <div style="font-size:11px;color:${scoreColor};font-weight:600;margin-top:2px;">${scoreLabel}</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:600;">${escHtml(commercial)}</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">${escHtml(type)} · ${escHtml(parsed.maturite||'')}</div>
+        <div style="font-size:11px;color:#aaa;margin-top:6px;">Analyse du débrief en cours...</div>
+      </div>
     </div>
-    <div class="score-grid">${grid}</div>
+    <div style="display:flex;flex-direction:column;gap:8px;" id="criteres-grid">${cards}</div>
     <div id="debrief-zone"></div>
     <button class="action-btn secondary" style="margin-top:4px;" onclick="resetScore('${badgeType}')">Analyser un autre call</button>
   </div>`;
+}
+
+function toggleComment(key) {
+  const el = document.getElementById('comment-' + key);
+  const btn = document.getElementById('toggle-' + key);
+  if (!el) return;
+  el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? 'Masquer ▲' : 'Voir ▼';
+}
+
+/* ---- RENDER DEBRIEF ---- */
+function renderDebrief(parsed, debrief, maxes, commercial, type, transcript) {
+  // 1. Peupler les commentaires dans les cartes critères
+  if (debrief.commentaires) {
+    for (const [key, comment] of Object.entries(debrief.commentaires)) {
+      const commentEl = document.getElementById('comment-' + key);
+      const toggleBtn = document.getElementById('toggle-' + key);
+      if (commentEl) {
+        commentEl.textContent = comment;
+        if (toggleBtn) toggleBtn.style.display = '';
+      }
+    }
+  }
+
+  // 2. Points forts
+  let pfHtml = `<div class="debrief-section">
+    <div class="debrief-section-title">Points forts à conserver</div>`;
+  (debrief.points_forts || []).forEach((pf, i) => {
+    pfHtml += `<div class="point-fort-card">
+      <div class="point-fort-num">Point fort ${i+1}</div>
+      <div class="point-fort-titre">${escHtml(pf.titre||'')}</div>
+      <div class="point-fort-detail">${escHtml(pf.detail||'')}</div>
+    </div>`;
+  });
+  pfHtml += `</div>`;
+
+  // 3. Axes d'amélioration
+  let axHtml = `<div class="debrief-section">
+    <div class="debrief-section-title">Axes d'amélioration</div>`;
+  (debrief.axes || []).forEach((axe, i) => {
+    axHtml += `<div class="axe-card">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="axe-num">Axe ${i+1}</div>
+      </div>
+      <div class="axe-titre">${escHtml(axe.titre||'')}</div>
+      <div class="axe-contexte">${escHtml(axe.contexte||'')}</div>
+      <div class="axe-citation"><div class="axe-citation-label">❌ Ce qui s'est passé</div>${escHtml(axe.citation||'')}</div>
+      <div class="axe-reformulation"><div class="axe-reformulation-label">✅ Ce qu'il fallait dire</div>${escHtml(axe.reformulation||'')}</div>
+    </div>`;
+  });
+  axHtml += `</div>`;
+
+  // 4. Maturité deal + Actions
+  const maturiteHtml = debrief.maturite_deal ? `
+    <div class="maturite-card">
+      <div class="maturite-label">Stade de maturité réel du deal</div>
+      <div class="maturite-text">${escHtml(debrief.maturite_deal)}</div>
+    </div>` : '';
+
+  let actionsHtml = '';
+  if (debrief.actions && debrief.actions.length) {
+    actionsHtml = `<div class="actions-card">
+      <div class="actions-label">3 actions à faire dans les 48h</div>`;
+    debrief.actions.forEach((a, i) => {
+      actionsHtml += `<div class="action-item">
+        <div class="action-num">${i+1}</div>
+        <div class="action-text">${escHtml(a)}</div>
+      </div>`;
+    });
+    actionsHtml += `</div>`;
+  }
+
+  // 5. Note perso
+  const noteHtml = debrief.note_perso ? `
+    <div class="note-perso-card">
+      <div class="note-perso-label">Note personnelle</div>
+      <div class="note-perso-text">${escHtml(debrief.note_perso)}</div>
+    </div>` : '';
+
+  // 6. Section mail
+  mailStore.transcript = transcript || '';
+  mailStore.parsed = parsed;
+  mailStore.debrief = debrief;
+  mailStore.type = type;
+  mailStore.commercial = commercial;
+  const mailHtml = `
+    <div class="mail-section" id="mail-section">
+      <div class="mail-section-header">
+        <span class="mail-section-title">Mail de suivi</span>
+        <button class="action-btn" style="font-size:12px;padding:7px 16px;background:#1a6ef5;" onclick="genMailDebrief()">Générer le mail →</button>
+      </div>
+      <div id="mail-debrief-body"></div>
+    </div>`;
+
+  const dz = document.getElementById('debrief-zone');
+  if (dz) dz.innerHTML = pfHtml + axHtml + maturiteHtml + actionsHtml + noteHtml + mailHtml;
+}
+
+/* ---- MAIL DEPUIS DEBRIEF ---- */
+let mailDebriefHistory = [];
+
+async function genMailDebrief() {
+  const section = document.getElementById('mail-debrief-body');
+  if (!section) return;
+  section.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Rédaction du mail...</div>`;
+
+  const { transcript, parsed, debrief, type, commercial } = mailStore;
+  const mailTypeDesc = type === 'R1'
+    ? 'follow-up post-R1 : récap des pains identifiés, confirmation du next step, invitation à réceptionner la propale'
+    : type === 'R2'
+    ? 'récap post-R2 : merci pour l\'échange, résumé de la solution, push au closing'
+    : 'suivi post-call';
+
+  const prompt = `Rédige un mail commercial de suivi pour ${commercial} de Flying For You.
+Type : ${mailTypeDesc}
+Score call : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
+Actions recommandées : ${(debrief?.actions||[]).join(' | ')}
+Transcript (extrait) : ${(transcript||'').slice(0, 2000)}
+
+Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté au secteur. SPIN intégré. Next step concrète avec date. 150-200 mots. En français.`;
+
+  mailDebriefHistory = [{role:'user', content:prompt}];
+  try {
+    const mail = await callAPI(mailDebriefHistory, SYSTEM_MAIL);
+    mailDebriefHistory.push({role:'assistant', content:mail});
+    renderMailDebrief(mail);
+  } catch(e) {
+    section.innerHTML = `<div style="padding:14px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
+  }
+}
+
+function renderMailDebrief(mailText) {
+  const section = document.getElementById('mail-debrief-body');
+  if (!section) return;
+  section.innerHTML = `
+    <div class="mail-body" id="mail-editable" contenteditable="true">${escHtml(mailText)}</div>
+    <div style="display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #f0ede8;background:#fff;">
+      <button class="action-btn secondary" style="font-size:12px;padding:6px 14px;" onclick="copyMailDebrief()">Copier</button>
+      <button class="action-btn secondary" style="font-size:12px;padding:6px 14px;" onclick="genMailDebrief()">Régénérer</button>
+    </div>
+    <div class="mail-chat-msgs" id="mail-chat-msgs"></div>
+    <div class="mail-chat-input-row">
+      <input type="text" id="mail-chat-input" placeholder="Modifie le mail : rends-le plus court, ajoute une urgence, change le ton..." onkeydown="if(event.key==='Enter')sendMailChat()">
+      <button onclick="sendMailChat()">Envoyer</button>
+    </div>`;
+}
+
+async function sendMailChat() {
+  const input = document.getElementById('mail-chat-input');
+  const msgs = document.getElementById('mail-chat-msgs');
+  const instruction = input?.value?.trim();
+  if (!instruction || !msgs) return;
+
+  const currentMail = document.getElementById('mail-editable')?.innerText || '';
+  input.value = '';
+  msgs.innerHTML += `<div class="mail-chat-msg user">${escHtml(instruction)}</div>`;
+  msgs.innerHTML += `<div class="mail-chat-msg agent" id="mail-chat-typing">...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  mailDebriefHistory.push({role:'user', content:`Mail actuel :\n${currentMail}\n\nInstruction : ${instruction}\n\nRéponds uniquement avec le nouveau corps du mail, rien d'autre.`});
+  try {
+    const newMail = await callAPI(mailDebriefHistory, SYSTEM_MAIL);
+    mailDebriefHistory.push({role:'assistant', content:newMail});
+    const typing = document.getElementById('mail-chat-typing');
+    if (typing) typing.remove();
+    msgs.innerHTML += `<div class="mail-chat-msg agent">Mail mis à jour.</div>`;
+    const editable = document.getElementById('mail-editable');
+    if (editable) editable.innerText = newMail;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {
+    const typing = document.getElementById('mail-chat-typing');
+    if (typing) typing.textContent = 'Erreur : ' + e.message;
+  }
+}
+
+function copyMailDebrief() {
+  const el = document.getElementById('mail-editable');
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = el.closest('.mail-section')?.querySelector('button');
+    if (btn) { const o = btn.textContent; btn.textContent = 'Copié !'; setTimeout(() => btn.textContent = o, 1500); }
+  });
 }
 
 /* ---- RENDER SCORE ---- */
