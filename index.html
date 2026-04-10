@@ -1057,8 +1057,8 @@ async function scoreR1() {
     : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
 
   const notesPrompt = type === 'R1'
-    ? `Transcript call R1 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,2000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}`
-    : `Transcript call R2 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,2000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}`;
+    ? `Transcript call R1 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,8000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}`
+    : `Transcript call R2 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,8000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}`;
 
   let parsed;
   try {
@@ -1091,7 +1091,7 @@ async function scoreR1() {
   const debriefPrompt = `Tu es coach commercial senior chez FFY. Tu analyses ce call ${type} de ${commercial} et tu lui parles directement en "tu".
 
 Transcript :
-${hasFile ? '[fichier joint]' : text.slice(0,2000)}
+${hasFile ? '[fichier joint]' : text.slice(0,8000)}
 
 Scores : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
 Barème : ${critMaxesText}
@@ -1134,7 +1134,7 @@ RÈGLES : cite toujours le transcript, reformulations mot pour mot, zéro géné
         {type:'text',text:debriefPrompt}
       ]}];
     } else { msg2 = [{role:'user',content:debriefPrompt}]; }
-    const raw2 = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 4500, undefined, 'claude-sonnet-4-6');
+    const raw2 = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 8000, undefined, 'claude-sonnet-4-6');
     let debrief;
     try { debrief = extractJSON(raw2); } catch(e) {
       const dz = document.getElementById('debrief-zone');
@@ -1167,7 +1167,7 @@ async function scoreProsp() {
 
   const promptText = `Transcript d'un call de PROSPECTION TÉLÉPHONIQUE de ${commercial} chez Flying For You (agence street-marketing B2B).
 
-${hasFile ? '' : text.slice(0,2500)}
+${hasFile ? '' : text.slice(0,8000)}
 
 Score ce call de prospection avec la grille prospection FFY /20. JSON strict uniquement :
 {"score_total":X,"type":"Prospection","criteres":{"accroche":X,"pitch_aida":X,"qualification":X,"barrage":X,"obtention_rdv":X,"energie":X},"points_forts":"...","axes":"...","reformulations":"3 exemples concrets de reformulations pour les moments clés du call","recommandation":"..."}
@@ -1192,7 +1192,7 @@ Critères :
     } else {
       messages = [{ role: 'user', content: promptText }];
     }
-    const raw = await callAPI(messages, SYSTEM_SCORE_PROSP, hasFile ? 2500 : 1500, 0);
+    const raw = await callAPI(messages, SYSTEM_SCORE_PROSP, hasFile ? 4000 : 4000, 0);
     let parsed;
     try {
       parsed = extractJSON(raw);
