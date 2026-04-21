@@ -796,6 +796,9 @@ RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté 
 
 const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu es un coach commercial senior. Tu analyses les calls R1/R2 FFY avec un niveau de détail élevé. Tu cites des extraits exacts du transcript. Tu es franc, jamais complaisant, et fournis des reformulations concrètes actionnables.`;
 
+// Système ultra-court pour l'étape 1 (scoring uniquement — Haiku)
+const SYSTEM_SCORE_NOTES = 'Tu es un évaluateur de calls commerciaux B2B. Lis le transcript et attribue des notes selon le barème fourni. Réponds uniquement en JSON valide.';
+
 // Prompt allégé pour l'appel débrief — évite de renvoyer SYSTEM_BASE (~2500 tokens) une 2e fois
 const SYSTEM_SCORE_DEBRIEF = `Tu es un coach commercial senior expert en vente B2B pour Flying For You (FFY), agence de street-marketing basée à Puteaux (92).
 
@@ -829,7 +832,14 @@ const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospecti
 const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerciales FFY structurées, personnalisées, percutantes. Structure : Pain recap → Impact chiffré (CoI) → Solution FFY → Différenciants ciblés → RONI → Investissement. Ton direct, orienté résultat. Jamais de langue de bois.`;
 
 const callHistory = [];
-const scoreHistory = (() => { try { return JSON.parse(localStorage.getItem('ffy_score_history') || '[]'); } catch { return []; } })();
+let scoreHistory = [];
+async function loadHistory() {
+  try {
+    const r = await fetch('/api/history');
+    if (r.ok) scoreHistory = await r.json();
+  } catch {}
+}
+loadHistory();
 const mailStore = {};
 
 /* ---- VHR ---- */
@@ -905,8 +915,8 @@ function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   TABS.forEach((t, i) => { if (t === tab) document.querySelectorAll('.tab')[i].classList.add('active'); });
   document.getElementById('panel-' + tab).classList.add('active');
-  if (tab === 'compare') renderCompare();
-  if (tab === 'history') renderHistory();
+  if (tab === 'compare') loadHistory().then(renderCompare);
+  if (tab === 'history') loadHistory().then(renderHistory);
 }
 
 function extractJSON(raw) {
@@ -1049,108 +1059,81 @@ async function scoreR1() {
     ? {preparation:2,discovery:4,meddpicc:3,objections:3,pitch:2,closing:3,followup:3}
     : {pain_revalidation:2,solution_fit:4,meddpicc:3,objections:3,demo_propale:2,closing:4,followup:2};
 
-  // APPEL 1 — scores JSON via Haiku (rapide + léger)
-  body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Étape 1/2 — Calcul des notes...</div>`;
+  body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Analyse en cours — scoring + débrief...</div>`;
 
   const critMaxesText = type === 'R1'
     ? 'preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3'
     : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
 
-  const notesPrompt = type === 'R1'
-    ? `Transcript call R1 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,8000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"preparation":X.X,"discovery":X.X,"meddpicc":X.X,"objections":X.X,"pitch":X.X,"closing":X.X,"followup":X.X}}`
-    : `Transcript call R2 de ${commercial} — FFY.\n\n${hasFile?'[fichier joint]':text.slice(0,8000)}\n\nJSON strict (multiples de 0.5, barème ${critMaxesText}) :\n{"score_total":X.X,"maturite":"Exploration|Validation|Decision|Contractualisation","criteres":{"pain_revalidation":X.X,"solution_fit":X.X,"meddpicc":X.X,"objections":X.X,"demo_propale":X.X,"closing":X.X,"followup":X.X}}`;
-
-  let parsed;
-  try {
-    let msg1;
-    if (hasFile) {
-      msg1 = [{ role:'user', content:[
-        fileData.r1.mediaType==='audio/mpeg'
-          ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
-          : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
-        {type:'text',text:notesPrompt}
-      ]}];
-    } else { msg1 = [{role:'user',content:notesPrompt}]; }
-    const raw1 = await callAPI(msg1, SYSTEM_SCORE_DEBRIEF, 500, 0, 'claude-sonnet-4-6');
-    try { parsed = extractJSON(raw1); }
-    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw1)}</pre>`; return; }
-  } catch(e) {
-    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur étape 1 : ${escHtml(e.message)}</div>`; return;
-  }
-
-  renderScoreShell(body, parsed, commercial, maxes, type);
-
-  // APPEL 2 — débrief JSON structuré via Sonnet
-  const debriefEl = document.getElementById('debrief-zone');
-  if (debriefEl) debriefEl.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Étape 2/2 — Rédaction du débrief...</div>`;
-
   const spinInstruction = type === 'R1'
-    ? `Pour "commentaires", inclus aussi l'analyse SPIN dans le commentaire "discovery" : questions Situation/Problem/Implication/Need-payoff posées, cite des extraits exacts, lesquelles manquaient, ratio parole client vs commercial.`
-    : `Pour "commentaires", inclus dans "pain_revalidation" : la douleur a-t-elle été revalidée en ouverture ? Solution collée aux pains R1 ? Economic Buyer présent ? Propale en live ou par mail ?`;
+    ? `Dans "commentaires.discovery", inclus l'analyse SPIN : questions S/P/I/N posées, extraits exacts, lesquelles manquaient, ratio parole client vs commercial.`
+    : `Dans "commentaires.pain_revalidation", précise : douleur revalidée en ouverture ? Solution collée aux pains R1 ? Economic Buyer présent ? Propale en live ou par mail ?`;
 
-  const debriefPrompt = `Tu es coach commercial senior chez FFY. Tu analyses ce call ${type} de ${commercial} et tu lui parles directement en "tu".
+  const combinedPrompt = `Tu es coach commercial senior chez FFY. Analyse ce call ${type} de ${commercial} et parle-lui directement en "tu".
 
 Transcript :
-${hasFile ? '[fichier joint]' : text.slice(0,8000)}
+${hasFile ? '[fichier joint]' : text.slice(0,3000)}
 
-Scores : ${JSON.stringify(parsed.criteres)} — Total : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
-Barème : ${critMaxesText}
-
+Barème (ne jamais dépasser le max, multiples de 0.5) : ${critMaxesText}
+score_total = somme exacte des critères.
 ${spinInstruction}
 
-Réponds UNIQUEMENT avec ce JSON strict (zéro texte avant ou après) :
+Réponds UNIQUEMENT avec ce JSON (zéro texte avant ou après) :
 {
-  "commentaires": {
-    ${Object.keys(maxes).map(k => `"${k}": "3-4 phrases en tutoyant ${commercial}. Cite des extraits exacts entre guillemets. Ce que tu as fait, ce qui manquait, impact sur le deal."`).join(',\n    ')}
-  },
+  "score_total": X.X,
+  "maturite": "Exploration|Validation|Decision|Contractualisation",
+  "criteres": { ${Object.keys(maxes).map(k=>`"${k}":X.X`).join(', ')} },
+  "commentaires": { ${Object.keys(maxes).map(k=>`"${k}": "2-3 phrases, cite un extrait exact, ce qui manquait, impact deal"`).join(', ')} },
   "points_forts": [
-    {"titre": "Titre court", "detail": "Ce que tu as fait exactement + POURQUOI c'est efficace + comment reproduire systématiquement. En tutoyant."},
+    {"titre": "...", "detail": "Ce que tu as fait + pourquoi efficace + comment reproduire"},
     {"titre": "...", "detail": "..."},
     {"titre": "...", "detail": "..."}
   ],
   "axes": [
-    {"titre": "Titre court et percutant", "contexte": "2-3 phrases sur le problème, en tutoyant.", "citation": "Ce que tu as dit exactement", "reformulation": "Ce que tu aurais dû dire, mot pour mot, réutilisable immédiatement"},
+    {"titre": "...", "contexte": "Le problème en 2 phrases", "citation": "Ce que tu as dit exactement", "reformulation": "Ce qu'il fallait dire, mot pour mot"},
     {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."},
     {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."}
   ],
-  "maturite_deal": "3-4 phrases franches. Signaux positifs ET risques. Probabilité de closing. Zéro langue de bois. En tutoyant.",
-  "actions": [
-    "Action 1 concrète avec texte exact du message à envoyer si pertinent",
-    "Action 2",
-    "Action 3"
-  ],
-  "note_perso": "2-3 phrases en tutoyant ${commercial} directement. Miroir avec ses patterns habituels. Question qui fait réfléchir. Direct, coach, pas brutal."
-}
-
-RÈGLES : cite toujours le transcript, reformulations mot pour mot, zéro généralité, "tu" partout.`;
+  "maturite_deal": "3 phrases franches : signaux positifs, risques, probabilité closing",
+  "actions": ["Action 1 concrète", "Action 2", "Action 3"],
+  "note_perso": "2 phrases directes à ${commercial} : pattern remarqué + question qui fait réfléchir"
+}`;
 
   try {
-    let msg2;
+    let msg;
     if (hasFile) {
-      msg2 = [{ role:'user', content:[
+      msg = [{ role:'user', content:[
         fileData.r1.mediaType==='audio/mpeg'
           ? {type:'audio',source:{type:'base64',media_type:'audio/mpeg',data:fileData.r1.base64}}
           : {type:'document',source:{type:'base64',media_type:'application/pdf',data:fileData.r1.base64}},
-        {type:'text',text:debriefPrompt}
+        {type:'text',text:combinedPrompt}
       ]}];
-    } else { msg2 = [{role:'user',content:debriefPrompt}]; }
-    const raw2 = await callAPI(msg2, SYSTEM_SCORE_DEBRIEF, 8000, undefined, 'claude-sonnet-4-6');
-    let debrief;
-    try { debrief = extractJSON(raw2); } catch(e) {
-      const dz = document.getElementById('debrief-zone');
-      if (dz) dz.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw2)}</pre>`;
-      saveToHistory(commercial, parsed, type, 'r1r2', maxes);
-      return;
+    } else { msg = [{role:'user',content:combinedPrompt}]; }
+
+    const raw = await callAPI(msg, SYSTEM_SCORE_DEBRIEF, 3500, undefined, 'claude-sonnet-4-6');
+    let result;
+    try { result = extractJSON(raw); }
+    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
+
+    // Correction défensive : plafonner chaque critère à son maximum et recalculer le total
+    if (result.criteres) {
+      let total = 0;
+      for (const [k, max] of Object.entries(maxes)) {
+        const val = result.criteres[k] ?? 0;
+        result.criteres[k] = Math.min(Math.round(val * 2) / 2, max);
+        total += result.criteres[k];
+      }
+      result.score_total = Math.round(total * 2) / 2;
     }
-    // Mettre à jour le header — supprimer "analyse en cours"
+
+    renderScoreShell(body, result, commercial, maxes, type);
+    renderDebrief(result, result, maxes, commercial, type, text);
+    // Supprimer "analyse en cours" du header
     const headerNote = body.querySelector('.score-header div:last-child div:last-child');
     if (headerNote && headerNote.textContent.includes('en cours')) headerNote.remove();
-
-    renderDebrief(parsed, debrief, maxes, commercial, type, text);
-    saveToHistory(commercial, parsed, type, 'r1r2', maxes);
+    saveToHistory(commercial, result, type, 'r1r2', maxes);
   } catch(e) {
-    const dz = document.getElementById('debrief-zone');
-    if (dz) dz.innerHTML = `<div style="padding:14px;font-size:13px;color:#c00;">Erreur débrief : ${escHtml(e.message)}</div>`;
+    body.innerHTML = `<div style="padding:16px;font-size:13px;color:#c00;">Erreur : ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -1167,7 +1150,7 @@ async function scoreProsp() {
 
   const promptText = `Transcript d'un call de PROSPECTION TÉLÉPHONIQUE de ${commercial} chez Flying For You (agence street-marketing B2B).
 
-${hasFile ? '' : text.slice(0,8000)}
+${hasFile ? '' : text.slice(0,3000)}
 
 Score ce call de prospection avec la grille prospection FFY /20. JSON strict uniquement :
 {"score_total":X,"type":"Prospection","criteres":{"accroche":X,"pitch_aida":X,"qualification":X,"barrage":X,"obtention_rdv":X,"energie":X},"points_forts":"...","axes":"...","reformulations":"3 exemples concrets de reformulations pour les moments clés du call","recommandation":"..."}
@@ -1507,8 +1490,23 @@ function resetScore(type) {
 
 /* ---- SAVE & RENDER HISTORY ---- */
 function saveToHistory(commercial, parsed, type, badgeType, maxes) {
-  scoreHistory.push({ commercial, score: parsed.score_total, maturite: parsed.maturite||'', criteres: parsed.criteres||{}, date: new Date().toLocaleDateString('fr-FR'), type, badgeType, maxes: maxes||{} });
-  try { localStorage.setItem('ffy_score_history', JSON.stringify(scoreHistory)); } catch {}
+  const entry = {
+    commercial, score: parsed.score_total, maturite: parsed.maturite||'',
+    criteres: parsed.criteres||{}, date: new Date().toLocaleDateString('fr-FR'),
+    type, badgeType, maxes: maxes||{},
+    commentaires: parsed.commentaires||null,
+    points_forts: parsed.points_forts||null,
+    axes: parsed.axes||null,
+    maturite_deal: parsed.maturite_deal||null,
+    actions: parsed.actions||null,
+    note_perso: parsed.note_perso||null
+  };
+  scoreHistory.unshift(entry);
+  fetch('/api/history', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry)
+  }).catch(() => {});
 }
 
 const H_LABELS = {
@@ -1536,19 +1534,71 @@ function renderHistory() {
       }
       critHtml += '</div>';
     }
+    const hasDebrief = h.commentaires || h.points_forts || h.axes;
+    const idx = scoreHistory.slice().reverse().indexOf(h);
+    let debriefHtml = '';
+    if (hasDebrief) {
+      let d = '';
+      if (h.commentaires) {
+        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Commentaires par critère</div>`;
+        for (const [k, v] of Object.entries(h.commentaires)) {
+          d += `<div style="margin-bottom:6px;"><span style="font-size:11px;font-weight:600;color:#1a1a1a;">${H_LABELS[k]||k}</span><div style="font-size:12px;color:#444;line-height:1.6;margin-top:2px;">${escHtml(v)}</div></div>`;
+        }
+        d += `</div>`;
+      }
+      if (h.points_forts?.length) {
+        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Points forts</div>`;
+        h.points_forts.forEach(pf => { d += `<div style="margin-bottom:5px;"><span style="font-size:12px;font-weight:600;color:#3B6D11;">✓ ${escHtml(pf.titre||'')}</span><div style="font-size:12px;color:#444;line-height:1.6;">${escHtml(pf.detail||'')}</div></div>`; });
+        d += `</div>`;
+      }
+      if (h.axes?.length) {
+        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Axes d'amélioration</div>`;
+        h.axes.forEach(axe => {
+          d += `<div style="margin-bottom:8px;border-left:2px solid #e0ddd6;padding-left:8px;">`;
+          d += `<div style="font-size:12px;font-weight:600;color:#1a1a1a;">${escHtml(axe.titre||'')}</div>`;
+          if (axe.citation) d += `<div style="font-size:11px;color:#c00;margin-top:3px;">❌ ${escHtml(axe.citation)}</div>`;
+          if (axe.reformulation) d += `<div style="font-size:11px;color:#3B6D11;margin-top:2px;">✅ ${escHtml(axe.reformulation)}</div>`;
+          d += `</div>`;
+        });
+        d += `</div>`;
+      }
+      if (h.actions?.length) {
+        d += `<div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Actions</div>`;
+        h.actions.forEach((a,i) => { d += `<div style="font-size:12px;color:#444;margin-bottom:3px;">${i+1}. ${escHtml(a)}</div>`; });
+        d += `</div>`;
+      }
+      if (h.note_perso) d += `<div style="background:#faf9f7;border-radius:8px;padding:8px 10px;font-size:12px;color:#444;line-height:1.6;font-style:italic;">"${escHtml(h.note_perso)}"</div>`;
+      debriefHtml = `<div id="hdebrief-${idx}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #e0ddd6;">${d}</div>`;
+    }
     return `<div class="history-item">
-      <div class="h-row"><span class="h-name">${h.commercial}</span><span class="h-score" style="color:${color}">${h.score}/20</span></div>
+      <div class="h-row">
+        <span class="h-name">${h.commercial}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${hasDebrief?`<button onclick="toggleHDebrief(${idx})" id="hdbtn-${idx}" style="font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #d0cdc6;background:#fff;cursor:pointer;color:#555;">Débrief ▼</button>`:''}
+          <span class="h-score" style="color:${color}">${h.score}/20</span>
+        </div>
+      </div>
       <div class="h-meta">${h.date} · <span class="h-type ${badgeClass}">${badgeLabel}</span>${h.maturite?' · '+h.maturite:''}</div>
       ${critHtml}
+      ${debriefHtml}
     </div>`;
   }).join('');
+}
+
+function toggleHDebrief(idx) {
+  const el = document.getElementById('hdebrief-' + idx);
+  const btn = document.getElementById('hdbtn-' + idx);
+  if (!el) return;
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  if (btn) btn.textContent = open ? 'Débrief ▼' : 'Débrief ▲';
 }
 
 function clearHistory() {
   if (!scoreHistory.length) { alert('L\'historique est déjà vide.'); return; }
   if (confirm(`Supprimer les ${scoreHistory.length} call(s) de l'historique ?`)) {
     scoreHistory.length = 0;
-    try { localStorage.removeItem('ffy_score_history'); } catch {}
+    fetch('/api/history', { method: 'DELETE' }).catch(() => {});
     renderHistory();
   }
 }
@@ -1803,12 +1853,15 @@ function simCompute(){
   // IDF = zones U1/U2/S1 → 17€/h | Hors IDF = zones S2/S3/R1/R2 → 20€/h
   const isIDF=['U1','U2','S1'].includes(zone);
   const tauxChef=isIDF?17:20;
-  const coutChef=heuresTotal*tauxChef;
+  // Le chef travaille la durée du scénario sélectionné (heuresTotal / nb distributeurs)
+  const hChef=heuresTotal/simSelectedScenario;
+  const coutChef=hChef*tauxChef;
 
   const coutVHR=avecReg?simVhrCout:0;
   let html=`<div class="sim-cadence-badge"><span class="sim-cadence-val">${cadence}</span><span class="sim-cadence-unit">BAL/h · ${SIM_ZONE_LABELS[zone]} · ${SIM_SUP_LABELS[support]}<br>Stop Pub ${stopPub?'OUI':'NON'}</span></div>`;
   html+=`<table class="sim-table"><thead><tr><th>Distrib.</th><th>H/distrib.</th><th>Durée</th><th>Coût MO</th><th></th></tr></thead><tbody>`;
-  for(let n=1;n<=4;n++){
+  const maxDistrib=Math.min(15,Math.max(4,Math.ceil(heuresTotal/6)));
+  for(let n=1;n<=maxDistrib;n++){
     const hPD=heuresTotal/n;
     const jours=Math.ceil(hPD/SIM_HEURES_JOUR);
     const coutMO=heuresTotal*tauxH;
@@ -1822,7 +1875,7 @@ function simCompute(){
   const coutTotal=coutMOSel+coutChef+coutVHR;
   simLastCout=coutTotal; simLastCoutMO=coutMOSel; simLastCoutChef=coutChef; simLastCoutVHR=coutVHR;
   html+=`<div class="sim-cost-lines"><div class="sim-cost-line"><span class="lbl">MO — ${simSelectedScenario} distrib. × ${simFmtH(hPDSel)} × ${tauxH}€/h</span><span class="amt">${simFmt(coutMOSel)}</span></div>`;
-  html+=`<div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${simFmtH(heuresTotal)} × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
+  html+=`<div class="sim-cost-line"><span class="lbl">Chef d'équipe — ${simFmtH(hChef)} × ${tauxChef}€/h${isIDF?' (IDF)':' (Hors IDF)'}</span><span class="amt">${simFmt(coutChef)}</span></div>`;
   if(avecReg){
     if(simVhrDetails) html+=`<div class="sim-cost-line"><span class="lbl">VHR — ${escHtml(simVhrDetails.ville)} · ${nbJReg}j</span><span class="amt">${simFmt(coutVHR)}</span></div>`;
     else html+=`<div class="sim-cost-line" style="opacity:0.5;"><span class="lbl">VHR — cliquez "Calculer le VHR" pour inclure</span><span class="amt">—</span></div>`;
