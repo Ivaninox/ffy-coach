@@ -1083,20 +1083,20 @@ Réponds UNIQUEMENT avec ce JSON (zéro texte avant ou après) :
   "score_total": X.X,
   "maturite": "Exploration|Validation|Decision|Contractualisation",
   "criteres": { ${Object.keys(maxes).map(k=>`"${k}":X.X`).join(', ')} },
-  "commentaires": { ${Object.keys(maxes).map(k=>`"${k}": "2-3 phrases, cite un extrait exact, ce qui manquait, impact deal"`).join(', ')} },
+  "commentaires": { ${Object.keys(maxes).map(k=>`"${k}": "1 phrase max + 1 extrait court entre guillemets"`).join(', ')} },
   "points_forts": [
-    {"titre": "...", "detail": "Ce que tu as fait + pourquoi efficace + comment reproduire"},
+    {"titre": "Court", "detail": "1-2 phrases : ce que tu as fait + comment reproduire"},
     {"titre": "...", "detail": "..."},
     {"titre": "...", "detail": "..."}
   ],
   "axes": [
-    {"titre": "...", "contexte": "Le problème en 2 phrases", "citation": "Ce que tu as dit exactement", "reformulation": "Ce qu'il fallait dire, mot pour mot"},
+    {"titre": "Court", "contexte": "1 phrase", "citation": "extrait court exact", "reformulation": "reformulation courte mot pour mot"},
     {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."},
     {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."}
   ],
-  "maturite_deal": "3 phrases franches : signaux positifs, risques, probabilité closing",
+  "maturite_deal": "2 phrases : signal positif + risque principal + % closing estimé",
   "actions": ["Action 1 concrète", "Action 2", "Action 3"],
-  "note_perso": "2 phrases directes à ${commercial} : pattern remarqué + question qui fait réfléchir"
+  "note_perso": "1 phrase directe à ${commercial} : pattern + question"
 }`;
 
   try {
@@ -1110,7 +1110,7 @@ Réponds UNIQUEMENT avec ce JSON (zéro texte avant ou après) :
       ]}];
     } else { msg = [{role:'user',content:combinedPrompt}]; }
 
-    const raw = await callAPI(msg, SYSTEM_SCORE_DEBRIEF, 3500, undefined, 'claude-sonnet-4-6');
+    const raw = await callAPI(msg, SYSTEM_SCORE_DEBRIEF, 4000, undefined, 'claude-sonnet-4-6');
     let result;
     try { result = extractJSON(raw); }
     catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }

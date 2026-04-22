@@ -1,5 +1,8 @@
 {
   "name": "ffy-coach",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "ioredis": "^5.3.2"
+  }
 }
