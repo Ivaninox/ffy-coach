@@ -254,6 +254,70 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .mail-chat-input-row input:focus { border-color:#1a6ef5; }
 .mail-chat-input-row button { font-size:12px; padding:7px 14px; border-radius:8px; border:none; background:#1a1a1a; color:#fff; cursor:pointer; flex-shrink:0; }
 .mail-chat-input-row button:hover { background:#333; }
+
+/* ===== HISTORY DASHBOARD v4 ===== */
+.hist-section-title { font-size:11px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:.6px; padding:12px 16px 6px; }
+.hist-dashboard { display:flex; flex-direction:column; gap:10px; padding:0 16px 6px; }
+.hist-commercial-row { background:#fff; border:1px solid #e0ddd6; border-radius:12px; padding:14px; }
+.hist-commercial-name { font-size:13px; font-weight:600; margin-bottom:10px; }
+.hist-avg-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.hist-avg-card { border-radius:10px; padding:12px; border:1px solid transparent; }
+.hist-avg-card.green { background:#f0fdf4; border-color:#86efac; }
+.hist-avg-card.orange { background:#fffbeb; border-color:#fcd34d; }
+.hist-avg-card.red { background:#fef2f2; border-color:#fca5a5; }
+.hist-avg-card.empty { background:#faf9f7; border-color:#e0ddd6; color:#aaa; font-size:11px; display:flex; align-items:center; justify-content:center; min-height:58px; text-align:center; }
+.hist-avg-type { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#888; margin-bottom:4px; }
+.hist-avg-score { font-size:22px; font-weight:800; letter-spacing:-.02em; }
+.green .hist-avg-score { color:#16a34a; }
+.orange .hist-avg-score { color:#d97706; }
+.red .hist-avg-score { color:#dc2626; }
+.hist-avg-meta { font-size:11px; color:#888; margin-top:2px; }
+.hist-weak { font-size:11px; color:#888; margin-top:8px; padding-top:8px; border-top:1px solid #f0ede8; line-height:1.6; }
+.hist-filters { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:8px 16px; border-bottom:1px solid #e0ddd6; background:#faf9f7; flex-shrink:0; }
+.hist-filters label { font-size:11px; color:#888; }
+.hist-filters select { font-size:12px; padding:4px 8px; border-radius:6px; border:1px solid #d0cdc6; background:#fff; color:#1a1a1a; }
+.hist-call-card { background:#fff; border:1px solid #e0ddd6; border-radius:12px; padding:12px 14px; }
+.hist-call-header { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.hist-call-prospect { font-size:13px; font-weight:500; flex:1; min-width:100px; }
+.hist-call-date { font-size:11px; color:#888; }
+.hist-badge { font-size:10px; padding:2px 8px; border-radius:20px; font-weight:600; }
+.hist-badge.cheikh { background:#dbeafe; color:#1d4ed8; }
+.hist-badge.marcel { background:#fef3c7; color:#92400e; }
+.hist-badge.simon { background:#f3e8ff; color:#6b21a8; }
+.hist-badge.r1 { background:#e0f2fe; color:#0369a1; }
+.hist-badge.r2 { background:#dcfce7; color:#15803d; }
+.hist-badge.prosp { background:#fef3c7; color:#92400e; }
+.hist-score-badge { font-size:14px; font-weight:700; }
+.hist-call-actions { display:flex; gap:6px; margin-top:8px; }
+.hist-call-btn { font-size:11px; padding:4px 10px; border-radius:6px; border:1px solid #d0cdc6; background:#fff; cursor:pointer; color:#555; transition:background .15s; }
+.hist-call-btn:hover { background:#f5f4f0; }
+.hist-call-btn.danger { border-color:#fca5a5; color:#dc2626; }
+.hist-call-btn.danger:hover { background:#fef2f2; }
+.hist-detail { display:none; margin-top:10px; padding-top:10px; border-top:1px solid #f0ede8; }
+.hist-detail.open { display:block; }
+.hist-crit-row { display:flex; justify-content:space-between; align-items:flex-start; padding:5px 0; border-bottom:1px solid #f5f4f0; font-size:12px; gap:8px; }
+.hist-crit-row:last-child { border-bottom:none; }
+.hist-crit-name { color:#555; flex:1; }
+.hist-crit-note { font-weight:600; white-space:nowrap; }
+.hist-citation-text { font-size:11px; color:#888; font-style:italic; margin-top:2px; padding:3px 8px; background:#faf9f7; border-radius:5px; line-height:1.5; }
+.hist-synthese { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.hist-synthese-block { padding:10px 12px; border-radius:8px; font-size:12px; line-height:1.65; }
+.hist-synthese-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+
+/* ===== POINTS FORTS v2 — cartes individuelles ===== */
+.pf-card-v2 { background:#f0fdf4; border:1px solid #86efac; border-radius:12px; padding:13px 14px; display:flex; gap:12px; align-items:flex-start; }
+.pf-num-circle { width:24px; height:24px; background:#16a34a; color:#fff; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.pf-body { flex:1; font-size:13px; line-height:1.65; color:#14532d; }
+
+/* ===== AXES v2 — bandes rouge/verte ===== */
+.axe-card-v2 { border-radius:12px; overflow:hidden; border:1px solid #e0ddd6; }
+.axe-bad-band { background:#fef2f2; border-bottom:1px solid #fca5a5; padding:11px 14px; }
+.axe-good-band { background:#f0fdf4; padding:11px 14px; }
+.axe-band-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; }
+.axe-bad-band .axe-band-label { color:#dc2626; }
+.axe-good-band .axe-band-label { color:#16a34a; }
+.axe-bad-band p { font-size:12px; line-height:1.65; color:#7f1d1d; margin:0; }
+.axe-good-band p { font-size:12px; line-height:1.65; color:#14532d; margin:0; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -622,6 +686,28 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
       <button class="action-btn" style="font-size:12px;padding:7px 16px;background:#1a6ef5;" onclick="analyzeCoaching()">🎯 Analyse coaching par sales →</button>
       <button class="action-btn secondary" style="font-size:12px;padding:7px 14px;" onclick="clearHistory()">Vider l'historique</button>
     </div>
+    <div class="hist-filters" id="hist-filters-bar" style="display:none;">
+      <label>Commercial :</label>
+      <select id="hist-filter-commercial" onchange="histFilterChange()">
+        <option value="all">Tous</option>
+        <option value="Cheikh">Cheikh</option>
+        <option value="Marcel">Marcel</option>
+        <option value="Simon">Simon</option>
+      </select>
+      <label>Type :</label>
+      <select id="hist-filter-type" onchange="histFilterChange()">
+        <option value="all">Tous</option>
+        <option value="R1">R1</option>
+        <option value="R2">R2</option>
+        <option value="Prospection">Prospection</option>
+      </select>
+      <label>Tri :</label>
+      <select id="hist-filter-sort" onchange="histFilterChange()">
+        <option value="date_desc">Date (récent d'abord)</option>
+        <option value="score_desc">Score (décroissant)</option>
+        <option value="score_asc">Score (croissant)</option>
+      </select>
+    </div>
     <div class="scrollable" id="history-body">
       <div style="color:#888;font-size:13px;text-align:center;margin-top:60px;">Aucun call scoré pour l'instant.</div>
     </div>
@@ -794,38 +880,51 @@ const SYSTEM_COACH = SYSTEM_BASE + `\n\nTon rôle : tu es Cheikho, coach commerc
 const SYSTEM_MAIL = SYSTEM_BASE + `\n\nTu es Cheikho, expert en mails commerciaux B2B pour Flying For You.
 RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté au secteur. SPIN intégré. NSC concrète. 150-200 mots max. Commence par "Suite à notre échange..." ou similaire.`;
 
-const SYSTEM_SCORE_R1 = SYSTEM_BASE + `\n\nTu es un coach commercial senior. Tu analyses les calls R1/R2 FFY avec un niveau de détail élevé. Tu cites des extraits exacts du transcript. Tu es franc, jamais complaisant, et fournis des reformulations concrètes actionnables.`;
+const _SCORING_STRICT_RULES = `
 
-// Système ultra-court pour l'étape 1 (scoring uniquement — Haiku)
-const SYSTEM_SCORE_NOTES = 'Tu es un évaluateur de calls commerciaux B2B. Lis le transcript et attribue des notes selon le barème fourni. Réponds uniquement en JSON valide.';
+Tu es un directeur commercial senior chez FFY. Tu notes selon les standards exigeants de la formation Emilie Demas (RevOp Agency). Tu n'es PAS complaisant.
 
-// Prompt allégé pour l'appel débrief — évite de renvoyer SYSTEM_BASE (~2500 tokens) une 2e fois
-const SYSTEM_SCORE_DEBRIEF = `Tu es un coach commercial senior expert en vente B2B pour Flying For You (FFY), agence de street-marketing basée à Puteaux (92).
+RÈGLES DE NOTATION STRICTES :
+- Une note moyenne (50% du total) signifie "tout juste correct"
+- Note basse normale en début de carrière : 6-9/20
+- Un call exemplaire mérite 16+/20 et c'est rare
+- Les commerciaux FFY (Marcel et Simon) sont en montée en compétence — la majorité de leurs calls doivent être notés 7-12/20
+- Si tu hésites entre deux notes, prends la plus basse. N'arrondis jamais vers le haut.
 
-MÉTHODES FFY :
-SPIN : Situation → Problem → Implication → Need-payoff. Règle d'or : 80% temps de parole client en R1, jamais pitcher avant le pain.
-MEDDPICC : Metrics / Economic Buyer / Decision Criteria / Decision Process / Paper Process / Implicate Pain (D.U.R.) / Champion / Competition
-D.U.R. : Pain Douloureux, Urgent, Reconnu — sinon pas de propale.
-NSC : Next Step Calée — toujours une date posée avant de raccrocher.
-Gap Selling : creuser l'écart entre situation actuelle (pain) et idéale (gain avec FFY).
-Closing : propale TOUJOURS présentée en live, jamais envoyée par mail seul. Pas de compelling event = pas de deal.
+INTERDITS :
+- Ne mets jamais une note "pour encourager"
+- Ne mets jamais 2/3 ou 3/3 sur un critère sans citation exacte du transcript prouvant la note
+- Si un critère est absent du call → mets 0
+- Une moyenne autour de 11-13/20 systématiquement = tu n'es pas assez exigeant
 
-QUESTIONS SPIN FFY :
-Situation : "Comment communiquez-vous aujourd'hui ?" / "Qu'est-ce qui vous a donné envie d'accepter ce RDV ?"
-Problem : "Qu'est-ce qui est le plus frustrant dans vos campagnes terrain ?" / "Quelles sont les limites de vos prestataires actuels ?"
-Implication : "Quelles conséquences concrètes si ça reste comme ça ?" / "Si la situation reste identique dans 6 mois, qu'est-ce que ça freine ?"
-Need-payoff : "Si vous aviez une solution plus mesurable, qu'est-ce que ça changerait ?"
+Pour CHAQUE critère, tu dois fournir :
+1. La note sur le maximum
+2. Une citation EXACTE du transcript entre guillemets (ou "Absent du transcript" si rien)
+3. Une justification de 2-3 phrases expliquant pourquoi cette note précise et pas une autre`;
 
-PATTERNS À CHALLENGER (Audit RevOp FFY) :
-- Propale envoyée par mail au lieu d'être présentée en live
-- Pitch avant que le pain soit verbalisé
-- Pas de NSC (prochaine étape dans les mains du prospect, pas du commercial)
-- Pas de compelling event utilisé pour créer l'urgence
-- Marcel : pitch avant pain, gestion objections faible — 8 RDV sur 2362 appels en 2025
-- Simon : progression rapide mais techniques à consolider
-- Cheikh : tendance à ne pas revalider le pain en R2, closes trop souples
+const SYSTEM_SCORE_R1_STRICT = SYSTEM_BASE + _SCORING_STRICT_RULES + `
 
-Tu es franc, direct, jamais complaisant. Tu cites le transcript. Reformulations réutilisables mot pour mot.`;
+GRILLE R1 (total /20) :
+1. cadrage (max 1) : durée annoncée, agenda en 3-4 étapes, tour de table, question "qu'est-ce qui vous a donné envie d'accepter ce RDV ?". 1=cadre explicite et validé, 0=call sans cadre ou pitch direct.
+2. situation (max 3) : questions ouvertes sur contexte actuel (canaux, prestataires, volumes, pilotage). 3=≥5 questions pertinentes, 2=3-4 correctes, 1=1-2 superficielles, 0=aucune.
+3. problem (max 3) : frustrations identifiées et creusées avec relances. 3=2+ douleurs creusées, 2=1 douleur correcte, 1=effleurée, 0=aucune.
+4. implication (max 3) : impact business chiffré des douleurs. 3=chaque douleur quantifiée (euros/temps/risque), 2=une implication chiffrée, 1=floues, 0=absent.
+5. need_payoff (max 2) : prospect verbalise lui-même la valeur. 2=verbalisation spontanée, 1=commercial parle à sa place, 0=absent.
+6. meddpicc (max 3) : Economic Buyer + Decision Process + Champion + Competition. 3=4 éléments, 2=2-3, 1=1, 0=aucun.
+7. objections (max 3) : rebond avec valeur sur chaque objection. 3=toutes traitées, 2=la plupart, 1=molles, 0=fuite/concession. Si aucune objection dans le call : répartir les 3 points proportionnellement sur les autres critères via N/A.
+8. next_step (max 2) : R2 calé avec date précise en live. 2=date précise+invitation annoncée, 1=date floue ou prospect aux commandes, 0="je vous envoie ça par mail".`;
+
+const SYSTEM_SCORE_R2_STRICT = SYSTEM_BASE + _SCORING_STRICT_RULES + `
+
+GRILLE R2 (total /20) :
+1. revalidation_pain (max 2) : douleurs R1 rappelées et reconfirmées en ouverture. 2=pain revalidé explicitement, 1=mention rapide sans confirmation, 0=passage direct à la démo.
+2. presentation_solution (max 3) : solution collée aux pains R1. 3=sur-mesure chaque élément lié à un pain, 2=bon fit quelques détours, 1=pitch générique, 0=aucun lien.
+3. preuves (max 2) : use cases clients similaires avec résultats concrets. 2=≥2 références avec résultats, 1=une référence ou noms sans résultats, 0=aucune preuve.
+4. meddpicc (max 3) : EB présent ou stratégie verrouillée + Champion + paper process. 3=3 éléments solides, 2=2, 1=1, 0=closing en aveugle.
+5. objections (max 3) : rebond avec valeur, concessions conditionnées. 3=toutes traitées, 2=correct avec une faiblesse, 1=mollit/concessions non conditionnées, 0=subies.
+6. presentation_prix (max 2) : prix présenté EN LIVE avec ancrage ROI/RONI. 2=live+ancrage valeur, 1=mentionné sans ancrage, 0="je vous envoie le devis" = échec R2.
+7. closing (max 3) : tentative de closing explicite + engagement. 3=tentative+engagement ou date ferme, 2=tentative sans engagement clair, 1=pas de tentative, 0=call qui finit sur "je vous envoie le PDF".
+8. next_step (max 2) : date précise dans les mains du commercial + invitation. 2=date+invitation, 1=date floue, 0=aucun next step.`;
 
 const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospection téléphonique B2B. Tu analyses les calls de prospection FFY avec précision, en identifiant chaque moment clé et en proposant des reformulations concrètes immédiatement réutilisables.`;
 
@@ -833,11 +932,24 @@ const SYSTEM_PROPALE = SYSTEM_BASE + `\n\nTu génères des propositions commerci
 
 const callHistory = [];
 let scoreHistory = [];
-async function loadHistory() {
+
+function saveHistoryToStorage() {
+  try { localStorage.setItem('ffy_score_history', JSON.stringify({ version: '1.0', history: scoreHistory })); } catch {}
+}
+
+function loadHistory() {
   try {
-    const r = await fetch('/api/history');
-    if (r.ok) scoreHistory = await r.json();
-  } catch {}
+    const raw = localStorage.getItem('ffy_score_history');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data && !data.version) {
+      // Migration : ancien format sans clé version
+      scoreHistory = Array.isArray(data) ? data : (data.history || []);
+      saveHistoryToStorage();
+    } else {
+      scoreHistory = (data && data.history) ? data.history : [];
+    }
+  } catch { scoreHistory = []; }
 }
 loadHistory();
 const mailStore = {};
@@ -915,8 +1027,8 @@ function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   TABS.forEach((t, i) => { if (t === tab) document.querySelectorAll('.tab')[i].classList.add('active'); });
   document.getElementById('panel-' + tab).classList.add('active');
-  if (tab === 'compare') loadHistory().then(renderCompare);
-  if (tab === 'history') loadHistory().then(renderHistory);
+  if (tab === 'compare') renderCompare();
+  if (tab === 'history') renderHistory();
 }
 
 function extractJSON(raw) {
@@ -1055,48 +1167,48 @@ async function scoreR1() {
   const type = document.getElementById('score-r1-type').value;
   const body = document.getElementById('scoring-r1-body');
 
-  const maxes = type === 'R1'
-    ? {preparation:2,discovery:4,meddpicc:3,objections:3,pitch:2,closing:3,followup:3}
-    : {pain_revalidation:2,solution_fit:4,meddpicc:3,objections:3,demo_propale:2,closing:4,followup:2};
+  const maxesR1 = {cadrage:1, situation:3, problem:3, implication:3, need_payoff:2, meddpicc:3, objections:3, next_step:2};
+  const maxesR2 = {revalidation_pain:2, presentation_solution:3, preuves:2, meddpicc:3, objections:3, presentation_prix:2, closing:3, next_step:2};
+  const maxes = type === 'R1' ? maxesR1 : maxesR2;
+  const systemPrompt = type === 'R1' ? SYSTEM_SCORE_R1_STRICT : SYSTEM_SCORE_R2_STRICT;
 
   body.innerHTML = `<div style="text-align:center;padding:40px;color:#888;font-size:13px;">Analyse en cours — scoring + débrief...</div>`;
 
-  const critMaxesText = type === 'R1'
-    ? 'preparation/2, discovery/4, meddpicc/3, objections/3, pitch/2, closing/3, followup/3'
-    : 'pain_revalidation/2, solution_fit/4, meddpicc/3, objections/3, demo_propale/2, closing/4, followup/2';
+  const critKeys = Object.keys(maxes);
+  const critSchemaR1 = `"cadrage":{"note":X,"max":1,"citation":"...","justification":"..."},"situation":{"note":X,"max":3,"citation":"...","justification":"..."},"problem":{"note":X,"max":3,"citation":"...","justification":"..."},"implication":{"note":X,"max":3,"citation":"...","justification":"..."},"need_payoff":{"note":X,"max":2,"citation":"...","justification":"..."},"meddpicc":{"note":X,"max":3,"citation":"...","justification":"..."},"objections":{"note":X,"max":3,"citation":"...","justification":"..."},"next_step":{"note":X,"max":2,"citation":"...","justification":"..."}`;
+  const critSchemaR2 = `"revalidation_pain":{"note":X,"max":2,"citation":"...","justification":"..."},"presentation_solution":{"note":X,"max":3,"citation":"...","justification":"..."},"preuves":{"note":X,"max":2,"citation":"...","justification":"..."},"meddpicc":{"note":X,"max":3,"citation":"...","justification":"..."},"objections":{"note":X,"max":3,"citation":"...","justification":"..."},"presentation_prix":{"note":X,"max":2,"citation":"...","justification":"..."},"closing":{"note":X,"max":3,"citation":"...","justification":"..."},"next_step":{"note":X,"max":2,"citation":"...","justification":"..."}`;
 
-  const spinInstruction = type === 'R1'
-    ? `Dans "commentaires.discovery", inclus l'analyse SPIN : questions S/P/I/N posées, extraits exacts, lesquelles manquaient, ratio parole client vs commercial.`
-    : `Dans "commentaires.pain_revalidation", précise : douleur revalidée en ouverture ? Solution collée aux pains R1 ? Economic Buyer présent ? Propale en live ou par mail ?`;
-
-  const combinedPrompt = `Tu es coach commercial senior chez FFY. Analyse ce call ${type} de ${commercial} et parle-lui directement en "tu".
+  const combinedPrompt = `Analyse ce call ${type} de ${commercial} chez FFY. Parle-lui directement en "tu".
 
 Transcript :
-${hasFile ? '[fichier joint]' : text.slice(0,3000)}
+${hasFile ? '[fichier joint]' : text.slice(0, 4000)}
 
-Barème (ne jamais dépasser le max, multiples de 0.5) : ${critMaxesText}
-score_total = somme exacte des critères.
-${spinInstruction}
+INSTRUCTIONS :
+- Note STRICTEMENT selon la grille fournie dans tes instructions système
+- score_total = somme exacte des notes (sur 20)
+- Pour CHAQUE critère : une citation EXACTE du transcript ou "Absent du transcript"
+- Si un critère est absent → note 0
+- Extrait le nom du prospect/entreprise depuis le transcript
 
-Réponds UNIQUEMENT avec ce JSON (zéro texte avant ou après) :
+Réponds UNIQUEMENT avec ce JSON valide (zéro texte avant ou après) :
 {
-  "score_total": X.X,
-  "maturite": "Exploration|Validation|Decision|Contractualisation",
-  "criteres": { ${Object.keys(maxes).map(k=>`"${k}":X.X`).join(', ')} },
-  "commentaires": { ${Object.keys(maxes).map(k=>`"${k}": "1 phrase max + 1 extrait court entre guillemets"`).join(', ')} },
-  "points_forts": [
-    {"titre": "Court", "detail": "1-2 phrases : ce que tu as fait + comment reproduire"},
-    {"titre": "...", "detail": "..."},
-    {"titre": "...", "detail": "..."}
-  ],
-  "axes": [
-    {"titre": "Court", "contexte": "1 phrase", "citation": "extrait court exact", "reformulation": "reformulation courte mot pour mot"},
-    {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."},
-    {"titre": "...", "contexte": "...", "citation": "...", "reformulation": "..."}
-  ],
-  "maturite_deal": "2 phrases : signal positif + risque principal + % closing estimé",
-  "actions": ["Action 1 concrète", "Action 2", "Action 3"],
-  "note_perso": "1 phrase directe à ${commercial} : pattern + question"
+  "type": "${type}",
+  "score_total": X,
+  "prospect": "Nom du prospect ou entreprise extrait du transcript",
+  "criteres": {
+    ${type === 'R1' ? critSchemaR1 : critSchemaR2}
+  },
+  "synthese": {
+    "points_forts": "3 points forts concrets avec citations courtes du transcript",
+    "axes_amelioration": "3 axes d'amélioration au format : ✗ [ce qui s'est passé] / ✓ [ce qu'il fallait dire]",
+    "stade_deal": "Exploration|Validation|Décision|Contractualisation",
+    "verdict": "Une phrase franche et directe sur le niveau réel du call"
+  },
+  "actions": [
+    {"intitule": "Titre court", "pourquoi": "Élément du call qui justifie cette action avec citation", "comment": "Étape concrète à exécuter", "delai": "J+1"},
+    {"intitule": "...", "pourquoi": "...", "comment": "...", "delai": "J+2"},
+    {"intitule": "...", "pourquoi": "...", "comment": "...", "delai": "J+2"}
+  ]
 }`;
 
   try {
@@ -1110,25 +1222,44 @@ Réponds UNIQUEMENT avec ce JSON (zéro texte avant ou après) :
       ]}];
     } else { msg = [{role:'user',content:combinedPrompt}]; }
 
-    const raw = await callAPI(msg, SYSTEM_SCORE_DEBRIEF, 4000, undefined, 'claude-sonnet-4-6');
+    const raw = await callAPI(msg, systemPrompt, 4000, undefined, 'claude-sonnet-4-6');
     let result;
     try { result = extractJSON(raw); }
-    catch(e) { body.innerHTML = `<pre style="font-size:12px;padding:16px;white-space:pre-wrap;">${escHtml(raw)}</pre>`; return; }
+    catch(e) {
+      body.innerHTML = `<div style="padding:12px 16px;background:#fef2f2;border-radius:10px;font-size:12px;color:#c00;margin-bottom:8px;">⚠️ Réponse JSON invalide — affichage brut ci-dessous</div><pre style="font-size:12px;padding:16px;white-space:pre-wrap;background:#fff;border:1px solid #e0ddd6;border-radius:10px;">${escHtml(raw)}</pre>`;
+      return;
+    }
 
-    // Correction défensive : plafonner chaque critère à son maximum et recalculer le total
+    // Correction défensive : plafonner chaque critère et recalculer le total
     if (result.criteres) {
       let total = 0;
       for (const [k, max] of Object.entries(maxes)) {
-        const val = result.criteres[k] ?? 0;
-        result.criteres[k] = Math.min(Math.round(val * 2) / 2, max);
-        total += result.criteres[k];
+        const crit = result.criteres[k];
+        if (!crit) { result.criteres[k] = {note:0, max, citation:'Absent du transcript', justification:'Critère non évalué.'}; }
+        else if (typeof crit === 'object') {
+          crit.note = Math.min(Math.round((crit.note??0) * 2) / 2, max);
+          crit.max = max;
+        } else {
+          result.criteres[k] = {note: Math.min(Math.round(crit * 2) / 2, max), max, citation:'', justification:''};
+        }
+        total += result.criteres[k].note;
       }
       result.score_total = Math.round(total * 2) / 2;
     }
 
-    renderScoreShell(body, result, commercial, maxes, type);
-    renderDebrief(result, result, maxes, commercial, type, text);
-    // Supprimer "analyse en cours" du header
+    // Adapter pour renderScoreShell (qui attend criteres comme nombres)
+    const flatCriteres = {};
+    const commentaires = {};
+    for (const [k, v] of Object.entries(result.criteres || {})) {
+      flatCriteres[k] = typeof v === 'object' ? v.note : v;
+      if (typeof v === 'object') {
+        commentaires[k] = (v.citation && v.citation !== 'Absent du transcript' ? `"${v.citation}" — ` : (v.citation === 'Absent du transcript' ? 'Absent du transcript. ' : '')) + (v.justification || '');
+      }
+    }
+    const parsedForRender = { ...result, criteres: flatCriteres, commentaires, maturite: result.synthese?.stade_deal || '' };
+
+    renderScoreShell(body, parsedForRender, commercial, maxes, type);
+    renderDebrief(parsedForRender, result, maxes, commercial, type, text);
     const headerNote = body.querySelector('.score-header div:last-child div:last-child');
     if (headerNote && headerNote.textContent.includes('en cours')) headerNote.remove();
     saveToHistory(commercial, result, type, 'r1r2', maxes);
@@ -1194,8 +1325,15 @@ function renderScoreShell(body, parsed, commercial, maxes, type) {
   const scoreColor = s >= 15 ? '#3B6D11' : s >= 10 ? '#BA7517' : '#c00';
   const scoreLabel = s >= 15 ? 'Excellent' : s >= 12 ? 'Bon' : s >= 8 ? 'À travailler' : 'Insuffisant';
   const labels = {
+    // Nouvelles grilles R1/R2
+    cadrage:'Cadrage RDV', situation:'Découverte Situation', problem:'Découverte Problème',
+    implication:'Découverte Implication', need_payoff:'Need Pay-Off',
+    revalidation_pain:'Revalidation pain', presentation_solution:'Présentation solution',
+    preuves:'Preuves & références', presentation_prix:'Présentation prix',
+    closing:'Closing & engagement', next_step:'Next Step Calée',
+    // Anciennes clés (pour compatibilité)
     preparation:'Préparation', discovery:'Découverte SPIN', meddpicc:'MEDDPICC',
-    objections:'Gestion objections', pitch:'Pitch & preuves', closing:'Closing & NSC', followup:'Follow-up',
+    objections:'Gestion objections', pitch:'Pitch & preuves', followup:'Follow-up',
     pain_revalidation:'Revalidation pain', solution_fit:'Solution / fit', demo_propale:'Démo & propale',
     accroche:'Accroche & hook', pitch_aida:'Pitch AIDA', qualification:'Qualification',
     barrage:'Gestion barrage', obtention_rdv:'Obtention RDV', energie:'Énergie & rythme'
@@ -1245,76 +1383,163 @@ function toggleComment(key) {
   btn.textContent = el.classList.contains('open') ? 'Masquer ▲' : 'Voir ▼';
 }
 
-/* ---- RENDER DEBRIEF ---- */
-function renderDebrief(parsed, debrief, maxes, commercial, type, transcript) {
-  // 1. Peupler les commentaires dans les cartes critères
-  if (debrief.commentaires) {
-    for (const [key, comment] of Object.entries(debrief.commentaires)) {
-      const commentEl = document.getElementById('comment-' + key);
-      const toggleBtn = document.getElementById('toggle-' + key);
-      if (commentEl) {
-        commentEl.textContent = comment;
-        if (toggleBtn) toggleBtn.style.display = '';
+/* ---- PARSEURS POINTS FORTS / AXES ---- */
+function parsePointsForts(text) {
+  if (!text) return [];
+  // Découpe sur "1. " "2. " "3. "
+  const parts = text.split(/(?=\d+\.\s)/g).filter(p => p.trim());
+  if (parts.length <= 1) return [text.trim()];
+  return parts.map(p => p.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+}
+
+function parseAxesAmelioration(text) {
+  if (!text) return [];
+  const result = [];
+
+  // Découpe sur chaque ✗ (le LLM n'utilise pas toujours | comme séparateur)
+  const parts = text.split(/(?=✗)/).map(s => s.trim()).filter(Boolean);
+
+  for (const part of parts) {
+    if (part.startsWith('✗')) {
+      const withoutCross = part.substring(1).trim();
+      const checkIdx = withoutCross.indexOf('✓');
+      let bad, good;
+      if (checkIdx !== -1) {
+        bad = withoutCross.substring(0, checkIdx).replace(/\s*\/\s*$/, '').trim();
+        good = withoutCross.substring(checkIdx + 1).trim();
+      } else {
+        const slashIdx = withoutCross.indexOf(' / ');
+        if (slashIdx !== -1) { bad = withoutCross.substring(0, slashIdx).trim(); good = withoutCross.substring(slashIdx + 3).trim(); }
+        else { bad = withoutCross; good = ''; }
       }
+      result.push({ bad, good });
+    } else {
+      // Texte introductif ou conseil standalone (sans ✗) → carte verte seule
+      const clean = part.replace(/^✓\s*/, '').trim();
+      if (clean) result.push({ bad: '', good: clean });
     }
   }
 
-  // 2. Points forts
-  let pfHtml = `<div class="debrief-section">
-    <div class="debrief-section-title">Points forts à conserver</div>`;
-  (debrief.points_forts || []).forEach((pf, i) => {
-    pfHtml += `<div class="point-fort-card">
-      <div class="point-fort-num">Point fort ${i+1}</div>
-      <div class="point-fort-titre">${escHtml(pf.titre||'')}</div>
-      <div class="point-fort-detail">${escHtml(pf.detail||'')}</div>
-    </div>`;
-  });
+  return result.filter(a => a.bad || a.good);
+}
+
+/* ---- RENDER DEBRIEF ---- */
+function renderDebrief(parsed, debrief, maxes, commercial, type, transcript) {
+  // 1. Peupler les commentaires dans les cartes critères
+  const comments = debrief.commentaires || parsed.commentaires || {};
+  for (const [key, comment] of Object.entries(comments)) {
+    const commentEl = document.getElementById('comment-' + key);
+    const toggleBtn = document.getElementById('toggle-' + key);
+    if (commentEl && comment) {
+      commentEl.textContent = comment;
+      if (toggleBtn) toggleBtn.style.display = '';
+    }
+  }
+
+  const synthese = debrief.synthese || null;
+  const isNewFormat = !!synthese;
+
+  // 2. Points forts — cartes individuelles vertes
+  let pfHtml = `<div class="debrief-section"><div class="debrief-section-title">Points forts à conserver</div>`;
+  if (isNewFormat && synthese.points_forts) {
+    const pfItems = parsePointsForts(synthese.points_forts);
+    pfItems.forEach((item, i) => {
+      pfHtml += `<div class="pf-card-v2">
+        <div class="pf-num-circle">${i + 1}</div>
+        <div class="pf-body">${escHtml(item)}</div>
+      </div>`;
+    });
+  } else {
+    (debrief.points_forts || []).forEach((pf, i) => {
+      pfHtml += `<div class="pf-card-v2">
+        <div class="pf-num-circle">${i + 1}</div>
+        <div class="pf-body"><strong>${escHtml(pf.titre||'')}</strong>${pf.detail ? '<br>' + escHtml(pf.detail) : ''}</div>
+      </div>`;
+    });
+  }
   pfHtml += `</div>`;
 
-  // 3. Axes d'amélioration
-  let axHtml = `<div class="debrief-section">
-    <div class="debrief-section-title">Axes d'amélioration</div>`;
-  (debrief.axes || []).forEach((axe, i) => {
-    axHtml += `<div class="axe-card">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="axe-num">Axe ${i+1}</div>
-      </div>
-      <div class="axe-titre">${escHtml(axe.titre||'')}</div>
-      <div class="axe-contexte">${escHtml(axe.contexte||'')}</div>
-      <div class="axe-citation"><div class="axe-citation-label">❌ Ce qui s'est passé</div>${escHtml(axe.citation||'')}</div>
-      <div class="axe-reformulation"><div class="axe-reformulation-label">✅ Ce qu'il fallait dire</div>${escHtml(axe.reformulation||'')}</div>
-    </div>`;
-  });
+  // 3. Axes d'amélioration — bandes rouge / verte
+  let axHtml = `<div class="debrief-section"><div class="debrief-section-title">Axes d'amélioration</div>`;
+  if (isNewFormat && synthese.axes_amelioration) {
+    const axes = parseAxesAmelioration(synthese.axes_amelioration);
+    if (axes.length) {
+      axes.forEach((axe, i) => {
+        const badBand = axe.bad ? `
+          <div class="axe-bad-band">
+            <div class="axe-band-label">✗ Axe ${i + 1} — Ce qui s'est passé</div>
+            <p>${escHtml(axe.bad)}</p>
+          </div>` : '';
+        const goodLabel = axe.bad ? '✓ Ce qu\'il fallait dire' : `✓ Conseil ${i + 1}`;
+        const goodBand = axe.good ? `
+          <div class="axe-good-band">
+            <div class="axe-band-label">${goodLabel}</div>
+            <p>${escHtml(axe.good)}</p>
+          </div>` : '';
+        axHtml += `<div class="axe-card-v2">${badBand}${goodBand}</div>`;
+      });
+    } else {
+      // Fallback si le parseur échoue
+      axHtml += `<div class="axe-card"><div class="axe-contexte" style="white-space:pre-wrap;">${escHtml(synthese.axes_amelioration)}</div></div>`;
+    }
+  } else {
+    (debrief.axes || []).forEach((axe, i) => {
+      axHtml += `<div class="axe-card-v2">
+        <div class="axe-bad-band">
+          <div class="axe-band-label">✗ Axe ${i + 1} — Ce qui s'est passé</div>
+          <p>${escHtml(axe.citation || axe.contexte || '')}</p>
+        </div>
+        <div class="axe-good-band">
+          <div class="axe-band-label">✓ Ce qu'il fallait dire</div>
+          <p>${escHtml(axe.reformulation || '')}</p>
+        </div>
+      </div>`;
+    });
+  }
   axHtml += `</div>`;
 
-  // 4. Maturité deal + Actions
-  const maturiteHtml = debrief.maturite_deal ? `
+  // 4. Verdict / Maturité deal
+  const verdictText = isNewFormat ? (synthese.verdict || '') : (debrief.maturite_deal || '');
+  const maturiteHtml = verdictText ? `
     <div class="maturite-card">
-      <div class="maturite-label">Stade de maturité réel du deal</div>
-      <div class="maturite-text">${escHtml(debrief.maturite_deal)}</div>
+      <div class="maturite-label">${isNewFormat ? 'Verdict' : 'Stade de maturité réel du deal'}</div>
+      <div class="maturite-text">${escHtml(verdictText)}</div>
     </div>` : '';
 
+  // 5. Actions 48h
   let actionsHtml = '';
-  if (debrief.actions && debrief.actions.length) {
-    actionsHtml = `<div class="actions-card">
-      <div class="actions-label">3 actions à faire dans les 48h</div>`;
-    debrief.actions.forEach((a, i) => {
-      actionsHtml += `<div class="action-item">
-        <div class="action-num">${i+1}</div>
-        <div class="action-text">${escHtml(a)}</div>
-      </div>`;
+  const actions = debrief.actions || [];
+  if (actions.length) {
+    actionsHtml = `<div class="actions-card"><div class="actions-label">3 actions à faire dans les 48h</div>`;
+    actions.forEach((a, i) => {
+      if (typeof a === 'object' && a.intitule) {
+        actionsHtml += `<div class="action-item">
+          <div class="action-num">${i+1}</div>
+          <div class="action-text">
+            <strong>${escHtml(a.intitule)}</strong>
+            <div style="margin-top:4px;font-size:11px;color:#1e40af;line-height:1.5;">Pourquoi : ${escHtml(a.pourquoi||'')}</div>
+            <div style="font-size:11px;color:#1e40af;line-height:1.5;">Comment : ${escHtml(a.comment||'')}</div>
+            <div style="font-size:11px;color:#6366f1;font-weight:500;">Délai : ${escHtml(a.delai||'J+2')}</div>
+          </div>
+        </div>`;
+      } else {
+        actionsHtml += `<div class="action-item">
+          <div class="action-num">${i+1}</div>
+          <div class="action-text">${escHtml(String(a))}</div>
+        </div>`;
+      }
     });
     actionsHtml += `</div>`;
   }
 
-  // 5. Note perso
-  const noteHtml = debrief.note_perso ? `
+  // 6. Note perso (ancien format)
+  const noteHtml = (!isNewFormat && debrief.note_perso) ? `
     <div class="note-perso-card">
       <div class="note-perso-label">Note personnelle</div>
       <div class="note-perso-text">${escHtml(debrief.note_perso)}</div>
     </div>` : '';
 
-  // 6. Section mail
+  // 7. Section mail
   mailStore.transcript = transcript || '';
   mailStore.parsed = parsed;
   mailStore.debrief = debrief;
@@ -1342,23 +1567,51 @@ async function genMailDebrief() {
   section.innerHTML = `<div style="text-align:center;padding:20px;color:#888;font-size:13px;">Rédaction du mail...</div>`;
 
   const { transcript, parsed, debrief, type, commercial } = mailStore;
-  const mailTypeDesc = type === 'R1'
-    ? 'follow-up post-R1 : récap des pains identifiés, confirmation du next step, invitation à réceptionner la propale'
-    : type === 'R2'
-    ? 'récap post-R2 : merci pour l\'échange, résumé de la solution, push au closing'
-    : 'suivi post-call';
+  if (!type || !commercial) { section.innerHTML = '<div style="padding:14px;font-size:13px;color:#c00;">Données manquantes — rescorez le call d\'abord.</div>'; return; }
 
-  const prompt = `Rédige un mail commercial de suivi pour ${commercial} de Flying For You.
-Type : ${mailTypeDesc}
-Score call : ${parsed.score_total}/20 — Stade : ${parsed.maturite||'?'}
-Actions recommandées : ${(debrief?.actions||[]).join(' | ')}
-Transcript (extrait) : ${(transcript||'').slice(0, 2000)}
+  const synthese = debrief?.synthese || null;
+  const actionsText = (debrief?.actions||[]).map(a => typeof a === 'object' ? `${a.intitule} (${a.delai})` : String(a)).join(' | ');
+  const prospectName = debrief?.prospect || parsed?.prospect || '';
+  const transcriptExtrait = (transcript||'').slice(0, 3000);
 
-Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté au secteur. SPIN intégré. Next step concrète avec date. 150-200 mots. En français.`;
+  const prompt = `Tu es Cheikho, expert mail commercial B2B FFY. Analyse le transcript du call ${type} et rédige le mail de suivi.
+
+ÉTAPE 1 — DÉTECTION :
+Vérifie dans le transcript si une date précise pour un R2 a été calée pendant le call. Recherche : jour précis ("mardi prochain", "jeudi 14h", "le 15 avril"), confirmation explicite ("OK pour cette date", "c'est noté", "je bloque le créneau"), mention d'invitation ("je t'envoie l'invitation").
+
+ÉTAPE 2A — SI R2 DÉJÀ FIXÉ pendant le call :
+Mail de suivi informatif (PAS de relance, PAS de proposition de date alternative) :
+- Remerciement pour l'échange
+- Récapitulatif des pains identifiés (éléments concrets du transcript)
+- Implication : ce que ces pains coûtent ou freinent
+- Confirmation du R2 avec date et heure exactes
+- Annonce de ce qui sera présenté lors du R2
+
+ÉTAPE 2B — SI R2 NON FIXÉ :
+Mail avec proposition de R2 à valeur ajoutée :
+- Remerciement
+- Récapitulatif pains identifiés
+- Implication chiffrée si possible
+- Proposition R2 avec 2 créneaux concrets (jamais "quand vous voulez")
+- Teasing de ce qui sera présenté
+
+CONTRAINTES :
+- 150-200 mots maximum
+- Ton adapté au secteur détecté (formel pour institutionnel/mairie, direct pour PME/retail)
+- Personnalisation OBLIGATOIRE avec noms, chiffres, contexte du call
+- Commence par "Bonjour [Prénom],"
+- Termine par "À très vite, ${commercial}"
+- Corps du mail uniquement, pas d'objet, pas d'autres balises
+
+Prospect : ${escHtml(prospectName)}
+Score call : ${parsed?.score_total||'?'}/20
+Points clés : ${synthese?.verdict || actionsText || ''}
+Transcript (extrait) :
+${transcriptExtrait}`;
 
   mailDebriefHistory = [{role:'user', content:prompt}];
   try {
-    const mail = await callAPI(mailDebriefHistory, SYSTEM_MAIL);
+    const mail = await callAPI(mailDebriefHistory, SYSTEM_MAIL, 800);
     mailDebriefHistory.push({role:'assistant', content:mail});
     renderMailDebrief(mail);
   } catch(e) {
@@ -1490,115 +1743,258 @@ function resetScore(type) {
 
 /* ---- SAVE & RENDER HISTORY ---- */
 function saveToHistory(commercial, parsed, type, badgeType, maxes) {
+  const id = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const entry = {
-    commercial, score: parsed.score_total, maturite: parsed.maturite||'',
-    criteres: parsed.criteres||{}, date: new Date().toLocaleDateString('fr-FR'),
-    type, badgeType, maxes: maxes||{},
-    commentaires: parsed.commentaires||null,
-    points_forts: parsed.points_forts||null,
-    axes: parsed.axes||null,
-    maturite_deal: parsed.maturite_deal||null,
-    actions: parsed.actions||null,
-    note_perso: parsed.note_perso||null
+    id,
+    commercial,
+    score: parsed.score_total,
+    score_total: parsed.score_total,
+    prospect: parsed.prospect || '',
+    maturite: parsed.maturite || parsed.synthese?.stade_deal || '',
+    criteres: parsed.criteres || {},
+    synthese: parsed.synthese || null,
+    date: new Date().toISOString(),
+    type, badgeType, maxes: maxes || {},
+    commentaires: parsed.commentaires || null,
+    points_forts: parsed.points_forts || null,
+    axes: parsed.axes || null,
+    maturite_deal: parsed.maturite_deal || parsed.synthese?.verdict || null,
+    actions: parsed.actions || null,
+    note_perso: parsed.note_perso || null
   };
-  scoreHistory.unshift(entry);
-  fetch('/api/history', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(entry)
-  }).catch(() => {});
+  scoreHistory.push(entry);
+  saveHistoryToStorage();
 }
 
 const H_LABELS = {
-  preparation:'Prépa', discovery:'Découverte', meddpicc:'MEDDPICC',
-  objections:'Objections', pitch:'Pitch', closing:'Closing', followup:'Follow-up',
+  cadrage:'Cadrage', situation:'Situation', problem:'Problème', implication:'Implication',
+  need_payoff:'Need Pay-Off', meddpicc:'MEDDPICC', objections:'Objections', next_step:'Next Step',
+  revalidation_pain:'Revalidation pain', presentation_solution:'Solution', preuves:'Preuves',
+  presentation_prix:'Prix', closing:'Closing',
+  preparation:'Prépa', discovery:'Découverte', pitch:'Pitch', followup:'Follow-up',
   pain_revalidation:'Revalidation', solution_fit:'Solution fit', demo_propale:'Démo/Propale',
   accroche:'Accroche', pitch_aida:'Pitch AIDA', qualification:'Qualif.', barrage:'Barrage', obtention_rdv:'RDV', energie:'Énergie'
 };
 
+let histFilter = { commercial: 'all', type: 'all', sort: 'date_desc' };
+
+function histFilterChange() {
+  histFilter.commercial = document.getElementById('hist-filter-commercial')?.value || 'all';
+  histFilter.type = document.getElementById('hist-filter-type')?.value || 'all';
+  histFilter.sort = document.getElementById('hist-filter-sort')?.value || 'date_desc';
+  renderHistoryList();
+}
+
+function getCritereNote(v) { return typeof v === 'object' ? (v.note ?? 0) : (v ?? 0); }
+function getCritereMax(v, fallback) { return typeof v === 'object' ? (v.max ?? fallback) : fallback; }
+function getCallScore(h) { return h.score_total ?? h.score ?? 0; }
+
+function getAverages(commercial, type) {
+  const calls = scoreHistory.filter(c => c.commercial === commercial && c.type === type);
+  if (!calls.length) return null;
+  const scores = calls.map(c => getCallScore(c));
+  const moyenne = scores.reduce((s, n) => s + n, 0) / scores.length;
+  const derniere = scores[scores.length - 1];
+  return { moyenne, nb_calls: calls.length, derniere_note: derniere, tendance: derniere > moyenne ? 'up' : 'down' };
+}
+
+function getWeakCriteria(commercial, type) {
+  const calls = scoreHistory.filter(c => c.commercial === commercial && c.type === type && c.criteres && Object.keys(c.criteres).length);
+  if (!calls.length) return [];
+  const agg = {};
+  for (const call of calls) {
+    for (const [k, v] of Object.entries(call.criteres)) {
+      const note = getCritereNote(v);
+      const max = getCritereMax(v, call.maxes?.[k] || 4);
+      if (!agg[k]) agg[k] = { sum: 0, count: 0, max: 0 };
+      agg[k].sum += note; agg[k].count++; agg[k].max = max;
+    }
+  }
+  return Object.entries(agg)
+    .map(([k, d]) => ({ key: k, label: H_LABELS[k] || k, avg: d.sum / d.count, max: d.max, pct: d.max > 0 ? d.sum / (d.count * d.max) : 0 }))
+    .sort((a, b) => a.pct - b.pct).slice(0, 3);
+}
+
+function formatHistDate(dateStr) {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch { return dateStr; }
+}
+
 function renderHistory() {
+  const filtersBar = document.getElementById('hist-filters-bar');
+  if (filtersBar) filtersBar.style.display = scoreHistory.length ? '' : 'none';
   const body = document.getElementById('history-body');
-  if (!scoreHistory.length) { body.innerHTML = '<div style="color:#888;font-size:13px;text-align:center;margin-top:60px;">Aucun call scoré pour l\'instant.</div>'; return; }
-  body.innerHTML = scoreHistory.slice().reverse().map(h => {
-    const color = h.score >= 15 ? '#3B6D11' : h.score >= 10 ? '#BA7517' : '#c00';
-    const badgeClass = h.badgeType === 'prospection' ? 'prospection' : 'r1r2';
-    const badgeLabel = h.badgeType === 'prospection' ? 'Prospection' : h.type;
-    let critHtml = '';
-    if (h.criteres && Object.keys(h.criteres).length) {
-      critHtml = '<div class="h-criteria">';
-      for (const [key, val] of Object.entries(h.criteres)) {
-        const max = h.maxes?.[key] || 4;
-        const pct = Math.round((val / max) * 100);
-        const c = pct >= 70 ? '#3B6D11' : pct >= 40 ? '#BA7517' : '#c00';
-        critHtml += `<div class="h-crit-item"><div class="h-crit-label">${H_LABELS[key]||key}</div><div class="h-crit-val" style="color:${c}">${val}/${max}</div><div class="h-crit-bar"><div class="h-crit-fill" style="width:${pct}%;background:${c}"></div></div></div>`;
+  if (!scoreHistory.length) {
+    body.innerHTML = '<div style="color:#888;font-size:13px;text-align:center;margin-top:60px;">Aucun call scoré pour l\'instant.</div>';
+    return;
+  }
+  // Section 1 : Dashboard moyennes
+  const commercials = ['Cheikh', 'Marcel', 'Simon'];
+  const types = ['R1', 'R2'];
+  let dashHtml = `<div class="hist-section-title">Tableau de bord</div><div class="hist-dashboard">`;
+  for (const com of commercials) {
+    const hasAnyCalls = scoreHistory.some(h => h.commercial === com);
+    if (!hasAnyCalls) continue;
+    dashHtml += `<div class="hist-commercial-row"><div class="hist-commercial-name">${com}</div><div class="hist-avg-cards">`;
+    for (const t of types) {
+      const avg = getAverages(com, t);
+      if (!avg) {
+        dashHtml += `<div class="hist-avg-card empty">${t} — Aucun call scoré</div>`;
+      } else {
+        const cls = avg.moyenne >= 14 ? 'green' : avg.moyenne >= 10 ? 'orange' : 'red';
+        const trend = avg.tendance === 'up' ? '↑' : '↓';
+        const trendColor = avg.tendance === 'up' ? '#16a34a' : '#dc2626';
+        const weak = getWeakCriteria(com, t);
+        const weakStr = weak.length ? weak.map(w => `${w.label} (${w.avg.toFixed(1)}/${w.max})`).join(', ') : '';
+        dashHtml += `<div class="hist-avg-card ${cls}">
+          <div class="hist-avg-type">${t} — ${avg.nb_calls} call${avg.nb_calls > 1 ? 's' : ''}</div>
+          <div class="hist-avg-score">${parseFloat(avg.moyenne).toFixed(1)}<span style="font-size:13px;font-weight:400;">/20</span><span style="font-size:16px;color:${trendColor};margin-left:4px;">${trend}</span></div>
+          <div class="hist-avg-meta">Dernière note : ${avg.derniere_note}/20</div>
+          ${weakStr ? `<div class="hist-weak">⚠ À travailler : ${escHtml(weakStr)}</div>` : ''}
+        </div>`;
       }
-      critHtml += '</div>';
     }
-    const hasDebrief = h.commentaires || h.points_forts || h.axes;
-    const idx = scoreHistory.slice().reverse().indexOf(h);
-    let debriefHtml = '';
-    if (hasDebrief) {
-      let d = '';
-      if (h.commentaires) {
-        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Commentaires par critère</div>`;
-        for (const [k, v] of Object.entries(h.commentaires)) {
-          d += `<div style="margin-bottom:6px;"><span style="font-size:11px;font-weight:600;color:#1a1a1a;">${H_LABELS[k]||k}</span><div style="font-size:12px;color:#444;line-height:1.6;margin-top:2px;">${escHtml(v)}</div></div>`;
-        }
-        d += `</div>`;
-      }
-      if (h.points_forts?.length) {
-        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Points forts</div>`;
-        h.points_forts.forEach(pf => { d += `<div style="margin-bottom:5px;"><span style="font-size:12px;font-weight:600;color:#3B6D11;">✓ ${escHtml(pf.titre||'')}</span><div style="font-size:12px;color:#444;line-height:1.6;">${escHtml(pf.detail||'')}</div></div>`; });
-        d += `</div>`;
-      }
-      if (h.axes?.length) {
-        d += `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Axes d'amélioration</div>`;
-        h.axes.forEach(axe => {
-          d += `<div style="margin-bottom:8px;border-left:2px solid #e0ddd6;padding-left:8px;">`;
-          d += `<div style="font-size:12px;font-weight:600;color:#1a1a1a;">${escHtml(axe.titre||'')}</div>`;
-          if (axe.citation) d += `<div style="font-size:11px;color:#c00;margin-top:3px;">❌ ${escHtml(axe.citation)}</div>`;
-          if (axe.reformulation) d += `<div style="font-size:11px;color:#3B6D11;margin-top:2px;">✅ ${escHtml(axe.reformulation)}</div>`;
-          d += `</div>`;
-        });
-        d += `</div>`;
-      }
-      if (h.actions?.length) {
-        d += `<div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Actions</div>`;
-        h.actions.forEach((a,i) => { d += `<div style="font-size:12px;color:#444;margin-bottom:3px;">${i+1}. ${escHtml(a)}</div>`; });
-        d += `</div>`;
-      }
-      if (h.note_perso) d += `<div style="background:#faf9f7;border-radius:8px;padding:8px 10px;font-size:12px;color:#444;line-height:1.6;font-style:italic;">"${escHtml(h.note_perso)}"</div>`;
-      debriefHtml = `<div id="hdebrief-${idx}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #e0ddd6;">${d}</div>`;
-    }
-    return `<div class="history-item">
-      <div class="h-row">
-        <span class="h-name">${h.commercial}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          ${hasDebrief?`<button onclick="toggleHDebrief(${idx})" id="hdbtn-${idx}" style="font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #d0cdc6;background:#fff;cursor:pointer;color:#555;">Débrief ▼</button>`:''}
-          <span class="h-score" style="color:${color}">${h.score}/20</span>
-        </div>
+    dashHtml += `</div></div>`;
+  }
+  dashHtml += `</div>`;
+
+  // Section 2 : Liste filtrée
+  dashHtml += `<div class="hist-section-title">Calls scorés</div>`;
+  body.innerHTML = dashHtml;
+  renderHistoryList();
+}
+
+function renderHistoryList() {
+  const body = document.getElementById('history-body');
+  // Garde le dashboard, remplace seulement la liste
+  let listContainer = document.getElementById('hist-list-container');
+  if (!listContainer) {
+    listContainer = document.createElement('div');
+    listContainer.id = 'hist-list-container';
+    listContainer.style.cssText = 'display:flex;flex-direction:column;gap:10px;padding:0 16px 16px;';
+    body.appendChild(listContainer);
+  }
+
+  let filtered = scoreHistory.filter(h => {
+    if (histFilter.commercial !== 'all' && h.commercial !== histFilter.commercial) return false;
+    if (histFilter.type !== 'all' && h.type !== histFilter.type) return false;
+    return true;
+  });
+
+  if (histFilter.sort === 'date_desc') filtered = filtered.slice().reverse();
+  else if (histFilter.sort === 'score_desc') filtered = filtered.slice().sort((a, b) => getCallScore(b) - getCallScore(a));
+  else if (histFilter.sort === 'score_asc') filtered = filtered.slice().sort((a, b) => getCallScore(a) - getCallScore(b));
+
+  if (!filtered.length) {
+    listContainer.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:20px 0;">Aucun call correspond aux filtres.</div>';
+    return;
+  }
+
+  listContainer.innerHTML = filtered.map(h => {
+    const score = getCallScore(h);
+    const scoreColor = score >= 14 ? '#16a34a' : score >= 10 ? '#d97706' : '#dc2626';
+    const comBadge = h.commercial ? h.commercial.toLowerCase() : '';
+    const typeBadge = h.badgeType === 'prospection' ? 'prosp' : (h.type || '').toLowerCase().replace('/', '');
+    const typeLabel = h.badgeType === 'prospection' ? 'Prospection' : (h.type || '');
+    const prospect = h.prospect || '—';
+    const dateStr = formatHistDate(h.date);
+
+    // Détail inline
+    const critHtml = buildHistCriteriaHtml(h);
+    const syntheseHtml = buildHistSyntheseHtml(h);
+
+    return `<div class="hist-call-card" id="hcard-${h.id}">
+      <div class="hist-call-header">
+        <span class="hist-call-prospect">${escHtml(prospect)}</span>
+        <span class="hist-call-date">${escHtml(dateStr)}</span>
+        <span class="hist-badge ${comBadge}">${escHtml(h.commercial||'')}</span>
+        <span class="hist-badge ${typeBadge}">${escHtml(typeLabel)}</span>
+        <span class="hist-score-badge" style="color:${scoreColor}">${score}/20</span>
       </div>
-      <div class="h-meta">${h.date} · <span class="h-type ${badgeClass}">${badgeLabel}</span>${h.maturite?' · '+h.maturite:''}</div>
-      ${critHtml}
-      ${debriefHtml}
+      <div class="hist-call-actions">
+        <button class="hist-call-btn" onclick="toggleHistDetail('${h.id}')" id="hdetail-btn-${h.id}">Voir détail ▼</button>
+        <button class="hist-call-btn danger" onclick="deleteHistoryEntry('${h.id}')">Supprimer</button>
+      </div>
+      <div class="hist-detail" id="hdetail-${h.id}">
+        ${critHtml}
+        ${syntheseHtml}
+      </div>
     </div>`;
   }).join('');
 }
 
-function toggleHDebrief(idx) {
-  const el = document.getElementById('hdebrief-' + idx);
-  const btn = document.getElementById('hdbtn-' + idx);
+function buildHistCriteriaHtml(h) {
+  if (!h.criteres || !Object.keys(h.criteres).length) return '';
+  let html = '<div style="margin-bottom:10px;">';
+  for (const [k, v] of Object.entries(h.criteres)) {
+    const note = getCritereNote(v);
+    const max = getCritereMax(v, h.maxes?.[k] || 4);
+    const pct = max > 0 ? Math.round((note / max) * 100) : 0;
+    const c = pct >= 70 ? '#16a34a' : pct >= 40 ? '#d97706' : '#dc2626';
+    const citation = typeof v === 'object' && v.citation ? v.citation : null;
+    html += `<div class="hist-crit-row">
+      <span class="hist-crit-name">${H_LABELS[k] || k}</span>
+      <span class="hist-crit-note" style="color:${c}">${note}/${max}</span>
+    </div>
+    ${citation ? `<div class="hist-citation-text">${escHtml(citation)}</div>` : ''}`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function buildHistSyntheseHtml(h) {
+  const s = h.synthese;
+  if (!s && !h.maturite_deal && !h.actions?.length) return '';
+  let html = '<div class="hist-synthese">';
+  if (s?.verdict || h.maturite_deal) {
+    html += `<div class="hist-synthese-block" style="background:#fffbeb;border:1px solid #fcd34d;">
+      <div class="hist-synthese-label" style="color:#d97706;">Verdict</div>
+      <div style="font-size:12px;color:#78350f;">${escHtml(s?.verdict || h.maturite_deal || '')}</div>
+    </div>`;
+  }
+  if (s?.points_forts || h.points_forts) {
+    const pf = s?.points_forts || (Array.isArray(h.points_forts) ? h.points_forts.map(p => p.titre || '').join(' · ') : '');
+    html += `<div class="hist-synthese-block" style="background:#f0fdf4;border:1px solid #86efac;">
+      <div class="hist-synthese-label" style="color:#16a34a;">Points forts</div>
+      <div style="font-size:12px;color:#166534;white-space:pre-wrap;">${escHtml(typeof pf === 'string' ? pf : '')}</div>
+    </div>`;
+  }
+  const actions = h.actions || [];
+  if (actions.length) {
+    html += `<div class="hist-synthese-block" style="background:#eff6ff;border:1px solid #bfdbfe;">
+      <div class="hist-synthese-label" style="color:#1d4ed8;">Actions 48h</div>`;
+    actions.forEach((a, i) => {
+      html += `<div style="font-size:12px;color:#1e3a8a;margin-bottom:4px;">${i+1}. ${typeof a === 'object' ? `<strong>${escHtml(a.intitule||'')}</strong> — ${escHtml(a.pourquoi||'')}` : escHtml(String(a))}</div>`;
+    });
+    html += `</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function toggleHistDetail(id) {
+  const el = document.getElementById('hdetail-' + id);
+  const btn = document.getElementById('hdetail-btn-' + id);
   if (!el) return;
-  const open = el.style.display !== 'none';
-  el.style.display = open ? 'none' : 'block';
-  if (btn) btn.textContent = open ? 'Débrief ▼' : 'Débrief ▲';
+  el.classList.toggle('open');
+  if (btn) btn.textContent = el.classList.contains('open') ? 'Masquer ▲' : 'Voir détail ▼';
+}
+
+function deleteHistoryEntry(id) {
+  if (!confirm('Supprimer ce call de l\'historique ?')) return;
+  scoreHistory = scoreHistory.filter(e => e.id !== id);
+  saveHistoryToStorage();
+  renderHistory();
 }
 
 function clearHistory() {
   if (!scoreHistory.length) { alert('L\'historique est déjà vide.'); return; }
   if (confirm(`Supprimer les ${scoreHistory.length} call(s) de l'historique ?`)) {
-    scoreHistory.length = 0;
-    fetch('/api/history', { method: 'DELETE' }).catch(() => {});
+    scoreHistory = [];
+    saveHistoryToStorage();
     renderHistory();
   }
 }
@@ -1613,10 +2009,10 @@ async function analyzeCoaching() {
     byC[h.commercial].push(h);
   }
   const summaries = Object.entries(byC).map(([com, calls]) => {
-    const avg = (calls.reduce((s,c)=>s+c.score,0)/calls.length).toFixed(1);
+    const avg = (calls.reduce((s,c)=>s+getCallScore(c),0)/calls.length).toFixed(1);
     const detail = calls.map(c=>{
-      const crit = Object.entries(c.criteres||{}).map(([k,v])=>`${H_LABELS[k]||k}:${v}/${c.maxes?.[k]||4}`).join(', ');
-      return `  - ${c.date} · ${c.type} → ${c.score}/20 · Stade:${c.maturite||'?'} | ${crit}`;
+      const crit = Object.entries(c.criteres||{}).map(([k,v])=>`${H_LABELS[k]||k}:${getCritereNote(v)}/${getCritereMax(v,c.maxes?.[k]||4)}`).join(', ');
+      return `  - ${formatHistDate(c.date)} · ${c.type} → ${getCallScore(c)}/20 · Stade:${c.maturite||'?'} | ${crit}`;
     }).join('\n');
     return `=== ${com} — ${calls.length} call(s), moyenne ${avg}/20 ===\n${detail}`;
   }).join('\n\n');
@@ -1648,9 +2044,9 @@ function renderCompare() {
     const prosp = calls.filter(c => c.badgeType === 'prospection');
     byC[com] = {
       total_calls: calls.length,
-      avg_all: calls.reduce((s,h) => s+h.score,0) / calls.length,
-      avg_r1r2: r1r2.length ? r1r2.reduce((s,h) => s+h.score,0)/r1r2.length : null,
-      avg_prosp: prosp.length ? prosp.reduce((s,h) => s+h.score,0)/prosp.length : null,
+      avg_all: calls.reduce((s,h) => s+getCallScore(h),0) / calls.length,
+      avg_r1r2: r1r2.length ? r1r2.reduce((s,h) => s+getCallScore(h),0)/r1r2.length : null,
+      avg_prosp: prosp.length ? prosp.reduce((s,h) => s+getCallScore(h),0)/prosp.length : null,
       r1r2_count: r1r2.length, prosp_count: prosp.length
     };
   }
