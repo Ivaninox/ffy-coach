@@ -2,6 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import historyHandler from './api/history.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,6 +38,26 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(500); res.end(JSON.stringify({ error: e.message }));
       }
     });
+    return;
+  }
+
+  // /api/history — GET / POST / DELETE
+  if (req.url.startsWith('/api/history')) {
+    let body = '';
+    if (req.method !== 'GET' && req.method !== 'DELETE') {
+      await new Promise(resolve => {
+        req.on('data', chunk => body += chunk);
+        req.on('end', resolve);
+      });
+    }
+    req.body = body ? JSON.parse(body) : {};
+    const vRes = {
+      _status: 200,
+      status(code) { this._status = code; return this; },
+      json(data) { res.writeHead(this._status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); },
+      setHeader(k, v) { res.setHeader(k, v); }
+    };
+    historyHandler(req, vRes);
     return;
   }
 

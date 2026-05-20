@@ -284,6 +284,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .hist-badge.cheikh { background:#dbeafe; color:#1d4ed8; }
 .hist-badge.marcel { background:#fef3c7; color:#92400e; }
 .hist-badge.simon { background:#f3e8ff; color:#6b21a8; }
+.hist-badge.ivan { background:#fce7f3; color:#9d174d; }
 .hist-badge.r1 { background:#e0f2fe; color:#0369a1; }
 .hist-badge.r2 { background:#dcfce7; color:#15803d; }
 .hist-badge.prosp { background:#fef3c7; color:#92400e; }
@@ -346,6 +347,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
       <select id="chat-user">
         <option value="Marcel">Marcel Ambomo</option>
         <option value="Simon">Simon Cognet</option>
+        <option value="Ivan">Ivan Messias</option>
         <option value="Cheikh">Cheikh Kane</option>
       </select>
     </div>
@@ -368,6 +370,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
       <select id="score-r1-user">
         <option value="Marcel">Marcel Ambomo</option>
         <option value="Simon">Simon Cognet</option>
+        <option value="Ivan">Ivan Messias</option>
         <option value="Cheikh">Cheikh Kane</option>
       </select>
       <label style="margin-left:8px;">Type :</label>
@@ -394,6 +397,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
       <select id="score-prosp-user">
         <option value="Marcel">Marcel Ambomo</option>
         <option value="Simon">Simon Cognet</option>
+        <option value="Ivan">Ivan Messias</option>
         <option value="Cheikh">Cheikh Kane</option>
       </select>
     </div>
@@ -452,6 +456,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
           <select class="form-select" id="p-commercial">
             <option value="Marcel">Marcel Ambomo</option>
             <option value="Simon">Simon Cognet</option>
+            <option value="Ivan">Ivan Messias</option>
             <option value="Cheikh">Cheikh Kane</option>
           </select>
         </div>
@@ -693,6 +698,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
         <option value="Cheikh">Cheikh</option>
         <option value="Marcel">Marcel</option>
         <option value="Simon">Simon</option>
+        <option value="Ivan">Ivan</option>
       </select>
       <label>Type :</label>
       <select id="hist-filter-type" onchange="histFilterChange()">
@@ -882,20 +888,22 @@ RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté 
 
 const _SCORING_STRICT_RULES = `
 
-Tu es un directeur commercial senior chez FFY. Tu notes selon les standards exigeants de la formation Emilie Demas (RevOp Agency). Tu n'es PAS complaisant.
+Tu es un directeur commercial senior chez FFY. Tu notes selon les standards de la formation Emilie Demas (RevOp Agency). Tu es juste et honnête — ni complaisant, ni inutilement sévère.
 
-RÈGLES DE NOTATION STRICTES :
-- Une note moyenne (50% du total) signifie "tout juste correct"
-- Note basse normale en début de carrière : 6-9/20
-- Un call exemplaire mérite 16+/20 et c'est rare
-- Les commerciaux FFY (Marcel et Simon) sont en montée en compétence — la majorité de leurs calls doivent être notés 7-12/20
-- Si tu hésites entre deux notes, prends la plus basse. N'arrondis jamais vers le haut.
+RÈGLES DE NOTATION :
+- 10/20 = call correct, les bases sont respectées
+- 12-14/20 = bon call, quelques points à améliorer
+- 15-17/20 = très bon call, maîtrise solide des méthodes
+- 18+/20 = call quasi-parfait, réservé aux performances exceptionnelles
+- Un commercial qui applique correctement SPIN + NSC mérite 12-14/20
+- Si un critère est partiellement présent, donne une note partielle (ex : 1/3 ou 2/3) — ne mets 0 que si le critère est vraiment absent
+- Si tu hésites entre deux notes adjacentes, évalue au plus juste selon la réalité du transcript
 
 INTERDITS :
-- Ne mets jamais une note "pour encourager"
-- Ne mets jamais 2/3 ou 3/3 sur un critère sans citation exacte du transcript prouvant la note
-- Si un critère est absent du call → mets 0
-- Une moyenne autour de 11-13/20 systématiquement = tu n'es pas assez exigeant
+- Ne mets jamais une note "pour encourager" sans que le comportement soit dans le transcript
+- Ne mets pas 3/3 sur un critère sans citation prouvant que c'est bien fait
+- Ne mets pas 0 si le critère est effleuré ou partiellement présent
+- Évite les notes systématiquement basses : si le call est correct dans l'ensemble, la note doit refléter ça
 
 Pour CHAQUE critère, tu dois fournir :
 1. La note sur le maximum
@@ -937,13 +945,22 @@ function saveHistoryToStorage() {
   try { localStorage.setItem('ffy_score_history', JSON.stringify({ version: '1.0', history: scoreHistory })); } catch {}
 }
 
+async function syncHistoryFromServer() {
+  try {
+    const r = await fetch('/api/history');
+    if (!r.ok) return;
+    const data = await r.json();
+    scoreHistory = (data && data.history) ? data.history : [];
+    saveHistoryToStorage();
+  } catch {}
+}
+
 function loadHistory() {
   try {
     const raw = localStorage.getItem('ffy_score_history');
     if (!raw) return;
     const data = JSON.parse(raw);
     if (data && !data.version) {
-      // Migration : ancien format sans clé version
       scoreHistory = Array.isArray(data) ? data : (data.history || []);
       saveHistoryToStorage();
     } else {
@@ -951,7 +968,9 @@ function loadHistory() {
     }
   } catch { scoreHistory = []; }
 }
+// Charge le localStorage immédiatement, puis synchro serveur en arrière-plan
 loadHistory();
+syncHistoryFromServer();
 const mailStore = {};
 
 /* ---- VHR ---- */
@@ -1027,8 +1046,11 @@ function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   TABS.forEach((t, i) => { if (t === tab) document.querySelectorAll('.tab')[i].classList.add('active'); });
   document.getElementById('panel-' + tab).classList.add('active');
-  if (tab === 'compare') renderCompare();
-  if (tab === 'history') renderHistory();
+  if (tab === 'compare') { syncHistoryFromServer().then(renderCompare); }
+  if (tab === 'history') {
+    renderHistory(); // affiche immédiatement depuis localStorage
+    syncHistoryFromServer().then(renderHistory); // puis met à jour depuis le serveur
+  }
 }
 
 function extractJSON(raw) {
@@ -1764,6 +1786,12 @@ function saveToHistory(commercial, parsed, type, badgeType, maxes) {
   };
   scoreHistory.push(entry);
   saveHistoryToStorage();
+  // Synchro serveur (partagé entre tous les utilisateurs)
+  fetch('/api/history', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry)
+  }).catch(() => {});
 }
 
 const H_LABELS = {
@@ -1832,7 +1860,7 @@ function renderHistory() {
     return;
   }
   // Section 1 : Dashboard moyennes
-  const commercials = ['Cheikh', 'Marcel', 'Simon'];
+  const commercials = ['Cheikh', 'Marcel', 'Simon', 'Ivan'];
   const types = ['R1', 'R2'];
   let dashHtml = `<div class="hist-section-title">Tableau de bord</div><div class="hist-dashboard">`;
   for (const com of commercials) {
@@ -1988,6 +2016,7 @@ function deleteHistoryEntry(id) {
   scoreHistory = scoreHistory.filter(e => e.id !== id);
   saveHistoryToStorage();
   renderHistory();
+  fetch(`/api/history?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
 }
 
 function clearHistory() {
@@ -1996,6 +2025,7 @@ function clearHistory() {
     scoreHistory = [];
     saveHistoryToStorage();
     renderHistory();
+    fetch('/api/history', { method: 'DELETE' }).catch(() => {});
   }
 }
 
@@ -2033,7 +2063,7 @@ async function analyzeCoaching() {
 /* ---- COMPARATIF ---- */
 function renderCompare() {
   const body = document.getElementById('compare-body');
-  const commercials = ['Marcel','Simon','Cheikh'];
+  const commercials = ['Marcel','Simon','Ivan','Cheikh'];
   if (!scoreHistory.length) { body.innerHTML = '<div style="color:#888;font-size:13px;text-align:center;margin-top:60px;">Scorez au moins un call pour voir le comparatif.</div>'; return; }
 
   const byC = {};
@@ -2128,7 +2158,7 @@ function resetPropale() {
       <div class="form-group"><label class="form-label">Nom du prospect / entreprise</label><input class="form-input" id="p-prospect" type="text" placeholder="ex : TotalEnergies Renouvelables"></div>
       <div class="form-group"><label class="form-label">Secteur d'activité</label><select class="form-select" id="p-secteur"><option value="">Choisir...</option><option>Énergies Renouvelables</option><option>Mairie / Institution publique</option><option>Parti politique / Député</option><option>Promoteur immobilier</option><option>Agence marketing / Événementiel</option><option>Grande consommation / FMCG</option><option>Retail / Distribution</option><option>Franchise restauration</option><option>Autre</option></select></div>
       <div class="form-group"><label class="form-label">Service FFY principal</label><select class="form-select" id="p-service"><option value="">Choisir...</option><option value="Flying Box">Flying Box — Distribution BAL</option><option value="Flying Hand">Flying Hand — Main à main</option><option value="Flying Event">Flying Event — Sampling / Guerrilla</option><option value="Flying Store">Flying Store — Dépôt points de vente</option><option value="Flying Bike">Flying Bike — Vélos publicitaires</option><option value="Combo Box + Hand">Combo Flying Box + Flying Hand</option></select></div>
-      <div class="form-group"><label class="form-label">Commercial</label><select class="form-select" id="p-commercial"><option value="Marcel">Marcel Ambomo</option><option value="Simon">Simon Cognet</option><option value="Cheikh">Cheikh Kane</option></select></div>
+      <div class="form-group"><label class="form-label">Commercial</label><select class="form-select" id="p-commercial"><option value="Marcel">Marcel Ambomo</option><option value="Simon">Simon Cognet</option><option value="Ivan">Ivan Messias</option><option value="Cheikh">Cheikh Kane</option></select></div>
     </div>
     <div class="form-group"><label class="form-label">Pains identifiés en R1 (résumé libre)</label><textarea class="paste-area" id="p-pain" placeholder="ex : Pas de traçabilité sur leurs campagnes print actuelles, prestataire historique (La Poste) sans reporting, direction qui questionne le ROI du print..."></textarea></div>
     <div class="form-group"><label class="form-label">Informations complémentaires (optionnel)</label><textarea class="paste-area" style="height:60px;" id="p-extra" placeholder="ex : Zone Paris 12e + banlieue sud, ~8 000 boîtes, délai 3 semaines, concurrent Mediapost en lice..."></textarea></div>

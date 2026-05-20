@@ -1,0 +1,209 @@
+{
+  "version": "1.0",
+  "history": [
+    {
+      "id": "02aaea29-f92a-481a-ac76-d727f16cd3fa",
+      "commercial": "Cheikh",
+      "score": 9,
+      "score_total": 9,
+      "prospect": "Thibault Herbert - Manda (Flatlooker)",
+      "maturite": "Décision",
+      "criteres": {
+        "revalidation_pain": {
+          "note": 0,
+          "max": 2,
+          "citation": "Absent du transcript",
+          "justification": "Cheikh ouvre directement sur 'il y a eu du nouveau concernant ce projet-là ?' puis enchaîne immédiatement sur le pitch produit ('je vais te reparler un peu de Flank4You'). Aucun pain R1 n'est rappelé ni reconfirmé. Le passage au pitch est immédiat, sans revalider pourquoi cette campagne est critique pour Manda."
+        },
+        "presentation_solution": {
+          "note": 2,
+          "max": 3,
+          "citation": "\"je suis allé chercher les quartiers CSP+... je me suis mis sur des revenus médians assez élevés à plus de 40 000 € de revenus médians par foyer\"",
+          "justification": "La solution est présentée avec un vrai travail de personnalisation (3 scénarios, ciblage propriétaires, données INSEE, zones CSP+) qui correspond au besoin exprimé de cibler des propriétaires à fort revenu. C'est du bon boulot de préparation. Cependant, la solution n'est jamais reliée explicitement à un pain verbalisé en R1 — Cheikh assume que le client se fait lui-même le lien. Un élément manque : la connexion pain→solution est implicite, jamais articulée. Pas 3/3."
+        },
+        "preuves": {
+          "note": 0,
+          "max": 2,
+          "citation": "Absent du transcript",
+          "justification": "Aucun use case client similaire (agence immo, promoteur, mandataire) n'est cité, aucun résultat chiffré d'une campagne passée. Cheikh mentionne anecdotiquement 'j'ai reçu un flyer de La Forêt avec des traits de coupe' mais c'est un contre-exemple concurrentiel, pas une preuve client FFY. Critère totalement absent."
+        },
+        "meddpicc": {
+          "note": 2,
+          "max": 3,
+          "citation": "\"Ça va être Périne et moi [...] c'est la directrice marketing. Donc on va forcément consulter les sales ventes, mais ça va être nous qui allons prendre la décision finale.\"",
+          "justification": "L'Economic Buyer (Périne, directrice marketing) est identifié, et Thibault se positionne comme champion co-décideur. C'est solide. En revanche, le paper process (délais contractuels, bon de commande, validation juridique) n'est pas abordé. Et surtout, Cheikh ne cherche pas à rencontrer Périne directement ni à verrouiller sa stratégie auprès d'elle — il laisse Thibault seul porte-parole. Deux éléments sur trois, pas le troisième."
+        },
+        "objections": {
+          "note": 2,
+          "max": 3,
+          "citation": "\"Nous, les flyers, on les produit en interne. Comment vous fonctionnez, vous, de votre côté ?\" / \"Non, t'inquiète, c'est souple [...] soit vous les faites livrer dans notre entrepôt et on s'occupe du reste.\"",
+          "justification": "La seule objection réelle (production des flyers en interne) est bien traitée avec souplesse et sans concession sur le prix. Mais c'était une objection logistique facile, pas une objection de valeur ou de prix. Aucune objection sur le budget, la concurrence (La Poste citée par Thibault), ou le ROI n'est retraitée avec de la valeur. Le niveau de difficulté des objections rencontrées était bas, et Cheikh ne les a pas provoquées pour les traiter en amont."
+        },
+        "presentation_prix": {
+          "note": 1,
+          "max": 2,
+          "citation": "\"Si tu veux cibler Pluto uniquement, tu as 2450€ plus 12% de frais d'agence\" / \"on ira distribuer 20 000 flyers pour un peu plus de 3 000 €\"",
+          "justification": "Les prix sont présentés en live pendant la démo des scénarios, ce qui est positif. Cependant, il n'y a aucun ancrage ROI ni RONI. Thibault lui-même exprime le ROI ('si on signe un ou deux mandats on sera rentable, avec de bonnes valorisations et plus d'honoraires') mais Cheikh ne s'en empare pas pour ancrer le prix : il ne calcule pas 'ton mandat vaut X€ de commission, ma campagne à 3 000€ te coûte moins que 10% d'un mandat'. Prix mentionné live mais sans levier valeur."
+        },
+        "closing": {
+          "note": 1,
+          "max": 3,
+          "citation": "\"Ok, quand est-ce que vous allez prendre la décision ?\"",
+          "justification": "Cheikh pose une question sur le timing de décision, ce qui est bien. Mais il n'y a aucune tentative de closing explicite : pas de 'lequel des trois scénarios te convient le mieux ?', pas de 'qu'est-ce qui t'empêche de valider aujourd'hui ?', pas de compelling event créé autour de la date de juin qui approche. La question sur la décision est posée tardivement (16:20) et uniquement pour recueillir une info — pas pour engager. Aucun engagement contractuel ou verbal obtenu."
+        },
+        "next_step": {
+          "note": 1,
+          "max": 2,
+          "citation": "\"moi je me note si j'ai pas de nouvelles de te relancer la semaine prochaine et lundi prochain et je t'envoie tous les documents dans la journée\"",
+          "justification": "Il y a un semblant de next step (relance lundi prochain) mais c'est Cheikh qui porte seul la charge de la relance — 'si j'ai pas de nouvelles'. Aucune date de call ou réunion fixée avec Thibault ET Périne. Le next step idéal en R2 aurait été : 'tu m'as dit jeudi pour ton point avec Périne — on bloque vendredi 15 min tous les trois pour que je lui présente les zones et qu'on signe avant que juin parte'. C'est une date floue unilatérale, pas un engagement bilatéral."
+        }
+      },
+      "synthese": {
+        "points_forts": "1. Préparation geomarketing solide et différenciante : 3 scénarios ciblés avec données propriétaires/revenus médians — Thibault le reconnaît lui-même ('je pense que votre approche est un peu plus profonde que les autres'). 2. Identification de l'Economic Buyer en cours de call : Périne (directrice marketing) remontée spontanément, Cheikh pose la bonne question ('qui prend la décision ?'). 3. Traitement logistique fluide : l'objection impression en interne est neutralisée sans friction ('c'est souple [...] soit vous les faites livrer dans notre entrepôt').",
+        "axes_amelioration": "✗ Aucune revalidation du pain en ouverture — Cheikh pitch immédiatement après 'il y a du nouveau ?' / ✓ Il fallait ouvrir par 'Avant qu'on rentre dans les scénarios, je veux m'assurer qu'on est bien alignés sur ce qui compte le plus pour toi : tu m'avais dit que votre enjeu c'est de signer 1-2 mandats sur Puteaux, c'est toujours ça le critère de succès ?' — ça ancre le pain et justifie chaque scénario.\n✗ Le ROI verbalisé par Thibault ('un mandat nous rend rentables, des biens à forte valorisation = plus d'honoraires') n'est jamais récupéré par Cheikh pour ancrer le prix / ✓ Il fallait dire : 'Tu me dis qu'un mandat suffit à rentabiliser — ton honoraire moyen sur un bien CSP+ à Courbevoie c'est combien, 8-10k€ ? Alors là on parle d'une campagne à 3 000€ pour décrocher potentiellement 3x ta mise. C'est ça le vrai calcul.'\n✗ Pas de tentative de closing ni de proposition de réunion tripartite avec Périne — Cheikh repart avec une relance unilatérale floue / ✓ Il fallait dire : 'Tu vois Périne jeudi — est-ce qu'on peut bloquer 20 minutes vendredi matin tous les trois ? Comme ça elle voit les cartes directement, elle pose ses questions et vous pouvez valider avant que juin soit compromis.'",
+        "stade_deal": "Décision",
+        "verdict": "Un call de démo techniquement préparé mais commercialement incomplet : Cheikh vend un produit, pas une solution à un pain reconfirmé, rate le ROI servi sur un plateau par le prospect lui-même, et repart sans engagement ni date ferme avec le vrai décideur — un R2 qui ressemble trop à un R1 bis."
+      },
+      "date": "2026-05-19T16:49:06.915Z",
+      "type": "R2",
+      "badgeType": "r1r2",
+      "maxes": {
+        "revalidation_pain": 2,
+        "presentation_solution": 3,
+        "preuves": 2,
+        "meddpicc": 3,
+        "objections": 3,
+        "presentation_prix": 2,
+        "closing": 3,
+        "next_step": 2
+      },
+      "commentaires": null,
+      "points_forts": null,
+      "axes": null,
+      "maturite_deal": "Un call de démo techniquement préparé mais commercialement incomplet : Cheikh vend un produit, pas une solution à un pain reconfirmé, rate le ROI servi sur un plateau par le prospect lui-même, et repart sans engagement ni date ferme avec le vrai décideur — un R2 qui ressemble trop à un R1 bis.",
+      "actions": [
+        {
+          "intitule": "Envoyer les cartes + devis avec calcul ROI intégré",
+          "pourquoi": "Thibault a lui-même fourni les éléments du ROI : 'si on signe un ou deux mandats on sera rentable [...] des biens à forte valorisation et plus d'honoraires' — Cheikh n'a pas exploité ça en live, il faut le formaliser maintenant",
+          "comment": "Dans l'email d'envoi des cartes, intégrer un encadré 'Calcul de rentabilité estimé' : honoraire moyen mandat CSP+ (à demander ou à estimer à 8-10k€) vs coût campagne scénario 3 (3 000€) = ROI x3 sur 1 seul mandat. Rendre le deal évident sur le papier pour que Thibault puisse le défendre seul devant Périne.",
+          "delai": "J+1"
+        },
+        {
+          "intitule": "Proposer un slot tripartite Thibault + Périne avant vendredi",
+          "pourquoi": "Périne est l'Economic Buyer confirmée ('c'est la directrice marketing [...] ça va être nous qui allons prendre la décision finale') et Cheikh ne l'a jamais rencontrée — laisser Thibault seul porte-parole est un risque majeur de déformation du message et de stagnation",
+          "comment": "Envoyer un message à Thibault : 'Tu vois Périne jeudi — je te propose qu'on bloque 15-20 min vendredi matin tous les trois, je lui présente les zones en direct et elle peut poser ses questions. Comme ça vous êtes en position de valider avant mi-juin. Tu as un créneau ?' — forcer la date maintenant, ne pas attendre la relance lundi.",
+          "delai": "J+1"
+        },
+        {
+          "intitule": "Qualifier et neutraliser La Poste comme concurrent principal",
+          "pourquoi": "Thibault a explicitement cité 'il me reste à voir la Poste pour les pros' comme dernière offre à recevoir avant décision — c'est le concurrent le plus dangereux car institutionnel et rassurant pour Périne",
+          "comment": "Préparer 2-3 points de différenciation La Poste vs FFY à intégrer dans l'email ou la présentation Périne : (1) tracé GPS temps réel vs aucune preuve de passage, (2) ciblage propriétaires/revenus médians par îlot vs découpage postal standard, (3) espace client avec photos et anomalies vs rapport PDF générique. Anticiper l'objection 'La Poste c'est plus rassurant' avant qu'elle soit posée.",
+          "delai": "J+1"
+        }
+      ],
+      "note_perso": null
+    },
+    {
+      "id": "e2998189-7efd-4567-833f-2d01618b424f",
+      "commercial": "Cheikh",
+      "score": 8,
+      "score_total": 8,
+      "prospect": "Thibault Herbert - Manda (Flatlooker)",
+      "maturite": "Décision",
+      "criteres": {
+        "revalidation_pain": {
+          "note": 0,
+          "max": 2,
+          "citation": "Absent du transcript",
+          "justification": "Cheikh ouvre directement sur 'il y a eu du nouveau concernant ce projet-là?' puis enchaîne immédiatement sur la présentation des technos sans jamais rappeler ni reconfirmer les douleurs identifiées en R1. Aucune reformulation du pain, aucune question de type 'Tu m'avais dit que ton problème principal c'était X, c'est toujours le cas ?'. Passage direct à la démo = 0."
+        },
+        "presentation_solution": {
+          "note": 2,
+          "max": 3,
+          "citation": "\"Ce qui fait notre particularité, c'est les technos qu'on a mis en place pour mieux faire notre boulot et surtout s'assurer qu'on va s'adresser aux bonnes personnes.\"",
+          "justification": "La présentation est structurée (GPS temps réel, app mobile, espace client, geomarketing data INSEE) et clairement adaptée au contexte immobilier de Manda — ciblage propriétaires CSP+, revenus médians, périmètre Puteaux/La Garenne. C'est un bon fit contextuel. En revanche, les fonctionnalités sont pitchées dans l'ordre de Cheikh, pas dans l'ordre des pains du client : aucun lien explicite entre chaque élément et une douleur formulée en R1. On est à 'bon fit avec quelques détours' — 2/3."
+        },
+        "preuves": {
+          "note": 0,
+          "max": 2,
+          "citation": "Absent du transcript",
+          "justification": "Zéro client similaire cité, zéro résultat concret mentionné. Cheikh évoque un flyer reçu de La Forêt pour illustrer la mauvaise qualité des concurrents, ce qui n'est pas une preuve client FFY. Aucun use case immobilier, aucun chiffre de retour campagne. C'est un vrai angle mort sur un R2."
+        },
+        "meddpicc": {
+          "note": 2,
+          "max": 3,
+          "citation": "\"Ça va être Périne et moi. [...] c'est la directrice marketing. Donc on va forcément consulter les sales ventes, mais ça va être nous qui allons prendre la décision finale.\"",
+          "justification": "L'Economic Buyer (Périne, directrice marketing) est identifié et le process de décision est clarifié. Thibault est clairement le Champion. En revanche, le Paper Process est absent (pas de question sur le bon de commande, les délais de validation, la signature), et la compétition n'est pas vraiment traitée malgré la mention de plusieurs prestataires — Cheikh ne cherche pas à creuser les critères de sélection. 2 éléments solides sur 3."
+        },
+        "objections": {
+          "note": 1,
+          "max": 3,
+          "citation": "\"Non, t'inquiète, c'est souple. Là, je t'ai fait un devis avec impression, mais c'est une ligne sur le devis, donc on peut l'enlever.\"",
+          "justification": "La seule vraie objection traitée est la question logistique sur les flyers (impression interne vs FFY), gérée proprement et avec souplesse. Mais les signaux d'inquiétude sur la dispersion géographique du scénario 3 ('on serait un peu éparpillé') et la concurrence (La Poste, ISA) ne sont pas vraiment rebondis avec de la valeur. Cheikh ne counter pas la compétition, ne cherche pas à comprendre les critères de sélection des autres offres. Très en-dessous du niveau attendu pour un R2."
+        },
+        "presentation_prix": {
+          "note": 1,
+          "max": 2,
+          "citation": "\"Si tu veux cibler Pluto uniquement, tu as 2450€ plus 12% de frais d'agence. [...] tu serais à un peu moins de 5 000 €. [...] on ira distribuer 20 000 flyers pour un peu plus de 3 000 €.\"",
+          "justification": "Les prix sont présentés en live pendant la démo des scénarios — c'est positif. Mais il n'y a aucun ancrage ROI/RONI : Cheikh connaît l'objectif du client (1-2 mandats = rentable, biens CSP+ à forte valorisation), il ne fait jamais le lien 'pour 3 000€ vous pouvez signer 2 mandats à X€ de commission'. L'information est là dans le transcript mais le pont valeur n'est jamais construit explicitement."
+        },
+        "closing": {
+          "note": 1,
+          "max": 3,
+          "citation": "\"Ok, quand est-ce que vous allez prendre la décision?\"",
+          "justification": "Cheikh pose une question sur le timing de décision, ce qui est bien, mais il n'y a aucune tentative de closing explicite — pas de 'qu'est-ce qui t'empêcherait de partir sur le scénario 3 aujourd'hui ?', pas de compelling event créé, pas de résumé des raisons d'avancer. Il repart sur 'je te relance la semaine prochaine' sans engager Thibault sur un choix ou un engagement clair. C'est une sortie passive sur un deal qui a clairement besoin d'être poussé."
+        },
+        "next_step": {
+          "note": 1,
+          "max": 2,
+          "citation": "\"moi je me note si j'ai pas de nouvelles de te relancer la semaine prochaine et lundi prochain et je t'envoie tous les documents dans la journée.\"",
+          "justification": "Il y a une date (lundi prochain) mais elle est dans les mains de Cheikh, pas dans celles du client — c'est Cheikh qui va relancer, pas Thibault qui s'engage à rappeler. Le next step idéal aurait été : 'Tu me dis que Périne décide jeudi — est-ce qu'on se cale un call vendredi matin pour que tu me donnes votre réponse ?' Aucune invitation calendrier posée, aucun engagement bilatéral."
+        }
+      },
+      "synthese": {
+        "points_forts": "1. Travail de préparation geomarketing solide et différenciant : '\"J'ai mis Lagarenne parce que je voulais regarder aussi, grâce à mon outil, le pourcentage de propriétaires\"' — le client le valide explicitement ('votre approche est un peu plus profonde que les autres'). 2. Identification de l'Economic Buyer et du process de décision : '\"Ça va être Périne et moi [...] c'est la directrice marketing\"' — Cheikh sait qui décide et quand. 3. Prix présentés en live avec 3 scénarios clairs et adaptés au contexte, permettant au client de se projeter et de réagir ('\"il est intéressant ce scénario\"').",
+        "axes_amelioration": "✗ Aucune revalidation du pain en ouverture — le call démarre directement sur la démo / ✓ Il fallait ouvrir avec : 'Thibault, en R1 tu m'avais dit que votre problème c'était X. C'est toujours ta priorité numéro 1 ?' pour ancrer tout ce qui suit sur la douleur client.\n\n✗ Zéro preuve client citée malgré un contexte immobilier où les références auraient pesé lourd / ✓ Il fallait dire : 'On a travaillé avec [agence immo similaire], sur une zone CSP+ comparable à Puteaux, ils ont généré X leads pour un budget de Y€ — voilà leur retour.'\n\n✗ Pas de closing tenté ni de compelling event créé — le call se termine en 'je te relance lundi' / ✓ Il fallait dire : 'Tu m'as dit que Périne décide jeudi. Si tu valides le scénario 3 avec elle, qu'est-ce qui t'empêcherait de me confirmer vendredi matin pour qu'on cale juin ? Je peux bloquer les équipes dès la semaine prochaine.'",
+        "stade_deal": "Décision",
+        "verdict": "Un call correct dans la forme — bonne préparation, bon relationnel, prix présentés en live — mais qui rate les fondamentaux d'un R2 : pas de revalidation du pain, pas de preuve client, pas de closing tenté. Cheikh sort du call sans engagement ferme sur un deal qui est clairement en phase de décision avec un concurrent (La Poste) encore dans la course."
+      },
+      "date": "2026-05-19T16:55:05.414Z",
+      "type": "R2",
+      "badgeType": "r1r2",
+      "maxes": {
+        "revalidation_pain": 2,
+        "presentation_solution": 3,
+        "preuves": 2,
+        "meddpicc": 3,
+        "objections": 3,
+        "presentation_prix": 2,
+        "closing": 3,
+        "next_step": 2
+      },
+      "commentaires": null,
+      "points_forts": null,
+      "axes": null,
+      "maturite_deal": "Un call correct dans la forme — bonne préparation, bon relationnel, prix présentés en live — mais qui rate les fondamentaux d'un R2 : pas de revalidation du pain, pas de preuve client, pas de closing tenté. Cheikh sort du call sans engagement ferme sur un deal qui est clairement en phase de décision avec un concurrent (La Poste) encore dans la course.",
+      "actions": [
+        {
+          "intitule": "Envoyer les cartes geomarketing + devis dans la journée",
+          "pourquoi": "Cheikh s'y est engagé explicitement : '\"je t'envoie tous les documents dans la journée\"' — ne pas tenir cette promesse fragiliserait la confiance bâtie.",
+          "comment": "Envoyer les 2 cartes de chaleur (scénarios 2 et 3), le devis détaillé avec les 3 scénarios et une ligne d'accompagnement courte qui relie chaque scénario à l'objectif de Thibault : 1-2 mandats CSP+ = rentabilité. Ajouter une ligne ROI : 'Sur des biens à 400k€ en zone CSP+, 1 mandat = X€ de commission. Notre scénario 3 à 3 000€ vous permet d'en signer 2 pour être dans le vert.'",
+          "delai": "J+0"
+        },
+        {
+          "intitule": "Caler un call de suivi avec Thibault post-réunion Périne",
+          "pourquoi": "'\"Je vais essayer de faire un point avec Perrine [...] d'ici jeudi\"' — la décision tombe jeudi, Cheikh n'a posé aucun call de suivi. Si on attend lundi, La Poste peut avoir signé.",
+          "comment": "Envoyer une invitation calendrier pour vendredi matin (15-20 min) avec l'objet : 'Point suite à ta réunion avec Périne — scénario retenu pour juin'. Formuler dans le message d'accompagnement : 'Pour que tu puisses lancer la campagne en juin, il faudrait qu'on valide le bon de commande avant le [date]. Je bloque les équipes dès que tu me confirmes.'",
+          "delai": "J+1"
+        },
+        {
+          "intitule": "Préparer une référence client immo à glisser avant jeudi",
+          "pourquoi": "Thibault compare plusieurs offres et a reçu des propales sans call ('\"J'ai reçu d'autres propals où il n'y a même pas eu de call\"'). Il est rassuré par la profondeur de l'analyse FFY mais il manque une preuve terrain. Un use case immo concret avant la réunion Périne peut faire la différence.",
+          "comment": "Identifier dans la base clients FFY un client agence immobilière ou promoteur avec des résultats mesurables (leads générés, mandats signés, taux de retour). Envoyer à Thibault par message court : 'Pour ta réunion avec Périne, voici un cas client similaire : [agence X] a distribué Y flyers sur une zone CSP+ à [ville], résultat : Z leads qualifiés en 3 semaines pour un budget de W€.'",
+          "delai": "J+1"
+        }
+      ],
+      "note_perso": null
+    }
+  ]
+}
