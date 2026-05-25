@@ -65,7 +65,7 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .avatar.agent { background: #dbeafe; color: #1d4ed8; }
 .avatar.user { background: #e5e7eb; color: #374151; }
 .bubble { max-width: 78%; padding: 9px 13px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
-.bubble.agent { background: #fff; color: #1a1a1a; border: 1px solid #e0ddd6; border-radius: 4px 14px 14px 14px; }
+.bubble.agent { background: #fff; color: #1a1a1a; border: 1px solid #e0ddd6; border-radius: 4px 14px 14px 14px; white-space: normal; }
 .bubble.user { background: #1a6ef5; color: #fff; border-radius: 14px 4px 14px 14px; }
 .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; animation: bounce 1.2s infinite; }
@@ -328,12 +328,25 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .scoring-chat-suggestions { padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px; border-bottom:1px solid #f0ede8; background:#faf9f7; }
 .scoring-chat-sugg { font-size:11px; padding:5px 10px; border-radius:20px; border:1px solid #d0cdc6; background:#fff; cursor:pointer; color:#555; transition:all .15s; }
 .scoring-chat-sugg:hover { background:#1a6ef5; border-color:#1a6ef5; color:#fff; }
-.scoring-chat-msgs { max-height:300px; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:8px; background:#f9f8f6; min-height:40px; }
+.scoring-chat-msgs { max-height:480px; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; background:#f9f8f6; min-height:40px; }
 .scoring-chat-input-row { display:flex; gap:8px; padding:10px 14px; background:#fff; }
 .scoring-chat-input-row input { flex:1; font-size:12px; padding:7px 10px; border-radius:8px; border:1px solid #d0cdc6; font-family:inherit; outline:none; background:#faf9f7; color:#1a1a1a; }
 .scoring-chat-input-row input:focus { border-color:#1a6ef5; }
 .scoring-chat-input-row button { font-size:12px; padding:7px 14px; border-radius:8px; border:none; background:#1a1a1a; color:#fff; cursor:pointer; flex-shrink:0; }
 .scoring-chat-input-row button:hover { background:#333; }
+
+/* Markdown rendering inside agent messages */
+.md-agent { font-size:inherit; line-height:1.75; color:#1a1a1a; }
+.md-agent h2 { font-size:12px; font-weight:700; color:#1a6ef5; text-transform:uppercase; letter-spacing:.5px; margin:12px 0 4px; padding-bottom:3px; border-bottom:1px solid #e8edf8; }
+.md-agent h3 { font-size:12px; font-weight:700; color:#1a6ef5; margin:10px 0 3px; }
+.md-agent p { margin:4px 0; }
+.md-agent strong { font-weight:700; color:#111; }
+.md-agent em { font-style:italic; color:#555; }
+.md-agent hr { border:none; border-top:1px solid #e0ddd6; margin:10px 0; }
+.md-agent ul, .md-agent ol { padding-left:16px; margin:4px 0 8px; display:flex; flex-direction:column; gap:3px; }
+.md-agent li { margin:0; }
+.md-agent blockquote { border-left:3px solid #1a6ef5; background:#f0f4ff; padding:6px 10px; border-radius:0 6px 6px 0; margin:6px 0; color:#333; font-style:italic; }
+.md-agent code { background:#f0f0ec; border-radius:4px; padding:1px 5px; font-family:monospace; font-size:11px; color:#c7254e; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -1135,7 +1148,8 @@ function appendMsg(role, text, user) {
   const c = document.getElementById('chat-messages');
   const div = document.createElement('div');
   div.className = 'msg' + (role === 'user' ? ' user' : '');
-  div.innerHTML = `<div class="avatar ${role}">${role==='user'?(user||'?')[0].toUpperCase():'CKO'}</div><div class="bubble ${role}">${escHtml(text)}</div>`;
+  const content = role === 'agent' ? renderMd(text) : escHtml(text);
+  div.innerHTML = `<div class="avatar ${role}">${role==='user'?(user||'?')[0].toUpperCase():'CKO'}</div><div class="bubble ${role}">${content}</div>`;
   c.appendChild(div);
   c.scrollTop = c.scrollHeight;
   return div;
@@ -2311,7 +2325,7 @@ async function sendScoringChat() {
     scoringChatHistory.push({ role: 'assistant', content: reply });
     const t = document.getElementById(typingId);
     if (t) t.remove();
-    msgs.innerHTML += `<div class="mail-chat-msg agent">${escHtml(reply)}</div>`;
+    msgs.innerHTML += `<div class="mail-chat-msg agent">${renderMd(reply)}</div>`;
     msgs.scrollTop = msgs.scrollHeight;
   } catch(e) {
     const t = document.getElementById(typingId);
@@ -2327,6 +2341,57 @@ function sendScoringChatSugg(text) {
 function escHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderMd(str) {
+  if (!str) return '';
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const lines = str.split('\n');
+  let html = '';
+  let inUl = false, inOl = false;
+
+  const closeList = () => {
+    if (inUl) { html += '</ul>'; inUl = false; }
+    if (inOl) { html += '</ol>'; inOl = false; }
+  };
+
+  const inlineFormat = s =>
+    esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>');
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const trimmed = raw.trim();
+
+    if (/^#{2}\s+(.+)/.test(trimmed)) {
+      closeList();
+      html += `<h2>${inlineFormat(trimmed.replace(/^#{2}\s+/, ''))}</h2>`;
+    } else if (/^#{1,3}\s+(.+)/.test(trimmed)) {
+      closeList();
+      html += `<h3>${inlineFormat(trimmed.replace(/^#{1,3}\s+/, ''))}</h3>`;
+    } else if (/^---+$/.test(trimmed)) {
+      closeList();
+      html += '<hr>';
+    } else if (/^>\s?(.*)/.test(trimmed)) {
+      closeList();
+      html += `<blockquote>${inlineFormat(trimmed.replace(/^>\s?/, ''))}</blockquote>`;
+    } else if (/^[-*]\s+(.+)/.test(trimmed)) {
+      if (!inUl) { closeList(); html += '<ul>'; inUl = true; }
+      html += `<li>${inlineFormat(trimmed.replace(/^[-*]\s+/, ''))}</li>`;
+    } else if (/^\d+\.\s+(.+)/.test(trimmed)) {
+      if (!inOl) { closeList(); html += '<ol>'; inOl = true; }
+      html += `<li>${inlineFormat(trimmed.replace(/^\d+\.\s+/, ''))}</li>`;
+    } else if (trimmed === '') {
+      closeList();
+    } else {
+      closeList();
+      html += `<p>${inlineFormat(trimmed)}</p>`;
+    }
+  }
+  closeList();
+  return `<div class="md-agent">${html}</div>`;
 }
 
 /* ===== SIMULATEUR BAL ===== */
