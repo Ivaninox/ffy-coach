@@ -6,7 +6,7 @@ import historyHandler from './api/history.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-//  Lire .env.local
+// Lire .env.local
 try {
   const env = fs.readFileSync(path.join(__dirname, '.env.local'), 'utf8');
   env.split('\n').forEach(line => {
