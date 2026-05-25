@@ -319,6 +319,21 @@ header { padding: 12px 20px; border-bottom: 1px solid #e0ddd6; background: #fff;
 .axe-good-band .axe-band-label { color:#16a34a; }
 .axe-bad-band p { font-size:12px; line-height:1.65; color:#7f1d1d; margin:0; }
 .axe-good-band p { font-size:12px; line-height:1.65; color:#14532d; margin:0; }
+
+/* ===== SCORING CHAT ===== */
+.scoring-chat { background:#fff; border:1px solid #e0ddd6; border-radius:12px; overflow:hidden; }
+.scoring-chat-header { padding:12px 14px; border-bottom:1px solid #f0ede8; display:flex; align-items:center; justify-content:space-between; }
+.scoring-chat-title { font-size:11px; font-weight:600; color:#1d4ed8; text-transform:uppercase; letter-spacing:.5px; }
+.scoring-chat-sub { font-size:11px; color:#aaa; }
+.scoring-chat-suggestions { padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px; border-bottom:1px solid #f0ede8; background:#faf9f7; }
+.scoring-chat-sugg { font-size:11px; padding:5px 10px; border-radius:20px; border:1px solid #d0cdc6; background:#fff; cursor:pointer; color:#555; transition:all .15s; }
+.scoring-chat-sugg:hover { background:#1a6ef5; border-color:#1a6ef5; color:#fff; }
+.scoring-chat-msgs { max-height:300px; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:8px; background:#f9f8f6; min-height:40px; }
+.scoring-chat-input-row { display:flex; gap:8px; padding:10px 14px; background:#fff; }
+.scoring-chat-input-row input { flex:1; font-size:12px; padding:7px 10px; border-radius:8px; border:1px solid #d0cdc6; font-family:inherit; outline:none; background:#faf9f7; color:#1a1a1a; }
+.scoring-chat-input-row input:focus { border-color:#1a6ef5; }
+.scoring-chat-input-row button { font-size:12px; padding:7px 14px; border-radius:8px; border:none; background:#1a1a1a; color:#fff; cursor:pointer; flex-shrink:0; }
+.scoring-chat-input-row button:hover { background:#333; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -888,27 +903,33 @@ RÈGLES : Corps du mail uniquement (pas d'objet, pas de signature). Ton adapté 
 
 const _SCORING_STRICT_RULES = `
 
-Tu es un directeur commercial senior chez FFY. Tu notes selon les standards de la formation Emilie Demas (RevOp Agency). Tu es juste et honnête — ni complaisant, ni inutilement sévère.
+Tu es un directeur commercial senior chez FFY. Tu notes selon les standards de la formation Emilie Demas (RevOp Agency). Tu es juste et bienveillant — évalue ce qui est réellement fait, sans punir ce qui est implicite ou sous-entendu.
 
-RÈGLES DE NOTATION :
-- 10/20 = call correct, les bases sont respectées
-- 12-14/20 = bon call, quelques points à améliorer
-- 15-17/20 = très bon call, maîtrise solide des méthodes
-- 18+/20 = call quasi-parfait, réservé aux performances exceptionnelles
-- Un commercial qui applique correctement SPIN + NSC mérite 12-14/20
-- Si un critère est partiellement présent, donne une note partielle (ex : 1/3 ou 2/3) — ne mets 0 que si le critère est vraiment absent
-- Si tu hésites entre deux notes adjacentes, évalue au plus juste selon la réalité du transcript
+ÉCHELLE DE RÉFÉRENCE :
+- 8-10/20 = call basique, les fondamentaux sont là mais sans maîtrise des méthodes
+- 11-13/20 = call correct, SPIN + NSC appliqués correctement
+- 14-16/20 = bon call, maîtrise visible des méthodes, peu de lacunes
+- 17-18/20 = très bon call, presque rien à redire
+- 19-20/20 = call exceptionnel, réservé aux performances rares
+
+RÈGLES IMPORTANTES :
+- Ne mets 0 sur un critère QUE SI ce comportement/sujet est totalement absent du transcript
+- Si un sujet est évoqué, effleuré ou partiellement traité → note partielle minimum (ex : 1/3 ou 1/2)
+- Cherche activement les signes implicites : un prix mentionné en call vaut 1/2 même sans ancrage ROI formel
+- MEDDPICC : cherche les éléments même formulés différemment ("c'est moi qui décide" = EB identifié)
+- Si une objection est gérée mollement mais gérée quand même → donne 1-2, pas 0
+- La note finale doit refléter le niveau réel : un commercial qui fait un call complet mérite 11-13 minimum
+- Si tu hésites entre deux notes, donne la plus haute si le comportement est partiellement visible
 
 INTERDITS :
 - Ne mets jamais une note "pour encourager" sans que le comportement soit dans le transcript
-- Ne mets pas 3/3 sur un critère sans citation prouvant que c'est bien fait
-- Ne mets pas 0 si le critère est effleuré ou partiellement présent
-- Évite les notes systématiquement basses : si le call est correct dans l'ensemble, la note doit refléter ça
+- Ne mets pas le maximum sur un critère sans citation solide
+- N'applique pas les critères de manière mécanique : cherche l'intention derrière les mots
 
 Pour CHAQUE critère, tu dois fournir :
 1. La note sur le maximum
-2. Une citation EXACTE du transcript entre guillemets (ou "Absent du transcript" si rien)
-3. Une justification de 2-3 phrases expliquant pourquoi cette note précise et pas une autre`;
+2. Une citation EXACTE du transcript entre guillemets (ou "Absent du transcript" si vraiment rien)
+3. Une justification de 2-3 phrases expliquant pourquoi cette note précise`;
 
 const SYSTEM_SCORE_R1_STRICT = SYSTEM_BASE + _SCORING_STRICT_RULES + `
 
@@ -918,8 +939,8 @@ GRILLE R1 (total /20) :
 3. problem (max 3) : frustrations identifiées et creusées avec relances. 3=2+ douleurs creusées, 2=1 douleur correcte, 1=effleurée, 0=aucune.
 4. implication (max 3) : impact business chiffré des douleurs. 3=chaque douleur quantifiée (euros/temps/risque), 2=une implication chiffrée, 1=floues, 0=absent.
 5. need_payoff (max 2) : prospect verbalise lui-même la valeur. 2=verbalisation spontanée, 1=commercial parle à sa place, 0=absent.
-6. meddpicc (max 3) : Economic Buyer + Decision Process + Champion + Competition. 3=4 éléments, 2=2-3, 1=1, 0=aucun.
-7. objections (max 3) : rebond avec valeur sur chaque objection. 3=toutes traitées, 2=la plupart, 1=molles, 0=fuite/concession. Si aucune objection dans le call : répartir les 3 points proportionnellement sur les autres critères via N/A.
+6. meddpicc (max 3) : Economic Buyer + Decision Process + Champion + Compétition. Note : FFY travaille sur des petits deals — il n'y a PAS de Paper Process (P), ne l'évalue pas. EB = qui a autorité budget/signature, même indirect ("c'est moi qui décide", "je dois valider avec mon DG" = EB identifié). 3=3-4 éléments solides, 2=2 éléments, 1=1 élément effleuré, 0=aucun.
+7. objections (max 3) : rebond avec valeur sur chaque objection. 3=toutes traitées avec valeur, 2=la plupart traitées, 1=traitement mou mais tentative, 0=aucune tentative de rebond. Si aucune objection dans le call : N/A → répartir ces 3 points proportionnellement sur les critères les plus proches.
 8. next_step (max 2) : R2 calé avec date précise en live. 2=date précise+invitation annoncée, 1=date floue ou prospect aux commandes, 0="je vous envoie ça par mail".`;
 
 const SYSTEM_SCORE_R2_STRICT = SYSTEM_BASE + _SCORING_STRICT_RULES + `
@@ -928,10 +949,10 @@ GRILLE R2 (total /20) :
 1. revalidation_pain (max 2) : douleurs R1 rappelées et reconfirmées en ouverture. 2=pain revalidé explicitement, 1=mention rapide sans confirmation, 0=passage direct à la démo.
 2. presentation_solution (max 3) : solution collée aux pains R1. 3=sur-mesure chaque élément lié à un pain, 2=bon fit quelques détours, 1=pitch générique, 0=aucun lien.
 3. preuves (max 2) : use cases clients similaires avec résultats concrets. 2=≥2 références avec résultats, 1=une référence ou noms sans résultats, 0=aucune preuve.
-4. meddpicc (max 3) : EB présent ou stratégie verrouillée + Champion + paper process. 3=3 éléments solides, 2=2, 1=1, 0=closing en aveugle.
-5. objections (max 3) : rebond avec valeur, concessions conditionnées. 3=toutes traitées, 2=correct avec une faiblesse, 1=mollit/concessions non conditionnées, 0=subies.
-6. presentation_prix (max 2) : prix présenté EN LIVE avec ancrage ROI/RONI. 2=live+ancrage valeur, 1=mentionné sans ancrage, 0="je vous envoie le devis" = échec R2.
-7. closing (max 3) : tentative de closing explicite + engagement. 3=tentative+engagement ou date ferme, 2=tentative sans engagement clair, 1=pas de tentative, 0=call qui finit sur "je vous envoie le PDF".
+4. meddpicc (max 3) : EB identifié ou stratégie verrouillée + Champion + Decision Process. Note : FFY = petits deals, PAS de Paper Process (P). EB = qui signe/valide le budget, même si pas présent au call ("je dois confirmer avec mon associé" = EB identifié). 3=3 éléments solides, 2=2 éléments, 1=1 élément, 0=aucun élément.
+5. objections (max 3) : rebond avec valeur, concessions conditionnées. 3=toutes traitées avec valeur, 2=correct avec une faiblesse, 1=tentative même molle, 0=subies sans rebond.
+6. presentation_prix (max 2) : prix évoqué ou présenté en call. 2=prix en live avec ancrage ROI ou RONI explicite, 1=prix mentionné en call même sans ancrage formel, 0=aucune mention de prix en call ("je vous envoie le devis" sans chiffre dit = 0).
+7. closing (max 3) : tentative de conclusion ou d'engagement. 3=tentative explicite + engagement ou date ferme, 2=signal de conclusion envoyé même informel ("on y va ?", "on peut lancer ?"), 1=pas de tentative mais call conclut avec next step, 0=call qui s'arrête sans aucun engagement ni next step.
 8. next_step (max 2) : date précise dans les mains du commercial + invitation. 2=date+invitation, 1=date floue, 0=aucun next step.`;
 
 const SYSTEM_SCORE_PROSP = SYSTEM_BASE + `\n\nTu es un coach expert en prospection téléphonique B2B. Tu analyses les calls de prospection FFY avec précision, en identifiant chaque moment clé et en proposant des reformulations concrètes immédiatement réutilisables.`;
@@ -950,7 +971,16 @@ async function syncHistoryFromServer() {
     const r = await fetch('/api/history');
     if (!r.ok) return;
     const data = await r.json();
-    scoreHistory = (data && data.history) ? data.history : [];
+    const serverHistory = (data && data.history) ? data.history : [];
+    // Merge : le serveur est source de vérité, mais on remonte les entrées locales manquantes
+    const serverIds = new Set(serverHistory.map(e => e.id));
+    const localOnly = scoreHistory.filter(e => !serverIds.has(e.id));
+    if (localOnly.length > 0) {
+      for (const entry of localOnly) {
+        fetch('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) }).catch(() => {});
+      }
+    }
+    scoreHistory = [...serverHistory, ...localOnly];
     saveHistoryToStorage();
   } catch {}
 }
@@ -1567,6 +1597,28 @@ function renderDebrief(parsed, debrief, maxes, commercial, type, transcript) {
   mailStore.debrief = debrief;
   mailStore.type = type;
   mailStore.commercial = commercial;
+
+  // 8. Post-scoring chat
+  initScoringChat(commercial, type, parsed.score_total, { ...parsed, criteres: debrief.criteres || parsed.criteres, maxes: debrief.maxes || maxes, synthese: debrief.synthese }, transcript);
+  const scoringChatHtml = `
+    <div class="scoring-chat">
+      <div class="scoring-chat-header">
+        <span class="scoring-chat-title">Questions sur ce call</span>
+        <span class="scoring-chat-sub">Interroge Cheikho sur ce scoring</span>
+      </div>
+      <div class="scoring-chat-suggestions">
+        <button class="scoring-chat-sugg" onclick="sendScoringChatSugg('Quelles questions SPIN aurais-je pu poser pour mieux creuser les douleurs ?')">Questions SPIN manquantes</button>
+        <button class="scoring-chat-sugg" onclick="sendScoringChatSugg('Comment améliorer mon MEDDPICC sur ce call ?')">Améliorer MEDDPICC</button>
+        <button class="scoring-chat-sugg" onclick="sendScoringChatSugg('Donne-moi un script concret pour le prochain call avec ce prospect')">Script prochain call</button>
+        <button class="scoring-chat-sugg" onclick="sendScoringChatSugg('Quelles objections risque de soulever ce prospect et comment les gérer ?')">Préparer objections</button>
+      </div>
+      <div class="scoring-chat-msgs" id="scoring-chat-msgs"></div>
+      <div class="scoring-chat-input-row">
+        <input type="text" id="scoring-chat-input" placeholder="Ta question sur ce call..." onkeydown="if(event.key==='Enter')sendScoringChat()">
+        <button onclick="sendScoringChat()">Envoyer</button>
+      </div>
+    </div>`;
+
   const mailHtml = `
     <div class="mail-section" id="mail-section">
       <div class="mail-section-header">
@@ -1577,7 +1629,7 @@ function renderDebrief(parsed, debrief, maxes, commercial, type, transcript) {
     </div>`;
 
   const dz = document.getElementById('debrief-zone');
-  if (dz) dz.innerHTML = pfHtml + axHtml + maturiteHtml + actionsHtml + noteHtml + mailHtml;
+  if (dz) dz.innerHTML = pfHtml + axHtml + maturiteHtml + actionsHtml + noteHtml + mailHtml + scoringChatHtml;
 }
 
 /* ---- MAIL DEPUIS DEBRIEF ---- */
@@ -2220,6 +2272,56 @@ function copyMail() {
     const btn = el.closest('.card').nextElementSibling?.querySelector('button');
     if (btn) { const orig = btn.textContent; btn.textContent = 'Copié !'; setTimeout(() => btn.textContent = orig, 1500); }
   });
+}
+
+/* ---- POST-SCORING CHAT ---- */
+let scoringChatHistory = [];
+let scoringChatCtx = '';
+
+function initScoringChat(commercial, type, score, parsed, transcript) {
+  scoringChatHistory = [];
+  const critStr = Object.entries(parsed.criteres || {}).map(([k, v]) => {
+    const note = typeof v === 'object' ? (v.note ?? 0) : (v ?? 0);
+    const max = typeof v === 'object' ? (v.max ?? 4) : (parsed.maxes?.[k] || 4);
+    return `${H_LABELS[k] || k}: ${note}/${max}`;
+  }).join(', ');
+  scoringChatCtx = `Tu es Cheikho, coach commercial FFY. Tu viens d'analyser un call ${type} de ${commercial}, noté ${score}/20.
+Détail des critères : ${critStr}
+Prospect : ${parsed.prospect || 'inconnu'}
+${parsed.synthese?.verdict ? 'Verdict : ' + parsed.synthese.verdict : ''}
+${parsed.synthese?.axes_amelioration ? 'Axes d\'amélioration identifiés : ' + parsed.synthese.axes_amelioration : ''}
+${transcript ? 'Transcript (extrait) :\n' + String(transcript).slice(0, 2500) : ''}
+
+Réponds directement et concrètement aux questions sur ce call précis. Cite des moments du transcript quand tu peux.`;
+}
+
+async function sendScoringChat() {
+  const input = document.getElementById('scoring-chat-input');
+  const msgs = document.getElementById('scoring-chat-msgs');
+  const question = input?.value?.trim();
+  if (!question || !msgs) return;
+  input.value = '';
+  msgs.innerHTML += `<div class="mail-chat-msg user">${escHtml(question)}</div>`;
+  const typingId = 'sct-' + Date.now();
+  msgs.innerHTML += `<div class="mail-chat-msg agent" id="${typingId}">...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  scoringChatHistory.push({ role: 'user', content: question });
+  try {
+    const reply = await callAPI(scoringChatHistory, scoringChatCtx, 800);
+    scoringChatHistory.push({ role: 'assistant', content: reply });
+    const t = document.getElementById(typingId);
+    if (t) t.remove();
+    msgs.innerHTML += `<div class="mail-chat-msg agent">${escHtml(reply)}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {
+    const t = document.getElementById(typingId);
+    if (t) t.textContent = 'Erreur : ' + e.message;
+  }
+}
+
+function sendScoringChatSugg(text) {
+  const input = document.getElementById('scoring-chat-input');
+  if (input) { input.value = text; sendScoringChat(); }
 }
 
 function escHtml(str) {

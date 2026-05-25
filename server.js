@@ -57,7 +57,7 @@ const server = http.createServer(async (req, res) => {
       json(data) { res.writeHead(this._status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); },
       setHeader(k, v) { res.setHeader(k, v); }
     };
-    historyHandler(req, vRes);
+    await historyHandler(req, vRes);
     return;
   }
 
