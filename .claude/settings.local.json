@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/Cheikhy/Desktop/ffy-coach-main/data)",
+      "Bash(node --input-type=module)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node --input-type=module --eval \"import './server.js'\")",
+      "Bash(npm install *)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill -9)",
+      "Bash(node server.js)",
+      "Bash(curl -s http://localhost:3000/api/history)",
+      "Bash(curl -s -X POST http://localhost:3000/api/history -H 'Content-Type: application/json' -d '{\"id\":\"test-123\",\"commercial\":\"Simon\",\"score_total\":13,\"type\":\"R2\",\"date\":\"2026-05-25T10:00:00Z\"}')",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\);const p=JSON.parse\\(d\\);console.log\\('Entrées:', p.history.length, '→', p.history[0]?.commercial, p.history[0]?.score_total\\);\")",
+      "Bash(curl -s -X DELETE \"http://localhost:3000/api/history?id=test-123\")"
+    ],
+    "additionalDirectories": [
+      "/Users/Cheikhy/Desktop/ffy-coach-main"
+    ]
+  }
+}
